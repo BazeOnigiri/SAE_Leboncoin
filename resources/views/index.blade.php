@@ -76,7 +76,7 @@
                     <span class="text-xs font-medium">Messages</span>
                 </a>
 
-                <a href="#" class="flex flex-col items-center gap-1 text-gray-700 hover:text-black transition-colors ml-2">
+                <a href="{{ route('login') }}" class="flex flex-col items-center gap-1 text-gray-700 hover:text-black transition-colors ml-2">
                     <i class="fa-regular fa-user text-xl"></i>
                     <span class="text-xs font-medium">Se connecter</span>
                 </a>
