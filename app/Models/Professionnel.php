@@ -9,6 +9,11 @@ class Professionnel extends Model
     protected $table = 'professionnel';
     protected $primaryKey = 'idutilisateur';
     public $timestamps = false;
-    public $incrementing = false;
 
+    /* Un professionnel se réfere à 1 ... */
+
+    public function utilisateur()
+    {
+        return $this->belongsTo(Utilisateur::class, 'idutlisateur');
+    }
 }

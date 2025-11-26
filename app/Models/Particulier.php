@@ -9,6 +9,11 @@ class Particulier extends Model
     protected $table = 'particulier';
     protected $primaryKey = 'idutilisateur';
     public $timestamps = false;
-    public $incrementing = false;
 
+    /* Un particulier se réfere à 1 ... */
+
+    public function utilisateur()
+    {
+        return $this->belongsTo(Utilisateur::class, 'idutlisateur');
+    }
 }
