@@ -11,21 +11,23 @@ class Ville extends Model
 
     public $timestamps = false;
 
-    protected $fillable = [
-        'iddepartement',
-        'codepostal',
-        'nomville',
-        'taxedesejour'
-    ];
+    /* Une ville a beaucoup ou pas de ... */
+
+    public function adresse()
+    {
+        return $this->hasMany(Adresse::class, 'idville');
+    }
+
+    public function recherche()
+    {
+        return $this->hasMany(Recherche::class, 'idville');
+    }
+
+    /* Une ville se réfere à 1 ... */
 
     public function departement()
     {
         return $this->belongsTo(Departement::class, 'iddepartement');
-    }
-
-    public function adresse()
-    {
-        return $this->hasMany(Adresse::class, 'idadresse');
     }
 }
 
