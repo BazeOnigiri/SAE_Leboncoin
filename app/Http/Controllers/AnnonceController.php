@@ -16,8 +16,8 @@ class AnnonceController extends Controller
             'prixnuitee',
             'nombreetoilesleboncoin'
         )->with([
-            'photo',
-            'chambre',
+            'photos',
+            'chambres',
             'typehebergement',
             'adresse.ville',
         ])->limit(100)->get();
