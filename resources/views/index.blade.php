@@ -28,9 +28,9 @@
         </style>
 
     </head>
-    <body class=" bg-[#f8f9fb] max-w-6xl mx-auto px-6 md:px-12 xl:px-6 pt-20">
-    <header class="border-b border-gray-200 bg-white py-3 sticky top-0 z-40">
-        <div class="container mx-auto px-4 max-w-[1280px] h-16 flex items-center justify-between gap-4">
+    <body class="bg-[#f8f9fb] font-sans text-gray-900 antialiased">
+    <header id="main-header" class="w-full border-b border-gray-200 bg-white py-3 sticky top-0 z-40 left-0 transition-shadow duration-200">
+    <div class="container mx-auto p-7 px-4 max-w-[1280px] h-16 flex items-center justify-between gap-4">
 
             <a href="#" class="flex-shrink-0">
                 <span class="text-orange-lbc font-extrabold text-3xl tracking-tighter text-[#ea580c] rounded-[15px]">leboncoin</span>
@@ -76,7 +76,7 @@
                     <span class="text-xs font-medium">Messages</span>
                 </a>
 
-                <a href="{{ route('login') }}" class="flex flex-col items-center gap-1 text-gray-700 hover:text-black transition-colors ml-2">
+                <a {{ route('login') }} class="flex flex-col items-center gap-1 text-gray-700 hover:text-black transition-colors ml-2">
                     <i class="fa-regular fa-user text-xl"></i>
                     <span class="text-xs font-medium">Se connecter</span>
                 </a>
@@ -84,7 +84,7 @@
 
         </div>
     </header>
-        <div class=" bg-white p-7">
+        <div class=" bg-white p-7 max-w-6xl mx-auto px-6 md:px-12 xl:px-6 pt-20">
   
                 <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pb-4">
         
