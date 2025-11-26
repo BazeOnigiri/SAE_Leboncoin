@@ -13,13 +13,18 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    // afficher formulaire email + mot de passe
+
+    // afficher le formulaire email + mot de passe
+     
     public function showEmailForm()
     {
-        return view('auth.register'); 
+        // Vue: resources/views/auth/register.blade.php
+        return view('auth.register');
     }
 
+
     // traiter email + mot de passe
+
     public function storeEmail(Request $request)
     {
         $data = $request->validate([
@@ -27,7 +32,7 @@ class RegisterController extends Controller
             'password' => 'required|confirmed|min:8',
         ]);
 
-        // on garde les infos en session pour les étapes suivantes
+        // On garde les infos en session pour les étapes suivantes
         session([
             'register.email'    => $data['email'],
             'register.password' => $data['password'],
@@ -36,9 +41,10 @@ class RegisterController extends Controller
         return redirect()->route('register.type');
     }
 
-    // choix type de compte
+    // choix du type de compte
     public function showTypeForm()
     {
+        // Vue: resources/views/auth/register-type.blade.php
         return view('auth.register-type');
     }
 
@@ -58,6 +64,7 @@ class RegisterController extends Controller
     // formulaire particulier
     public function showParticulierForm()
     {
+        // Vue: resources/views/auth/register-particulier.blade.php
         return view('auth.register-particulier');
     }
 
@@ -73,14 +80,17 @@ class RegisterController extends Controller
             'idville'    => 'required|integer', 
         ]);
 
+        // Crée l'utilisateur + l'adresse
         $user = $this->createUserWithAdresse($data);
 
-        Particulier::create([
-            'idutilisateur' => $user->idutilisateur,
-            'civilite'      => $data['civilite'],
-            'iddate'        => 1,
-        ]);
+        // Crée la ligne dans la table particulier (sans ::create)
+        $particulier = new Particulier();
+        $particulier->idutilisateur = $user->idutilisateur;
+        $particulier->civilite      = $data['civilite'];
+        $particulier->iddate        = 1; 
+        $particulier->save();
 
+        // Connexion automatique
         Auth::login($user);
 
         return redirect()->route('dashboard');
@@ -89,6 +99,7 @@ class RegisterController extends Controller
     // formulaire professionnel
     public function showProForm()
     {
+        // Vue: resources/views/auth/register-pro.blade.php
         return view('auth.register-pro');
     }
 
@@ -106,15 +117,18 @@ class RegisterController extends Controller
             'secteuractivite' => 'required',
         ]);
 
+        // Crée l'utilisateur + l'adresse
         $user = $this->createUserWithAdresse($data);
 
-        Professionnel::create([
-            'idutilisateur'   => $user->idutilisateur,
-            'numsiret'        => $data['numsiret'],
-            'nomsociete'      => $data['nomsociete'],
-            'secteuractivite' => $data['secteuractivite'],
-        ]);
+        // Crée la ligne dans la table professionnel (sans ::create)
+        $pro = new Professionnel();
+        $pro->idutilisateur   = $user->idutilisateur;
+        $pro->numsiret        = $data['numsiret'];
+        $pro->nomsociete      = $data['nomsociete'];
+        $pro->secteuractivite = $data['secteuractivite'];
+        $pro->save();
 
+        // Connexion automatique
         Auth::login($user);
 
         return redirect()->route('dashboard');
@@ -122,24 +136,24 @@ class RegisterController extends Controller
 
     private function createUserWithAdresse(array $data): User
     {
-        // création de l'adresse
-        $adresse = Adresse::create([
-            'idville'   => $data['idville'],
-            'numerorue' => $data['numerorue'],
-            'nomrue'    => $data['nomrue'],
-        ]);
+        // 1) Création de l'adresse
+        $adresse = new Adresse();
+        $adresse->idville   = $data['idville'];
+        $adresse->numerorue = $data['numerorue'];
+        $adresse->nomrue    = $data['nomrue'];
+        $adresse->save();
 
-        // création de l'utilisateur
-        $user = User::create([
-            'idadresse'          => $adresse->idadresse,
-            'nomutilisateur'     => $data['nom'],
-            'prenomutilisateur'  => $data['prenom'],
-            'pseudonyme'         => $data['prenom'] . '_' . substr($data['nom'], 0, 3),
-            'email'              => session('register.email'),
-            'telephoneutilisateur' => $data['telephone'] ?? null,
-            'solde'              => 0,
-            'password'           => Hash::make(session('register.password')),
-        ]);
+        // 2) Création de l'utilisateur
+        $user = new User();
+        $user->idadresse            = $adresse->idadresse;
+        $user->nomutilisateur       = $data['nom'];
+        $user->prenomutilisateur    = $data['prenom'];
+        $user->pseudonyme           = $data['prenom'] . '_' . substr($data['nom'], 0, 3);
+        $user->email                = session('register.email');
+        $user->telephoneutilisateur = $data['telephone'] ?? null;
+        $user->solde                = 0;
+        $user->password             = Hash::make(session('register.password'));
+        $user->save();
 
         return $user;
     }
