@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AnnonceController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AnnonceController::class, 'index']);
 
 Route::middleware([
     'auth:sanctum',
