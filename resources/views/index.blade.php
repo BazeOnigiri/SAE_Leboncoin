@@ -29,6 +29,15 @@
 
     </head>
     <body class=" bg-[#f8f9fb] max-w-6xl mx-auto px-6 md:px-12 xl:px-6 pt-20">
+
+        <header class=" sticky bg-white min-w-full min-h-60 flex ">
+            <img src="public/assets/Leboncoin_logo.svg" class=" w-80 h-20 ">
+            <div class=" bg-orange-600 flex">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM272 416C351.5 416 416 351.5 416 272C416 192.5 351.5 128 272 128C192.5 128 128 192.5 128 272C128 351.5 192.5 416 272 416z"/></svg>
+                <p>Déposer une annonce</p>
+            </div>
+        </header>
+
         <div class=" bg-white p-7">
             <h1 class=" text-xl font-bold mb-6">Annonces Location vacances</h1>
             <p class=" mb-6 font-bold">{{ $annonces->count() }} annonces</p>
@@ -50,7 +59,7 @@
                         <div
                             id="carousel{{ $annonce->idannonce }}"
                             class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth
-                                   snap-x snap-mandatory scrollbar-hide">
+                                snap-x snap-mandatory scrollbar-hide">
                             @foreach ($annonce->photo ?? [] as $photo)
                                 <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
                                     <img src="{{ $photo->lienphoto }}" class="w-full h-full object-cover">
