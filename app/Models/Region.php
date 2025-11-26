@@ -10,6 +10,13 @@ class Region extends Model
     protected $primaryKey = 'idregion';
     public $timestamps = false;
 
+    /* Une region a beaucoup ou pas de ... */
+
+    public function recherches()
+    {
+        return $this->hasMany(Recherche::class, 'idregion');
+    }
+
     public function departements()
     {
         return $this->hasMany(Departement::class, 'idregion');
