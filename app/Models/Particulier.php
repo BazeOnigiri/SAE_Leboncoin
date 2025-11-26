@@ -16,4 +16,9 @@ class Particulier extends Model
     {
         return $this->belongsTo(Utilisateur::class, 'idutlisateur');
     }
+
+    public function date()
+    {
+        return $this->belongsTo(Date::class, 'iddate');
+    }
 }
