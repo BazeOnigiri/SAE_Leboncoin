@@ -98,7 +98,7 @@
                             id="carousel{{ $annonce->idannonce }}"
                             class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth
                                 snap-x snap-mandatory scrollbar-hide">
-                            @foreach ($annonce->photo ?? [] as $photo)
+                            @foreach ($annonce->photos ?? [] as $photo)
                                 <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
                                     <img src="{{ $photo->lienphoto }}" loading="lazy" class="w-full h-full object-cover">
                                 </div>
@@ -106,7 +106,7 @@
                         </div>
                     
                         <div id="dots{{ $annonce->idannonce }}" class="absolute bottom-1 w-full flex justify-center gap-2">
-                            @foreach ($annonce->photo ?? [] as $i => $photo)
+                            @foreach ($annonce->photos ?? [] as $i => $photo)
                                 <div class="dot{{ $annonce->idannonce }} w-2 h-2 rounded-full bg-white/50 transition-all duration-300"></div>
                             @endforeach
                         </div>
@@ -165,7 +165,7 @@
                             <p>{{ $annonce->nombreetoilesleboncoin }} / 5</p>
                             <div class=" text-sm">
                                 @php $totalPlaces = 0; @endphp
-                                @foreach ($annonce->chambre ?? [] as $chambre)
+                                @foreach ($annonce->chambres ?? [] as $chambre)
                                     @php
                                         $cap = $chambre->capacitechambre ?? $chambre->capacite_chambre ?? null;
                                         $totalPlaces += (int) ($cap ?? 0);
