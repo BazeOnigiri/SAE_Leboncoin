@@ -8,6 +8,20 @@ use App\Models\Annonce;
 class AnnonceController extends Controller
 {
     public function index(){
-        return view("index", ['annonces' => Annonce::limit(10)->get() ]);
+        $annonces = Annonce::select(
+            'idannonce',
+            'idadresse',
+            'idtypehebergement',
+            'titreannonce',
+            'prixnuitee',
+            'nombreetoilesleboncoin'
+        )->with([
+            'photo',
+            'chambre',
+            'typehebergement',
+            'adresse.ville',
+        ])->limit(100)->get();
+
+        return view("index", compact('annonces'));
     }
 }

@@ -29,8 +29,6 @@
 
     </head>
     <body class=" bg-[#f8f9fb] max-w-6xl mx-auto px-6 md:px-12 xl:px-6 pt-20">
-
-        
         <div class=" bg-white p-7">
   
                 <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pb-4">
@@ -99,10 +97,10 @@
                         <div
                             id="carousel{{ $annonce->idannonce }}"
                             class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth
-                                   snap-x snap-mandatory scrollbar-hide">
+                                snap-x snap-mandatory scrollbar-hide">
                             @foreach ($annonce->photo ?? [] as $photo)
                                 <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
-                                    <img src="{{ $photo->lienphoto }}" class="w-full h-full object-cover">
+                                    <img src="{{ $photo->lienphoto }}" loading="lazy" class="w-full h-full object-cover">
                                 </div>
                             @endforeach
                         </div>
