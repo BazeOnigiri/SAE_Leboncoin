@@ -20,7 +20,7 @@ class AnnonceController extends Controller
             'chambres',
             'typehebergement',
             'adresse.ville',
-        ])->limit(100)->get();
+        ])->paginate(10);
 
         return view("index", compact('annonces'));
     }
