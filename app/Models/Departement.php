@@ -10,13 +10,13 @@ class Departement extends Model
     protected $primaryKey = 'iddepartement';
     public $timestamps = false;
 
-    public function region()
-    {
-        return $this->belongsTo(Region::class, 'idregion');
-    }
-
     public function villes()
     {
         return $this->hasMany(Ville::class, 'iddepartement');
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class, 'idregion');
     }
 }
