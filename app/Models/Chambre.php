@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/* push */
+
 class Chambre extends Model
 {
     protected $table = 'chambre';
