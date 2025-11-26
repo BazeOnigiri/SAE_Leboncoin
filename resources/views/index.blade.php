@@ -62,7 +62,7 @@
                                 snap-x snap-mandatory scrollbar-hide">
                             @foreach ($annonce->photo ?? [] as $photo)
                                 <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
-                                    <img src="{{ $photo->lienphoto }}" class="w-full h-full object-cover">
+                                    <img src="{{ $photo->lienphoto }}" loading="lazy" class="w-full h-full object-cover">
                                 </div>
                             @endforeach
                         </div>
