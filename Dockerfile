@@ -18,7 +18,7 @@ COPY . .
 
 # Install dependencies
 RUN composer install --no-interaction
-RUN npm install && npm run build
+RUN rm -rf package-lock.json node_modules && npm install && npm run build
 
 # Laravel permissions
 RUN chmod -R 775 storage bootstrap/cache
