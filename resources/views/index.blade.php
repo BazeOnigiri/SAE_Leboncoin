@@ -135,18 +135,6 @@
                         </div>
                 
                         <div class="flex-1 overflow-y-auto p-6 hide-scrollbar space-y-8">
-                
-                            <div>
-                                <h3 class="text-base text-gray-500 mb-2">Catégories</h3>
-                                <div class="flex justify-between items-center py-2 cursor-pointer group">
-                                    <span class="text-lg text-slate-900">Locations saisonnières</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400 group-hover:text-gray-600">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                                    </svg>
-                                </div>
-                                <hr class="border-gray-200 mt-2">
-                            </div>
-                
                             <div>
                                 <div class="flex items-center gap-2 mb-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-700">
@@ -261,9 +249,6 @@
                                         <div class="text-sm text-gray-500 mt-1">Appartement, Bateau, Bungalow, Bus, ...</div>
                                     </div>
                                 </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                                </svg>
                             </div>
 
                             <div class="mt-4 flex justify-between items-center text-slate-600">
