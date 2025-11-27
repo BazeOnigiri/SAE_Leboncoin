@@ -10,8 +10,13 @@
         </svg>
 
         <span class="text-slate-900">
-            <input type="text" wire:model.live="query" class="border-0 outline-0 focus:outline-none focus:ring-0 bg-transparent"
-                placeholder="Choisir une destination" />
+            <input 
+                type="text" 
+                class="border-0 outline-0 focus:outline-none focus:ring-0 bg-transparent"
+                wire:model.live="search"
+                wire:keydown.enter.prevent="selectFirstMatch" 
+                placeholder="Rechercher une localisation..."
+            />
         </span>
 
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
@@ -21,21 +26,34 @@
 
     </button>
 
-    @if (strlen($query) > 0)
-        <ul class=" absolute bg-white rounded-md shadow-lg mt-2 w-72 max-h-60 overflow-y-auto z-30">
-            @foreach ($results as $result)
-                <li class="p-2 hover:bg-gray-200 cursor-pointer">
-                    {{ $result['nomregion'] ?? '' }}
-                    {{ $result['nomdepartement'] ?? '' }}
-                    {{ $result['nomville'] ?? '' }}
+    {{-- On affiche la liste seulement si on a tapé quelque chose ET qu'il y a des résultats --}}
+    @if(strlen($search) > 0 && count($results) > 0)
+    <div class="absolute z-10 bg-white shadow-lg rounded-md mt-2 w-72 max-h-60 overflow-y-auto">
+        <ul>
+            @foreach($results as $result)
+                {{-- Logique pour déterminer le nom et le type à afficher --}}
+                @php
+                    $nom = $result['nomregion'] ?? ($result['nomdepartement'] ?? ($result['nomville'] ?? ''));
+                    $type = isset($result['nomregion']) ? '(Région)' : (isset($result['nomdepartement']) ? '(Département)' : '');
+                    
+                    // Gestion du code postal ou numéro département s'ils existent
+                    $info = '';
+                    if (!empty($result['codepostal'])) {
+                        $info = ' - ' . $result['codepostal'];
+                    } elseif (!empty($result['numerodepartement'])) {
+                        $info = ' - ' . $result['numerodepartement'];
+                    }
+                @endphp
 
-                    @if(!empty($result['codepostal']) || !empty($result['numerodepartement']))
-                        ({{ $result['codepostal'] ?? '' }}{{ !empty($result['codepostal']) && !empty($result['numerodepartement']) ? ' - ' : '' }}{{ $result['numerodepartement'] ?? '' }})
-                    @endif
+                <li 
+                    {{-- On utilise addslashes pour éviter les erreurs JS si le nom contient une apostrophe --}}
+                    wire:click="selectOption('{{ addslashes($nom) }}')" 
+                    class="p-2 hover:bg-gray-100 cursor-pointer text-left"
+                >
+                    {{ $nom }} <span class="text-gray-500 text-xs">{{ $type }}{{ $info }}</span>
                 </li>
             @endforeach
         </ul>
-    @else
+    </div>
     @endif
-
 </div>
