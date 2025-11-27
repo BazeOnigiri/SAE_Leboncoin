@@ -42,6 +42,11 @@ class AnnonceList extends Component
             });
         }
 
+        if (!empty($this->filterTypes)) {
+            // "whereIn" vérifie si l'ID est dans la liste des IDs sélectionnés
+            $query->whereIn('idtypehebergement', $this->filterTypes);
+        }
+
         $annonces = $query->get();
 
         return view('livewire.annonce-list', [
