@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisterController;
 // PAGE D'ACCUEIL
 // --------------------------------------------------------------
 Route::get('/', [AnnonceController::class, 'index'])->name('home');
+Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 
 // --------------------------------------------------------------
 // WIZARD INSCRIPTION 
