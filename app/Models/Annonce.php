@@ -76,9 +76,9 @@ class Annonce extends Model
         return $this->belongsToMany(Annonce::class, 'ressembler', 'idannonce', 'idannonce');
     }
 
-    public function utilisateurs()
+    public function users()
     {
-        return $this->belongsToMany(Utilisateur::class, 'favoriser', 'idannonce', 'idutilisateur');
+        return $this->belongsToMany(User::class, 'favoriser', 'idannonce', 'idutilisateur');
     }
 
     public function dates()
