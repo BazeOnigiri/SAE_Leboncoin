@@ -3,10 +3,10 @@
         <h2 class="text-xl font-bold text-slate-900">Tous les filtres</h2>
         <button onclick="closeFilters()" class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
             <button 
-    @click="sidebarOpen = false" 
-    class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
-    <span>X</span>
-</button>
+                @click="sidebarOpen = false" 
+                class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
+                <span>X</span>
+            </button>
         </button>
     </div>
 
@@ -42,11 +42,11 @@
                     <input type="text" placeholder="JJ/MM/AAAA" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                 </div>
             </div>
-             <hr class="border-gray-200 mt-2">
+            <hr class="border-gray-200 mt-2">
         </div>
         <div>
             <div class="flex items-center gap-2 mb-4">
-                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-700">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                 </svg>
                 <span class="text-lg font-medium text-slate-900">Voyageurs</span>
@@ -68,7 +68,7 @@
         </div>
 
         <div>
-             <div class="flex items-center justify-between pb-6">
+            <div class="flex items-center justify-between pb-6">
                 <div class="flex items-center gap-3">
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" value="" class="sr-only peer">
@@ -78,7 +78,7 @@
                 </div>
             </div>
         </div>
-       
+
         <div class="py-6 border-b border-gray-200 border-t" x-data="{ open: @entangle('showTypes') }">
             
             <div @click="open = !open" class="cursor-pointer group">
@@ -101,8 +101,8 @@
                         </div>
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
-                         class="w-5 h-5 text-gray-400 transition-transform duration-200"
-                         :class="open ? 'rotate-180' : ''">
+                        class="w-5 h-5 text-gray-400 transition-transform duration-200"
+                        :class="open ? 'rotate-180' : ''">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                 </div>
@@ -141,7 +141,7 @@
                     <span class="ml-4 text-lg text-slate-700 flex-1">Location ou Gîte</span>
                     <span class="text-sm text-gray-400 tabular-nums">227 007</span>
                 </label>
-                </div>
+            </div>
         </div>
 
         <div class="py-6 border-b border-gray-200">
@@ -174,11 +174,12 @@
         <button wire:click="$set('selectedTypes', [])" class="text-slate-900 font-medium px-4 py-2 hover:underline decoration-1 underline-offset-4">
             Tout Effacer
         </button>
+
         <button 
-    wire:click="applyFilters"
-    @click="sidebarOpen = false"
-    class="bg-[#ea580c] hover:bg-[#c2410c] text-white transition-colors font-bold py-3 px-6 rounded-xl">
-    Rechercher @if(count($selectedTypes) > 0) ({{ count($selectedTypes) }}) @endif
-</button>
+            wire:click="applyFilters"
+            @click="sidebarOpen = false"
+            class="bg-[#ea580c] hover:bg-[#c2410c] text-white transition-colors font-bold py-3 px-6 rounded-xl">
+            Rechercher @if(count($selectedTypes) > 0) ({{ count($selectedTypes) }}) @endif
+        </button>
     </div>
 </div>

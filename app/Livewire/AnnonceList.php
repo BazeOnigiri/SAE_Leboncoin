@@ -15,6 +15,13 @@ class AnnonceList extends Component
         $this->location = $nom;
     }
 
+    #[On('filtersUpdated')] // Très important !
+    public function updateFilters($types)
+    {
+        $this->filterTypes = $types;
+        // Livewire relancera automatiquement render() avec les nouveaux filtres
+    }
+
     public function render()
     {
         $query = Annonce::select(
