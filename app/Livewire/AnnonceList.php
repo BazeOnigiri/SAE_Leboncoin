@@ -4,22 +4,29 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Annonce;
-use Livewire\Attributes\On; // Important pour l'écouteur d'événement
+use Livewire\Attributes\On;
+use Illuminate\Database\Eloquent\Builder;
 
 class AnnonceList extends Component
 {
     public $location = ''; 
+    public $filterTypes = [];
+    
+    public $dateArrivee = '';
+    public $dateDepart = '';
+
     #[On('locationSelected')] 
     public function updateLocation($nom)
     {
         $this->location = $nom;
     }
 
-    #[On('filtersUpdated')] // Très important !
-    public function updateFilters($types)
+    #[On('filtersUpdated')]
+    public function updateFilters($types, $dateArrivee, $dateDepart) 
     {
         $this->filterTypes = $types;
-        // Livewire relancera automatiquement render() avec les nouveaux filtres
+        $this->dateArrivee = $dateArrivee; 
+        $this->dateDepart = $dateDepart;   
     }
 
     public function render()
@@ -28,15 +35,12 @@ class AnnonceList extends Component
             'idannonce', 'idadresse', 'idtypehebergement', 'titreannonce', 
             'prixnuitee', 'nombreetoilesleboncoin'
         )->with([
-            'photos',
-            'chambres',
-            'typehebergement',
-            'adresse.ville.departement.region', 
+            'photos', 'chambres', 'typehebergement', 'adresse.ville.departement.region', 
         ]);
 
+        // 1. Filtre Localisation
         if (!empty($this->location)) {
             $loc = $this->location;
-            
             $query->whereHas('adresse.ville', function ($q) use ($loc) {
                 $q->where('nomville', 'like', "%{$loc}%")
                 ->orWhere('codepostal', 'like', "{$loc}%")
@@ -48,10 +52,20 @@ class AnnonceList extends Component
                 });
             });
         }
-
+        
         if (!empty($this->filterTypes)) {
-            // "whereIn" vérifie si l'ID est dans la liste des IDs sélectionnés
             $query->whereIn('idtypehebergement', $this->filterTypes);
+        }
+
+        if (!empty($this->dateArrivee) && !empty($this->dateDepart)) {
+            $start = $this->dateArrivee;
+            $end = $this->dateDepart;
+
+            
+            $query->whereHas('dates', function (Builder $q) use ($start, $end) {
+                $q->whereBetween('date', [$start, $end])
+                ->where('estdisponible', true);
+            });
         }
 
         $annonces = $query->get();
