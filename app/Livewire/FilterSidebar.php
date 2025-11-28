@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\TypeHebergement;
+use App\Models\Date;
 use Illuminate\Support\Facades\Cache;
 
 class FilterSidebar extends Component
@@ -11,6 +12,8 @@ class FilterSidebar extends Component
     public array $typesHebergement = [];
     public array $selectedTypes = []; // Stocke les IDs des types cochés
     public bool $showTypes = false; // Pour ouvrir/fermer la section
+    public $dateArrivee = '';
+    public $dateDepart = '';
 
     public function mount()
     {
@@ -31,10 +34,12 @@ class FilterSidebar extends Component
     // Cette fonction est appelée quand on clique sur "Rechercher"
     public function applyFilters()
     {
-        // On envoie les filtres au composant AnnonceList
-        $this->dispatch('filtersUpdated', types: $this->selectedTypes);
+        $this->dispatch('filtersUpdated', 
+            types: $this->selectedTypes,
+            dateArrivee: $this->dateArrivee,
+            dateDepart: $this->dateDepart
+        );
         
-        // Optionnel : fermer la sidebar via un événement browser si vous utilisez AlpineJS pour le panel
         $this->dispatch('close-filter-panel'); 
     }
 
