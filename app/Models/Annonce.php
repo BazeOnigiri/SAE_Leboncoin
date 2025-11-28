@@ -83,6 +83,6 @@ class Annonce extends Model
 
     public function dates()
     {
-        return $this->belongsToMany(Date::class, 'relier', 'idannonce', 'iddate');
+        return $this->belongsToMany(Date::class, 'relier', 'idannonce', 'iddate')->withPivot('estdisponible');
     }
 }
