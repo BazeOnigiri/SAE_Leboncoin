@@ -13,8 +13,7 @@ Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.v
 // --------------------------------------------------------------
 
 // email + mot de passe (affichage)
-Route::get('/register', [RegisterController::class, 'showEmailForm'])
-Route::get('/', [AnnonceController::class, 'index']); 
+Route::get('/register', [RegisterController::class, 'showEmailForm']);
 
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')
