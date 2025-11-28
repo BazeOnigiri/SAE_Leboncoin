@@ -10,6 +10,8 @@ class Professionnel extends Model
     protected $primaryKey = 'idutilisateur';
     public $timestamps = false;
 
+    protected $guarded = [];
+
     /* Un professionnel se réfere à 1 ... */
 
     public function utilisateur()

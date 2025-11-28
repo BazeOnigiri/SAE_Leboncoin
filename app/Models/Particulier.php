@@ -10,11 +10,13 @@ class Particulier extends Model
     protected $primaryKey = 'idutilisateur';
     public $timestamps = false;
 
+    protected $guarded = [];
+
     /* Un particulier se réfere à 1 ... */
 
     public function utilisateur()
     {
-        return $this->belongsTo(Utilisateur::class, 'idutlisateur');
+        return $this->belongsTo(Utilisateur::class, 'idutilisateur');
     }
 
     public function date()

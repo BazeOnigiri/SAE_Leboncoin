@@ -12,6 +12,8 @@ class Adresse extends Model
     protected $primaryKey = 'idadresse';
     public $timestamps = false;
 
+    protected $guarded = [];
+
     /* Une adresse a beaucoup ou pas de ... */
 
     public function annonces()

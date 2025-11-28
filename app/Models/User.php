@@ -25,11 +25,10 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $table = 'utilisateur';
+    protected $primaryKey = 'idutilisateur';
+    public $timestamps = false;
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -69,47 +68,47 @@ class User extends Authenticatable
 
     public function annoncesPubliees()
     {
-        return $this->hasMany(Reservation::class, 'idutlisateur');
+        return $this->hasMany(Annonce::class, 'idutilisateur');
     }
 
     public function reservations()
     {
-        return $this->hasMany(Reservation::class, 'idutlisateur');
+        return $this->hasMany(Reservation::class, 'idutilisateur');
     }
 
     public function avis()
     {
-        return $this->hasMany(Avis::class, 'idutlisateur');
+        return $this->hasMany(Avis::class, 'idutilisateur');
     }
 
     public function recherches()
     {
-        return $this->hasMany(Recherche::class, 'idutlisateur');
+        return $this->hasMany(Recherche::class, 'idutilisateur');
     }
 
     public function cartesbancaires()
     {
-        return $this->hasMany(CarteBancaire::class, 'idutlisateur');
+        return $this->hasMany(CarteBancaire::class, 'idutilisateur');
     }
 
     public function messages()
     {
-        return $this->hasMany(Message::class, 'idutlisateur');
+        return $this->hasMany(Message::class, 'idutliisateur');
     }
 
     public function incidents()
     {
-        return $this->hasMany(Incident::class, 'idutlisateur');
+        return $this->hasMany(Incident::class, 'idutilisateur');
     }
 
     public function particuliers()
     {
-        return $this->hasMany(Particulier::class, 'idutlisateur');
+        return $this->hasOne(Particulier::class, 'idutilisateur');
     }
 
     public function professionnels()
     {
-        return $this->hasMany(Professionnel::class, 'idutlisateur');
+        return $this->hasOne(Professionnel::class, 'idutilisateur');
     }
 
     /* Un utilisateur se réfere à 1 ... */
