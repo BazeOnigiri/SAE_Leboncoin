@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Livewire;
+
+use Livewire\Component;
+use App\Models\Annonce;
+use Livewire\Attributes\On; // Important pour l'écouteur d'événement
+
+class AnnonceList extends Component
+{
+    public $location = ''; 
+    #[On('locationSelected')] 
+    public function updateLocation($nom)
+    {
+        $this->location = $nom;
+    }
+
+    #[On('filtersUpdated')] // Très important !
+    public function updateFilters($types)
+    {
+        $this->filterTypes = $types;
+        // Livewire relancera automatiquement render() avec les nouveaux filtres
+    }
+
+    public function render()
+    {
+        $query = Annonce::select(
+            'idannonce', 'idadresse', 'idtypehebergement', 'titreannonce', 
+            'prixnuitee', 'nombreetoilesleboncoin'
+        )->with([
+            'photos',
+            'chambres',
+            'typehebergement',
+            'adresse.ville.departement.region', 
+        ]);
+
+        if (!empty($this->location)) {
+            $loc = $this->location;
+            
+            $query->whereHas('adresse.ville', function ($q) use ($loc) {
+                $q->where('nomville', 'like', "%{$loc}%")
+                ->orWhere('codepostal', 'like', "{$loc}%")
+                ->orWhereHas('departement', function ($q2) use ($loc) {
+                    $q2->where('nomdepartement', 'like', "%{$loc}%")
+                        ->orWhereHas('region', function ($q3) use ($loc) {
+                            $q3->where('nomregion', 'like', "%{$loc}%");
+                        });
+                });
+            });
+        }
+
+        if (!empty($this->filterTypes)) {
+            // "whereIn" vérifie si l'ID est dans la liste des IDs sélectionnés
+            $query->whereIn('idtypehebergement', $this->filterTypes);
+        }
+
+        $annonces = $query->get();
+
+        return view('livewire.annonce-list', [
+            'annonces' => $annonces
+        ]);
+    }
+}
