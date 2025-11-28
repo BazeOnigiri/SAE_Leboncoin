@@ -2,18 +2,10 @@
 use App\Http\Controllers\AnnonceController; 
 use App\Http\Controllers\ConnexionController;
 
-// --------------------------------------------------------------
-// PAGE D'ACCUEIL
-// --------------------------------------------------------------
+
 Route::get('/', [AnnonceController::class, 'index'])->name('home');
 Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 
-// --------------------------------------------------------------
-// WIZARD INSCRIPTION 
-// --------------------------------------------------------------
-
-// email + mot de passe (affichage)
-Route::get('/register', [RegisterController::class, 'showEmailForm']);
 
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')
