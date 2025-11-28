@@ -59,7 +59,7 @@
 
             <livewire:search-location />
 
-            <button
+            <button onclick="openFilters()"
                 class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
                 <span>Dates</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
@@ -68,7 +68,7 @@
                 </svg>
             </button>
 
-            <button
+            <button onclick="openFilters()"
                 class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
                 <span>Voyageurs</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
@@ -77,7 +77,7 @@
                 </svg>
             </button>
 
-            <button
+            <button onclick="openFilters()"
                 class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
                 <span>Paiement en ligne</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
@@ -100,16 +100,13 @@
 
 
             <div id="filter-overlay" onclick="closeFilters()"
-                class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity opacity-0"></div>
+                class="fixed inset-0 bg-black/50 z-40 hidden transition-opacity opacity-0">
+            </div>
 
             <div id="filter-panel"
                 class="fixed inset-y-0 right-0 w-full max-w-[480px] bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col shadow-2xl">
-
                 <div x-data="{ sidebarOpen: false }">
-
                     <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar pb-4">
-
-                        <livewire:search-location />
 
                         <button @click="sidebarOpen = true"
                             class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
@@ -127,16 +124,13 @@
 
                         <div id="filter-panel" :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full'"
                             class="fixed inset-y-0 right-0 w-full max-w-[480px] bg-white z-50 transform transition-transform duration-300 ease-in-out shadow-2xl">
-
                             <livewire:filter-sidebar />
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </div>
+
         <div class="w-full overflow-x-auto no-scrollbar py-2">
             <div class="flex flex-wrap gap-3 font-sans">
                 <button
