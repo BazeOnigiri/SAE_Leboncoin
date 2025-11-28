@@ -83,7 +83,7 @@
                         dots{{ $annonce->idannonce }}[0].classList.add("w-3", "h-3", "bg-white");
                     </script>
 
-                    <div class="flex h-auto flex-col justify-between">
+                    <a href="{{ route('annonce.view', ['id' => $annonce->idannonce]) }}" class="flex h-auto flex-col justify-between">
                         <div>
                             <div class="gap-x-sm flex items-center justify-between w-80">
                                 <h2 class=" font-black">{{ $annonce->titreannonce }}</h2>
@@ -116,7 +116,7 @@
                             </p>
                             <p class=" text-xs opacity-75">{{ $annonce->adresse->ville->nomville }} {{ $annonce->adresse->ville->codepostal }}</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <hr class="my-6 opacity-50">
             @endforeach
