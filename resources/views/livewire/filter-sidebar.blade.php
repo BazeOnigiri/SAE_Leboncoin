@@ -4,7 +4,7 @@
         <button onclick="closeFilters()" class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors"
                 @click="sidebarOpen = false" 
                 class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
-                <span>X</span>
+                <span class=" font-bold">X</span>
         </button>
     </div>
 
