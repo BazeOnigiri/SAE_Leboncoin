@@ -1,6 +1,7 @@
 <?php use Illuminate\Support\Facades\Route; 
 use App\Http\Controllers\AnnonceController; 
 use App\Http\Controllers\ConnexionController;
+use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', [AnnonceController::class, 'index'])->name('home');
@@ -21,6 +22,7 @@ Route::middleware([
     'verified', 
     ])->group(function () { 
         Route::get('/dashboard', function () { 
-            return view('dashboard'); 
+            $user = Auth::user();
+            return view('dashboard', ['user' => $user]); 
         })->name('dashboard'); 
     });
