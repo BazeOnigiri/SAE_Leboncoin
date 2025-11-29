@@ -116,7 +116,11 @@
                 @endphp
                 à partir de <span class=" font-black">{{ $price }} € / nuit</span>
             </p>
-            <p>Publié le "A FAIRE"</p>
+                <p>Publié le 
+                    <span class="font-bold">
+                        {{ $annonce->datePublication ? \Carbon\Carbon::parse($annonce->datePublication->date)->format('d/m/Y') : 'Date inconnue' }}
+                    </span>
+                </p>
         </div>
         <hr class="my-6 opacity-50">
         <h2 class=" text-xl font-black">Description</h2>

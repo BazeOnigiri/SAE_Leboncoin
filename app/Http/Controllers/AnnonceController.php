@@ -14,6 +14,20 @@ class AnnonceController extends Controller
 
     public function view($id)
     {
-        return view ("annonce-view", ['annonce'=>Annonce::withAvg('avis', 'nombreetoiles')->withCount('avis')->findOrFail($id) ]);
+        $annonce = Annonce::with([
+            'photos',            
+            'commodites',        
+            'adresse.ville',      
+            'date',              
+            'heurearrivee',      
+            'heuredepart',       
+            'utilisateur',       
+            'chambres'           
+        ])
+        ->withAvg('avis', 'nombreetoiles') 
+        ->withCount('avis')                
+        ->findOrFail($id);                 
+
+        return view("annonce-view", ['annonce' => $annonce]);
     }
 }
