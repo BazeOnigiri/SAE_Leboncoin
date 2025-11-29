@@ -128,5 +128,11 @@
         </div>
         <hr class="my-6 opacity-50">
         <h2 class=" text-xl font-black">Conditions de l'hébergement</h2>
+        <hr class="my-6 opacity-50">
+        <p>Publié par 
+            <a class=" underline" href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
+                {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
+            </a>
+        </p>
     </div>
 @endsection

@@ -134,4 +134,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Annonce::class, 'favoriser', 'idutilisateur', 'idannonce');
     }
+
+    public function defaultProfilePhotoUrl()
+    {
+        $name = $this->pseudonyme;
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($name) .
+               '&color=7F9CF5&background=EBF4FF';
+    }
+
 }
