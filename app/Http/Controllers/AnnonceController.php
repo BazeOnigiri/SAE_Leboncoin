@@ -16,6 +16,7 @@ class AnnonceController extends Controller
     {
         $annonce = Annonce::with([
             'photos',
+<<<<<<< HEAD
             'commodites.typeEquipement', 
             'adresse.ville',
             'datePublication',
@@ -23,6 +24,18 @@ class AnnonceController extends Controller
             'heuredepart',
             'utilisateur',
             'chambres'
+=======
+            'chambres',
+            'commodites',
+            'typehebergement',
+            'avis',
+            'adresse.ville',
+            'utilisateur',
+            'heurearrivee',
+            'heuredepart',
+            'annonces.photos',
+            'annonces.adresse.ville',
+>>>>>>> ebfc1ff1a0bd9574fc404cdd59d6640c63a96e80
         ])
         ->withAvg('avis', 'nombreetoiles')
         ->withCount('avis')

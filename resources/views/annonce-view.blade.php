@@ -183,6 +183,7 @@
             </div>
         </div>
 
+<<<<<<< HEAD
         <h2 class="text-xl font-black mb-6">Conditions de l'hébergement</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
             
@@ -233,7 +234,60 @@
                     <span class="text-xs text-gray-500 mb-0.5">Logement</span>
                     <span class="font-bold text-sm text-neutral-900">Non-fumeur</span>
                 </div>
+=======
+            <div class=" mb-10">
+                <h2 class="text-xl font-black mb-4">Conditions de l'hébergement</h2>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 text-neutral-800">
+                        <!-- Icône d'horloge -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5 text-neutral-500">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>
+                            Arrivée : <span class="font-medium">{{ $annonce->heurearrivee->heure ?? 'Non spécifiée' }}</span>
+                        </span>
+                    </li>
+                    <li class="flex items-center gap-3 text-neutral-800">
+                        <!-- Icône d'horloge -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5 text-neutral-500">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>
+                            Départ : <span class="font-medium">{{ $annonce->heuredepart->heure ?? 'Non spécifiée' }}</span>
+                        </span>
+                    </li>
+                </ul>
+>>>>>>> ebfc1ff1a0bd9574fc404cdd59d6640c63a96e80
             </div>
+            <p class=" mb-10">Publié par 
+                <a class=" underline" href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
+                    {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
+                </a>
+            </p>
+                <h2 class="text-xl font-black mb-4">Annonces similaires</h2>
+                @foreach ($annonce->annonces as $annonce)
+            <a href="{{ route('annonce.view', ['id' => $annonce->idannonce]) }}" class="block mb-4">
+                <div class="flex border rounded-lg">
+                    <img src="{{ $annonce->photos->first()->lienphoto ?? '' }}" alt="{{ $annonce->titreannonce }}"
+                        class=" w-44 h-32 object-cover rounded-lg mr-4">
+                    <div class=" flex flex-col justify-around py-2">
+                        <p class=" font-bold text-xl">{{ $annonce->titreannonce }}</p>
+                        <p>
+                            @php
+                                $price = number_format($annonce->prixnuitee, 2, '.', '');
+                                $price = preg_replace('/\.00$/', '', $price);
+                            @endphp
+                            à partir de <span class=" font-black">{{ $price }} € / nuit</span>
+                        </p>
+                        <p>{{ $annonce->adresse->ville->nomville }} {{ $annonce->adresse->ville->codepostal }}</p>
+                    </div>
+                </div>
+            </a>
+        @endforeach
         </div>
         @if ($annonce->commodites->isNotEmpty())
             <h2 class="text-xl font-black mb-6">Équipements et services</h2>
@@ -253,6 +307,7 @@
                                     {{-- Icône générique --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-neutral-500">
 
+<<<<<<< HEAD
                                     </svg>
                                     <span>{{ $commodite->nomcommodite }}</span>
                                 </li>
@@ -271,5 +326,7 @@
         </p>
         </div>
         
+=======
+>>>>>>> ebfc1ff1a0bd9574fc404cdd59d6640c63a96e80
     </div>
 @endsection

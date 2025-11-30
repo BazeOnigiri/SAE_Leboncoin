@@ -73,7 +73,7 @@ class Annonce extends Model
 
     public function annonces()
     {
-        return $this->belongsToMany(Annonce::class, 'ressembler', 'idannonce', 'idannonce');
+        return $this->belongsToMany(Annonce::class, 'ressembler', 'idannonce_a', 'idannonce_b');
     }
 
     public function users()
