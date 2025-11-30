@@ -12,7 +12,6 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-    @livewireScripts
     @livewireStyles
 
     <!-- Styles / Scripts -->
@@ -129,6 +128,10 @@
         </div>
     </header>
     @yield('content')
+    {{ $slot ?? '' }}
+    @stack('modals')
+
+    @livewireScripts
 </body>
 
 </html>

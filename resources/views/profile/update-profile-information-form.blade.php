@@ -1,10 +1,10 @@
 <x-form-section submit="updateProfileInformation">
     <x-slot name="title">
-        {{ __('Profile Information') }}
+        Information de profile
     </x-slot>
 
     <x-slot name="description">
-        {{ __('Update your account\'s profile information and email address.') }}
+        Mettez à jour les informations de votre compte et votre adresse e-mail.
     </x-slot>
 
     <x-slot name="form">
@@ -52,11 +52,18 @@
             </div>
         @endif
 
-        <!-- Name -->
+        <!-- Nom -->
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="name" value="{{ __('Name') }}" />
-            <x-input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" required autocomplete="name" />
-            <x-input-error for="name" class="mt-2" />
+            <x-label for="nom" value="Nom" />
+            <x-input id="nom" type="text" class="mt-1 block w-full" wire:model="state.nomutilisateur" required autocomplete="nom" />
+            <x-input-error for="nom" class="mt-2" />
+        </div>
+
+        <!-- Prénom -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="prenom" value="Prénom" />
+            <x-input id="prenom" type="text" class="mt-1 block w-full" wire:model="state.prenomutilisateur" required />
+            <x-input-error for="prenom" class="mt-2" />
         </div>
 
         <!-- Email -->

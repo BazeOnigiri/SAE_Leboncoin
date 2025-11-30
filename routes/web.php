@@ -25,6 +25,6 @@ Route::middleware([
     ])->group(function () { 
         Route::get('/dashboard', function () { 
             $user = Auth::user();
-            return view('zzz', ['user' => $user]); 
+            return view('dashboard', ['user' => $user]); 
         })->name('dashboard'); 
     });

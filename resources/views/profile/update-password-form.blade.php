@@ -1,10 +1,10 @@
 <x-form-section submit="updatePassword">
     <x-slot name="title">
-        {{ __('Update Password') }}
+        Mettre à jour le mot de passe
     </x-slot>
 
     <x-slot name="description">
-        {{ __('Ensure your account is using a long, random password to stay secure.') }}
+        Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour garantir sa sécurité.
     </x-slot>
 
     <x-slot name="form">

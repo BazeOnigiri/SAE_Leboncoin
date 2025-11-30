@@ -12,10 +12,11 @@
             </h1>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-5qqqqqq00 border border-transparent rounded-md font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
                     Se déconnecter
                 </button>
             </form>
+            <a class="underline" href="/user/profile">Modifier le profil</a>
         </div>
     @endsection
 
