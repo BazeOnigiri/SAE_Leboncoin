@@ -234,61 +234,9 @@
                     <span class="text-xs text-gray-500 mb-0.5">Logement</span>
                     <span class="font-bold text-sm text-neutral-900">Non-fumeur</span>
                 </div>
-=======
-            <div class=" mb-10">
-                <h2 class="text-xl font-black mb-4">Conditions de l'hébergement</h2>
-                <ul class="space-y-3">
-                    <li class="flex items-center gap-3 text-neutral-800">
-                        <!-- Icône d'horloge -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5 text-neutral-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>
-                            Arrivée : <span class="font-medium">{{ $annonce->heurearrivee->heure ?? 'Non spécifiée' }}</span>
-                        </span>
-                    </li>
-                    <li class="flex items-center gap-3 text-neutral-800">
-                        <!-- Icône d'horloge -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5 text-neutral-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>
-                            Départ : <span class="font-medium">{{ $annonce->heuredepart->heure ?? 'Non spécifiée' }}</span>
-                        </span>
-                    </li>
-                </ul>
->>>>>>> ebfc1ff1a0bd9574fc404cdd59d6640c63a96e80
-            </div>
-            <p class=" mb-10">Publié par 
-                <a class=" underline" href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
-                    {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
-                </a>
-            </p>
-                <h2 class="text-xl font-black mb-4">Annonces similaires</h2>
-                @foreach ($annonce->annonces as $annonce)
-            <a href="{{ route('annonce.view', ['id' => $annonce->idannonce]) }}" class="block mb-4">
-                <div class="flex border rounded-lg">
-                    <img src="{{ $annonce->photos->first()->lienphoto ?? '' }}" alt="{{ $annonce->titreannonce }}"
-                        class=" w-44 h-32 object-cover rounded-lg mr-4">
-                    <div class=" flex flex-col justify-around py-2">
-                        <p class=" font-bold text-xl">{{ $annonce->titreannonce }}</p>
-                        <p>
-                            @php
-                                $price = number_format($annonce->prixnuitee, 2, '.', '');
-                                $price = preg_replace('/\.00$/', '', $price);
-                            @endphp
-                            à partir de <span class=" font-black">{{ $price }} € / nuit</span>
-                        </p>
-                        <p>{{ $annonce->adresse->ville->nomville }} {{ $annonce->adresse->ville->codepostal }}</p>
-                    </div>
-                </div>
-            </a>
-        @endforeach
         </div>
+        </div>
+        <div>
         @if ($annonce->commodites->isNotEmpty())
             <h2 class="text-xl font-black mb-6">Équipements et services</h2>
             
@@ -307,7 +255,6 @@
                                     {{-- Icône générique --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-neutral-500">
 
-<<<<<<< HEAD
                                     </svg>
                                     <span>{{ $commodite->nomcommodite }}</span>
                                 </li>
@@ -325,8 +272,64 @@
             </a>
         </p>
         </div>
+
+        {{-- ANNONCES SIMILAIRES (NOUVEAU BLOC HORIZONTAL) --}}
+        <hr class="my-8 opacity-50">
+        <div class="my-8">
+            <div class="flex justify-between items-center mb-6 px-1">
+                <h2 class="text-2xl font-black text-slate-800">Ces annonces peuvent vous intéresser</h2>
+                <a href="#" class="text-slate-800 font-semibold hover:underline flex items-center">
+                    Voir plus d'annonces <span class="ml-1">→</span>
+                </a>
+            </div>
+
+            <div class="flex overflow-x-auto space-x-6 pb-6 px-1 snap-x scrollbar-hide">
+                @foreach ($annonce->annonces as $annonce)
+                    <a href="{{ route('annonce.view', ['id' => $annonce->idannonce]) }}"
+                        class="snap-start flex-shrink-0 w-72 block bg-white border border-gray-100 rounded-2xl hover:shadow-lg transition-shadow duration-300">
+
+                        <div class="relative">
+                            <img src="{{ $annonce->photos->first()->lienphoto ?? 'https://via.placeholder.com/300' }}"
+                                alt="{{ $annonce->titreannonce }}" class="w-full h-52 object-cover rounded-t-2xl">
+
+                            <button
+                                class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-sm hover:scale-110 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="p-4 flex flex-col gap-1">
+                            <p class="font-bold text-lg truncate text-slate-800">{{ $annonce->titreannonce }}</p>
+
+                            <p class="text-slate-600 text-sm">
+                                @php
+                                    $price = number_format($annonce->prixnuitee, 2, '.', '');
+                                    $price = preg_replace('/\.00$/', '', $price);
+                                @endphp
+                                à partir de <span class="font-black text-slate-900">{{ $price }} €</span> / nuit
+                            </p>
+
+                            <div class="mt-1">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">
+                                    Paiement en ligne
+                                </span>
+                            </div>
+
+                            <p class="text-gray-500 text-sm mt-2">
+                                {{ $annonce->adresse->ville->nomville }} {{ $annonce->adresse->ville->codepostal }}
+                                <br>
+                                <span class="text-xs">• Date (ex: 31/07/2025)</span>
+                            </p>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
         
-=======
->>>>>>> ebfc1ff1a0bd9574fc404cdd59d6640c63a96e80
+
     </div>
 @endsection
