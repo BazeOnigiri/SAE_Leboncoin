@@ -5,11 +5,19 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <x-welcome />
-            </div>
+    @section('content')
+        <div class="bg-white p-7 max-w-6xl mx-auto px-6 md:px-12 xl:px-6 pt-32 min-h-screen">
+            <h1 class=" text-4xl font-bold mb-8">
+                Bonjour {{ auth()->user()->prenomutilisateur }} !
+            </h1>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                    Se déconnecter
+                </button>
+            </form>
+            <a class="underline" href="/user/profile">Modifier le profil</a>
         </div>
-    </div>
+    @endsection
+
 </x-app-layout>

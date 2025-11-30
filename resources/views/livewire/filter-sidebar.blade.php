@@ -20,12 +20,20 @@
             <div class="flex gap-4 mb-6">
                 <div class="flex-1">
                     <label class="text-xs text-gray-500 block mb-1">Arrivée</label>
-                    <input type="text" placeholder="JJ/MM/AAAA" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                    <input 
+                        type="date" 
+                        wire:model="dateArrivee"
+                        class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                    >
                 </div>
                 <div class="flex items-center text-sm text-gray-400 pt-5">au</div>
                 <div class="flex-1">
                     <label class="text-xs text-gray-500 block mb-1">Départ</label>
-                    <input type="text" placeholder="JJ/MM/AAAA" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                    <input 
+                        type="date" 
+                        wire:model="dateDepart"
+                        class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                    >
                 </div>
             </div>
             <hr class="border-gray-200 mt-2">

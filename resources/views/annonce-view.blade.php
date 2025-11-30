@@ -116,17 +116,220 @@
                 @endphp
                 à partir de <span class=" font-black">{{ $price }} € / nuit</span>
             </p>
-            <p>Publié le "A FAIRE"</p>
+                <p>Publié le 
+                    <span class="font-bold">
+                        {{ $annonce->datePublication ? \Carbon\Carbon::parse($annonce->datePublication->date)->format('d/m/Y') : 'Date inconnue' }}
+                    </span>
+                </p>
         </div>
         <hr class="my-6 opacity-50">
-        <h2 class=" text-xl font-black">Description</h2>
-        <p class=" mt-3">{{ $annonce->descriptionannonce }}</p>
-        <hr class="my-6 opacity-50">
-        <h2 class=" text-xl font-black">Critères</h2>
-        <div class=" grid">
 
+        <h2 class="text-xl font-black mb-6">Critères</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Nombre d'étoiles</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $annonce->nombreetoilesleboncoin ? $annonce->nombreetoilesleboncoin . ' étoiles' : 'Non classé' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Capacité</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $totalPlaces ?? '?' }} personnes
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Type d'hébergement</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $annonce->typehebergement->nomtypehebergement ?? 'Non spécifié' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Nombre de chambres</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $annonce->chambres->count() ?? 0 }} chambres
+                    </span>
+                </div>
+            </div>
         </div>
-        <hr class="my-6 opacity-50">
-        <h2 class=" text-xl font-black">Conditions de l'hébergement</h2>
+
+<<<<<<< HEAD
+        <h2 class="text-xl font-black mb-6">Conditions de l'hébergement</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+            
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Heure d'arrivée</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $annonce->heurearrivee->heure ?? 'Non spécifiée' }}
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Heure de départ</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $annonce->heuredepart->heure ?? 'Non spécifiée' }}
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Animaux acceptés</span>
+                    <span class="font-bold text-sm text-neutral-900">Non</span>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Logement</span>
+                    <span class="font-bold text-sm text-neutral-900">Non-fumeur</span>
+                </div>
+        </div>
+        </div>
+        <div>
+        @if ($annonce->commodites->isNotEmpty())
+            <h2 class="text-xl font-black mb-6">Équipements et services</h2>
+            
+            @php
+                $commoditesGroupees = $annonce->commodites->groupBy(function ($item) {
+                    return $item->typeEquipement?->nomtypeequipement ?? 'Divers';
+                });
+            @endphp
+            <div class="grid grid-cols-1 gap-8 mb-8">
+                @foreach ($commoditesGroupees as $type => $commodites)
+                    <div>
+                        <h3 class="font-bold text-lg mb-3 text-neutral-900">{{ $type }}</h3>
+                        <ul class="space-y-2">
+                            @foreach ($commodites as $commodite)
+                                <li class="flex items-center gap-3 text-neutral-700">
+                                    {{-- Icône générique --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-neutral-500">
+
+                                    </svg>
+                                    <span>{{ $commodite->nomcommodite }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endforeach
+            </div>
+            <hr class="my-6 opacity-50">
+        @endif
+        <p>Publié par
+            <a class="underline font-bold"
+                href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
+                {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
+            </a>
+        </p>
+        </div>
+
+        {{-- ANNONCES SIMILAIRES (NOUVEAU BLOC HORIZONTAL) --}}
+        <hr class="my-8 opacity-50">
+        <div class="my-8">
+            <div class="flex justify-between items-center mb-6 px-1">
+                <h2 class="text-2xl font-black text-slate-800">Ces annonces peuvent vous intéresser</h2>
+                <a href="#" class="text-slate-800 font-semibold hover:underline flex items-center">
+                    Voir plus d'annonces <span class="ml-1">→</span>
+                </a>
+            </div>
+
+            <div class="flex overflow-x-auto space-x-6 pb-6 px-1 snap-x scrollbar-hide">
+                @foreach ($annonce->annonces as $annonce)
+                    <a href="{{ route('annonce.view', ['id' => $annonce->idannonce]) }}"
+                        class="snap-start flex-shrink-0 w-72 block bg-white border border-gray-100 rounded-2xl hover:shadow-lg transition-shadow duration-300">
+
+                        <div class="relative">
+                            <img src="{{ $annonce->photos->first()->lienphoto ?? 'https://via.placeholder.com/300' }}"
+                                alt="{{ $annonce->titreannonce }}" class="w-full h-52 object-cover rounded-t-2xl">
+
+                            <button
+                                class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-sm hover:scale-110 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="p-4 flex flex-col gap-1">
+                            <p class="font-bold text-lg truncate text-slate-800">{{ $annonce->titreannonce }}</p>
+
+                            <p class="text-slate-600 text-sm">
+                                @php
+                                    $price = number_format($annonce->prixnuitee, 2, '.', '');
+                                    $price = preg_replace('/\.00$/', '', $price);
+                                @endphp
+                                à partir de <span class="font-black text-slate-900">{{ $price }} €</span> / nuit
+                            </p>
+
+                            <div class="mt-1">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full">
+                                    Paiement en ligne
+                                </span>
+                            </div>
+
+                            <p class="text-gray-500 text-sm mt-2">
+                                {{ $annonce->adresse->ville->nomville }} {{ $annonce->adresse->ville->codepostal }}
+                                <br>
+                                <span class="text-xs">• Date (ex: 31/07/2025)</span>
+                            </p>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        
+
     </div>
 @endsection

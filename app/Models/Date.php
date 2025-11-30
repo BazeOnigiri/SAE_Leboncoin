@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Date extends Model
 {
-    protected $table = 'dates';
+    protected $table = 'date';
 
     protected $primaryKey = 'iddate';
 
