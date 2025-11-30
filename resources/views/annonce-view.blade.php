@@ -183,39 +183,93 @@
             </div>
         </div>
 
-            <div>
-                <h2 class="text-xl font-black mb-4">Conditions de l'hébergement</h2>
-                <ul class="space-y-3">
-                    <li class="flex items-center gap-3 text-neutral-800">
-                        <!-- Icône d'horloge -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5 text-neutral-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>
-                            Arrivée : <span class="font-medium">{{ $annonce->heurearrivee->heure ?? 'Non spécifiée' }}</span>
-                        </span>
-                    </li>
-                    <li class="flex items-center gap-3 text-neutral-800">
-                        <!-- Icône d'horloge -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5 text-neutral-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>
-                            Départ : <span class="font-medium">{{ $annonce->heuredepart->heure ?? 'Non spécifiée' }}</span>
-                        </span>
-                    </li>
-                </ul>
+        <h2 class="text-xl font-black mb-6">Conditions de l'hébergement</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+            
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Heure d'arrivée</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $annonce->heurearrivee->heure ?? 'Non spécifiée' }}
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Heure de départ</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $annonce->heuredepart->heure ?? 'Non spécifiée' }}
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Animaux acceptés</span>
+                    <span class="font-bold text-sm text-neutral-900">Non</span>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 mb-0.5">Logement</span>
+                    <span class="font-bold text-sm text-neutral-900">Non-fumeur</span>
+                </div>
             </div>
         </div>
+        @if ($annonce->commodites->isNotEmpty())
+            <h2 class="text-xl font-black mb-6">Équipements et services</h2>
+            
+            @php
+                $commoditesGroupees = $annonce->commodites->groupBy(function ($item) {
+                    return $item->typeEquipement?->nomtypeequipement ?? 'Divers';
+                });
+            @endphp
+            <div class="grid grid-cols-1 gap-8 mb-8">
+                @foreach ($commoditesGroupees as $type => $commodites)
+                    <div>
+                        <h3 class="font-bold text-lg mb-3 text-neutral-900">{{ $type }}</h3>
+                        <ul class="space-y-2">
+                            @foreach ($commodites as $commodite)
+                                <li class="flex items-center gap-3 text-neutral-700">
+                                    {{-- Icône générique --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-neutral-500">
 
-        <p>Publié par 
-            <a class=" underline" href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
+                                    </svg>
+                                    <span>{{ $commodite->nomcommodite }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endforeach
+            </div>
+            <hr class="my-6 opacity-50">
+        @endif
+        <p>Publié par
+            <a class="underline font-bold"
+                href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
                 {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
             </a>
         </p>
+        </div>
+        
     </div>
 @endsection
