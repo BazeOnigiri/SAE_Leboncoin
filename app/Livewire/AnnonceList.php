@@ -5,7 +5,6 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Annonce;
 use Livewire\Attributes\On;
-use Illuminate\Database\Eloquent\Builder;
 
 class AnnonceList extends Component
 {
@@ -38,7 +37,6 @@ class AnnonceList extends Component
             'photos', 'chambres', 'typehebergement', 'adresse.ville.departement.region', 
         ]);
 
-        // 1. Filtre Localisation
         if (!empty($this->location)) {
             $loc = $this->location;
             $query->whereHas('adresse.ville', function ($q) use ($loc) {
@@ -62,7 +60,7 @@ class AnnonceList extends Component
             $end = $this->dateDepart;
 
             
-            $query->whereHas('dates', function (Builder $q) use ($start, $end) {
+            $query->whereHas('dates', function ($q) use ($start, $end) {
                 $q->whereBetween('date', [$start, $end])
                 ->where('estdisponible', true);
             });
