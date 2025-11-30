@@ -183,7 +183,7 @@
             </div>
         </div>
 
-            <div>
+            <div class=" mb-10">
                 <h2 class="text-xl font-black mb-4">Conditions de l'hébergement</h2>
                 <ul class="space-y-3">
                     <li class="flex items-center gap-3 text-neutral-800">
@@ -210,12 +210,32 @@
                     </li>
                 </ul>
             </div>
+            <p class=" mb-10">Publié par 
+                <a class=" underline" href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
+                    {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
+                </a>
+            </p>
+                <h2 class="text-xl font-black mb-4">Annonces similaires</h2>
+                @foreach ($annonce->annonces as $annonce)
+            <a href="{{ route('annonce.view', ['id' => $annonce->idannonce]) }}" class="block mb-4">
+                <div class="flex border rounded-lg">
+                    <img src="{{ $annonce->photos->first()->lienphoto ?? '' }}" alt="{{ $annonce->titreannonce }}"
+                        class=" w-44 h-32 object-cover rounded-lg mr-4">
+                    <div class=" flex flex-col justify-around py-2">
+                        <p class=" font-bold text-xl">{{ $annonce->titreannonce }}</p>
+                        <p>
+                            @php
+                                $price = number_format($annonce->prixnuitee, 2, '.', '');
+                                $price = preg_replace('/\.00$/', '', $price);
+                            @endphp
+                            à partir de <span class=" font-black">{{ $price }} € / nuit</span>
+                        </p>
+                        <p>{{ $annonce->adresse->ville->nomville }} {{ $annonce->adresse->ville->codepostal }}</p>
+                    </div>
+                </div>
+            </a>
+        @endforeach
         </div>
 
-        <p>Publié par 
-            <a class=" underline" href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
-                {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
-            </a>
-        </p>
     </div>
 @endsection

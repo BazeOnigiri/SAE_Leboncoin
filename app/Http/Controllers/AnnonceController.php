@@ -15,14 +15,17 @@ class AnnonceController extends Controller
     public function view($id)
     {
         $annonce = Annonce::with([
-            'photos',            
-            'commodites',        
-            'adresse.ville',      
-            'date',              
-            'heurearrivee',      
-            'heuredepart',       
-            'utilisateur',       
-            'chambres'           
+            'photos',
+            'chambres',
+            'commodites',
+            'typehebergement',
+            'avis',
+            'adresse.ville',
+            'utilisateur',
+            'heurearrivee',
+            'heuredepart',
+            'annonces.photos',
+            'annonces.adresse.ville',
         ])
         ->withAvg('avis', 'nombreetoiles') 
         ->withCount('avis')                
