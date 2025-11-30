@@ -31,7 +31,7 @@
             
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                         <i class="fa-solid fa-lock text-gray-400"></i>
-                    </div>$
+                    </div>
                 </div>
                 @else
                 <x-input id="email" class="block mt-1 w-full bg-white text-gray-900" type="email" name="email" :value="old('email')" required autofocus />
