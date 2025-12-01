@@ -50,8 +50,11 @@
         <div class="mx-auto h-16 flex items-center justify-between gap-4 max-w-6xl px-6 md:px-12 xl:px-6">
 
             <a href="/" class="flex-shrink-0">
-                <span
-                    class="text-orange-lbc font-extrabold text-3xl tracking-tighter text-[#ea580c] rounded-[15px]">leboncoin</span>
+                <img 
+                    src="/assets/Leboncoin_logo.svg" 
+                    alt="Logo leboncoin" 
+                    class="h-8 w-auto object-contain" 
+                />
             </a>
 
             <a href="#"
