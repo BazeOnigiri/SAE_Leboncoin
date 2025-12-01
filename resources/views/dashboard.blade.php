@@ -136,7 +136,6 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <h2 class="text-lg font-bold text-gray-900">Connexion et sécurité</h2>
-                            <span class="bg-orange-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">1</span>
                         </div>
                         <p class="text-gray-500 text-sm mt-1">Protéger mon compte et consulter son indice</p>
                     </div>
