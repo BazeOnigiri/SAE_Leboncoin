@@ -10,6 +10,12 @@
             <h1 class=" text-4xl font-bold mb-8">
                 Bonjour {{ auth()->user()->prenomutilisateur }} !
             </h1>
+            @if (auth()->user()->particuliers)
+                <p>particuliers</p>
+            @elseif (auth()->user()->professionnels)
+                <p>professionnels</p>
+            @endif
+            <br>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
