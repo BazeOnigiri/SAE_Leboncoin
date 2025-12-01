@@ -100,17 +100,17 @@
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <x-label for="nom" value="Nom" />
-                            <x-input id="nom" class="block mt-1 w-full" type="text" name="nom" />
+                            <x-input id="nom" class="block mt-1 w-full" required type="text" name="nom" />
                         </div>
                         <div>
                             <x-label for="prenom" value="Prénom" />
-                            <x-input id="prenom" class="block mt-1 w-full" type="text" name="prenom" />
+                            <x-input id="prenom" class="block mt-1 w-full" required type="text" name="prenom" />
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <x-label for="date_naissance" value="Date de naissance" />
-                        <x-input id="date_naissance" class="block mt-1 w-full" type="date" name="date_naissance" />
+                        <x-input id="date_naissance" class="block mt-1 w-full" required type="date" name="date_naissance" />
                     </div>
                 </div>
 
@@ -119,7 +119,7 @@
                     <div class="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-md">
                         <div>
                             <x-label for="numsiret" value="SIRET *" />
-                            <x-input id="numsiret" class="block mt-1 w-full border-gray-400" type="text" name="numsiret" maxlength="14" placeholder="14 chiffres" />
+                            <x-input id="numsiret" class="block mt-1 w-full border-gray-400" type="text" name="numsiret" maxlength="14" required placeholder="14 chiffres" />
                         </div>
                     </div>
 
@@ -127,7 +127,7 @@
 
                     <div class="mb-4">
                         <x-label for="nomsociete" value="Société *" />
-                        <x-input id="nomsociete" class="block mt-1 w-full uppercase" type="text" name="nomsociete" placeholder="NOM DE L'ENTREPRISE" />
+                        <x-input id="nomsociete" class="block mt-1 w-full uppercase" type="text" name="nomsociete" required placeholder="NOM DE L'ENTREPRISE" />
                         <p class="text-xs text-gray-400 mt-1">Le nom de votre société sera visible sur vos annonces</p>
                     </div>
 
@@ -193,7 +193,7 @@
                 </div>
 
                 <div class="mt-8">
-                    <x-button class="w-full justify-center h-12 text-lg bg-orange-600 hover:bg-orange-700 shadow-sm">
+                    <x-button class="w-full bg-[#ec5a13] hover:bg-[#d64d0e] text-white font-bold py-3 px-4 rounded-[18px] transition duration-200 text-center mt-6 shadow-md hover:shadow-lg">
                         {{ __('Continuer') }}
                     </x-button>
                 </div>
