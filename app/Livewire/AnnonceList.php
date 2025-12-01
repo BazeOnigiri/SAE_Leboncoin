@@ -6,8 +6,7 @@ use Livewire\Component;
 use App\Models\Annonce;
 use App\Models\Date;
 use Livewire\Attributes\On;
-use Illuminate\Support\Facades\Cache; // <--- IMPERATIF
-use Illuminate\Support\Facades\Http;  // <--- IMPERATIF
+use Illuminate\Support\Facades\Cache; 
 
 class AnnonceList extends Component
 {
@@ -37,7 +36,6 @@ class AnnonceList extends Component
             'photos', 'chambres', 'typehebergement', 'adresse.ville.departement.region', 
         ]);
 
-        // --- FILTRES (Inchangés) ---
         if (!empty($this->location)) {
             $loc = $this->location;
             $query->whereHas('adresse.ville', function ($q) use ($loc) {
@@ -83,7 +81,7 @@ class AnnonceList extends Component
         })->filter()->values()->toArray();
 
         $this->dispatch('update-map');
-        
+
         return view('livewire.annonce-list', [
             'annonces' => $annonces
         ]);
