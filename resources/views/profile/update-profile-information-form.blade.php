@@ -34,7 +34,7 @@
                 <!-- New Profile Photo Preview -->
                 <div class="mt-2" x-show="photoPreview" style="display: none;">
                     <span class="block rounded-full size-20 bg-cover bg-no-repeat bg-center"
-                          x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
+                        x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
                     </span>
                 </div>
 
@@ -54,16 +54,16 @@
 
         <!-- Nom -->
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="nom" value="Nom" />
-            <x-input id="nom" type="text" class="mt-1 block w-full" wire:model="state.nomutilisateur" required autocomplete="nom" />
-            <x-input-error for="nom" class="mt-2" />
+            <x-label for="nomutilisateur" value="Nom" />
+            <x-input id="nomutilisateur" type="text" class="mt-1 block w-full" wire:model="state.nomutilisateur" required autocomplete="nomutilisateur" />
+            <x-input-error for="nomutilisateur" class="mt-2" />
         </div>
 
         <!-- Prénom -->
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="prenom" value="Prénom" />
-            <x-input id="prenom" type="text" class="mt-1 block w-full" wire:model="state.prenomutilisateur" required />
-            <x-input-error for="prenom" class="mt-2" />
+            <x-label for="prenomutilisateur" value="Prénom" />
+            <x-input id="prenomutilisateur" type="text" class="mt-1 block w-full" wire:model="state.prenomutilisateur" required />
+            <x-input-error for="prenomutilisateur" class="mt-2" />
         </div>
 
         <!-- Email -->
