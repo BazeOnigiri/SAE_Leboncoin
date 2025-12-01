@@ -45,30 +45,7 @@
                 </svg>
             </div>
 
-            <nav class="flex items-center gap-6">
-                
-                <a href="#" class="hidden xl:flex flex-col items-center gap-1 text-gray-700 hover:text-black transition-colors group">
-                    <div class="relative">
-                        <i class="fa-regular fa-bell text-xl"></i>
-                    </div>
-                    <span class="text-xs font-medium">Mes recherches</span>
-                </a>
-
-                <a href="#" class="hidden xl:flex flex-col items-center gap-1 text-gray-700 hover:text-black transition-colors">
-                    <i class="fa-regular fa-heart text-xl"></i>
-                    <span class="text-xs font-medium">Favoris</span>
-                </a>
-
-                <a href="#" class="hidden xl:flex flex-col items-center gap-1 text-gray-700 hover:text-black transition-colors">
-                    <i class="fa-regular fa-comment-dots text-xl"></i>
-                    <span class="text-xs font-medium">Messages</span>
-                </a>
-
-                <a href="{{ route('auth.check') }}" class="flex flex-col items-center gap-1 text-gray-700 hover:text-black transition-colors ml-2">
-                    <i class="fa-regular fa-user text-xl"></i>
-                    <span class="text-xs font-medium">Se connecter</span>
-                </a>
-            </nav>
+            
             <div class="bg-[#f0f4f7] w-fit mx-auto rounded-[32px] px-10 md:px-16 py-8 text-center relative z-0">
                 <h2 class="text-[#5e6a7e] font-bold text-[22px] md:text-[26px] leading-snug">
                     Ne passez pas à côté de LA bonne affaire !

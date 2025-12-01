@@ -143,9 +143,7 @@
         function initMap() {
             if (map) return;
             map = L.map('map').setView([46.603354, 1.888334], 5);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
             markersLayer = L.layerGroup().addTo(map);
         }
 
@@ -162,8 +160,8 @@
                 let lng = parseFloat(marker.lng);
 
                 const offset = 0.0005; 
-                lat = lat + (Math.random() - 0.5) * offset;
-                lng = lng + (Math.random() - 0.5) * offset;
+                lat += (Math.random() - 0.5) * offset;
+                lng += (Math.random() - 0.5) * offset;
 
                 let popupContent = `
                     <div class="text-center min-w-[150px]">
@@ -178,17 +176,13 @@
                 bounds.extend([lat, lng]);
             });
 
-            if (markersData.length > 0) {
-                map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
-            }
+            if (markersData.length > 0) map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
         }
 
         initMap();
         updateMarkers($wire.markers);
 
-        $wire.on('update-map', () => {
-            updateMarkers($wire.markers);
-        });
+        $wire.on('update-map', () => { updateMarkers($wire.markers); });
     </script>
     @endscript
 </div>
