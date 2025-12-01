@@ -111,7 +111,6 @@ class User extends Authenticatable
         return $this->hasOne(Professionnel::class, 'idutilisateur');
     }
 
-    /* Un utilisateur se réfere à 1 ... */
 
     public function adresse()
     {
@@ -140,7 +139,7 @@ class User extends Authenticatable
         $name = $this->pseudonyme;
 
         return 'https://ui-avatars.com/api/?name=' . urlencode($name) .
-               '&color=7F9CF5&background=EBF4FF';
+            '&color=7F9CF5&background=EBF4FF';
     }
 
 }

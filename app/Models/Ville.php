@@ -8,11 +8,7 @@ class Ville extends Model
 {
     protected $table = 'ville';
     protected $primaryKey = 'idville';
-
     public $timestamps = false;
-
-    /* Une ville a beaucoup ou pas de ... */
-
     public function adresse()
     {
         return $this->hasMany(Adresse::class, 'idville');
@@ -22,9 +18,6 @@ class Ville extends Model
     {
         return $this->hasMany(Recherche::class, 'idville');
     }
-
-    /* Une ville se réfere à 1 ... */
-
     public function departement()
     {
         return $this->belongsTo(Departement::class, 'iddepartement');
