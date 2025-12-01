@@ -145,4 +145,16 @@ class User extends Authenticatable
     {
         return $this->adresse?->ville?->departement?->nomdepartement;
     }
+
+    public function avisRecus()
+    {
+        return $this->hasManyThrough(
+            Avis::class,       
+            Annonce::class,   
+            'idutilisateur', 
+            'idannonce',       
+            'idutilisateur',   
+            'idannonce'       
+        );
+    }
 }

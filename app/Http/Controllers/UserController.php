@@ -14,7 +14,8 @@ class UserController extends Controller
                     'annoncesPubliees.photos',  
                     'annoncesPubliees.adresse.ville' 
                 ])
-                ->withCount('avis')
+                ->withCount('avisRecus')
+                ->withAvg('avisRecus', 'nombreetoiles')
                 ->withCount('annoncesPubliees')
                 ->findOrFail($id);
 
