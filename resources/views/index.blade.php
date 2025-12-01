@@ -54,7 +54,7 @@
 
         </div>
     </div>
-    <div class="bg-white p-7 max-w-6xl mx-auto px-6 md:px-12 xl:px-6 pt-32">
+    <div class="bg-white p-7 max-w-6xl mx-auto px-6 md:px-12 xl:px-6">
 
     <div x-data="{ sidebarOpen: false }">
 
