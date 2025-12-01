@@ -81,48 +81,58 @@
             </div>
 
             <nav class="flex items-center gap-6 text-gray-700 shrink-0">
-                <a href="#" class="hidden lg:flex flex-col items-center gap-1 group">
+                <a href="#" class="relative hidden lg:flex flex-col items-center gap-1 group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6 group-hover:text-black">
+                        stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
-                    <span class="text-xs font-medium group-hover:text-black">Mes recherches</span>
+                    <span class="text-xs font-medium group-hover:text-black transition-colors">Mes recherches</span>
+
+                    <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
 
-                <a href="#" class="hidden lg:flex flex-col items-center gap-1 group">
+                <a href="#" class="relative hidden lg:flex flex-col items-center gap-1 group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6 group-hover:text-black">
+                        stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
-                    <span class="text-xs font-medium group-hover:text-black">Favoris</span>
+                    <span class="text-xs font-medium group-hover:text-black transition-colors">Favoris</span>
+
+                    <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
 
-                <a href="#" class="hidden lg:flex flex-col items-center gap-1 group">
+                <a href="#" class="relative hidden lg:flex flex-col items-center gap-1 group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-6 h-6 group-hover:text-black">
+                        stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
                     </svg>
-                    <span class="text-xs font-medium group-hover:text-black">Messages</span>
+                    <span class="text-xs font-medium group-hover:text-black transition-colors">Messages</span>
+
+                    <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
 
                 @auth
-                    <a href="{{ route('dashboard') }}" class="hidden lg:flex flex-col items-center gap-1 group">
+                    <a href="{{ route('dashboard') }}" class="relative hidden lg:flex flex-col items-center gap-1 group">
                         <img class="rounded-full h-6 z-6" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->prenomutilisateur }}">
-                        <span class="text-xs font-medium group-hover:text-black">{{ auth()->user()->pseudonyme }}</span>
+                        <span class="text-xs font-medium group-hover:text-black transition-colors">{{ auth()->user()->pseudonyme }}</span>
+
+                        <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                 @endauth
 
                 @guest
-                    <a href="{{ route('auth.check') }}" class="flex flex-col items-center gap-1 group">
+                    <a href="{{ route('auth.check') }}" class="relative flex flex-col items-center gap-1 group">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-6 h-6 group-hover:text-black">
+                            stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                             <path stroke-linecap="round" stroke-linejoin="round"
                             d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                         </svg>
-                        <span class="text-xs font-medium group-hover:text-black">Se connecter</span>
+                        <span class="text-xs font-medium group-hover:text-black transition-colors">Se connecter</span>
+
+                        <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                 @endguest
             </nav>
