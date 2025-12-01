@@ -33,6 +33,13 @@ class SearchLocation extends Component
         });
     }
 
+    public function updatedSearch()
+    {
+        if (empty($this->search)) {
+            $this->dispatch('locationSelected', '');
+        }
+    }
+
     public function resetResults()
     {
         $this->results = [];
