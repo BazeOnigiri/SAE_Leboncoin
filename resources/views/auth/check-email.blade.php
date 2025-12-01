@@ -26,7 +26,7 @@
             </div>
 
             <div class="flex items-center justify-end mt-6">
-                <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-lg transition duration-150 ease-in-out">
+                <button type="submit" class="w-full bg-[#ec5a13] hover:bg-[#d64d0e] text-white font-bold py-3 px-4 rounded-[18px] transition duration-200 text-center mt-6 shadow-md hover:shadow-lg">
                     {{ __('Continuer') }}
                 </button>
             </div>
