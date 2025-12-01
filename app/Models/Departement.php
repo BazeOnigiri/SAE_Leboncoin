@@ -15,8 +15,6 @@ class Departement extends Model
         return $this->hasMany(Ville::class, 'iddepartement');
     }
 
-    /* Un departement se réfere à 1 ... */
-
     public function region()
     {
         return $this->belongsTo(Region::class, 'idregion');

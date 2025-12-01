@@ -141,5 +141,8 @@ class User extends Authenticatable
         return 'https://ui-avatars.com/api/?name=' . urlencode($name) .
             '&color=7F9CF5&background=EBF4FF';
     }
-
+    public function getNomDepartementAttribute()
+    {
+        return $this->adresse?->ville?->departement?->nomdepartement;
+    }
 }
