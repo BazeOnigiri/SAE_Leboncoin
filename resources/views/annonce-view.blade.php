@@ -183,7 +183,6 @@
             </div>
         </div>
 
-<<<<<<< HEAD
         <h2 class="text-xl font-black mb-6">Conditions de l'hébergement</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
             
