@@ -106,7 +106,7 @@ class User extends Authenticatable
         return $this->hasMany(Incident::class, 'idutilisateur');
     }
 
-    public function particuliers()
+    public function particulier()
     {
         return $this->hasOne(Particulier::class, 'idutilisateur');
     }
