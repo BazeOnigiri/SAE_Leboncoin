@@ -8,35 +8,36 @@ use App\Models\Annonce;
 
 class UserAccountController extends Controller
 {
-    public function edit() 
+    public function edit()
     {
         return view('user-account.edit', ['user' => Auth::user()]);
     }
 
-    public function annonces() 
+    public function annonces()
     {
         $user = Auth::user();
         $annonces = Annonce::where('idutilisateur', $user->idutilisateur)
-            ->with('photos', 'adresse.ville')
+            ->with(['photos', 'typeHebergement', 'adresse.ville']) 
             ->orderBy('idannonce', 'desc')
             ->get();
+
         return view('user-account.annonces', compact('annonces'));
     }
 
-    public function spaces() 
+    public function spaces()
     {
         return view('user-account.spaces');
     }
 
-    public function security() 
+    public function security()
     {
         return view('user-account.security');
     }
-
-    public function settings() 
+    
+    public function settings()
     {
         $user = Auth::user();
-        $user->load('particulier', 'adresse.ville');
+        $user->load(['particulier', 'adresse.ville']);
         return view('user-account.settings', compact('user'));
     }
 }
