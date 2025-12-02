@@ -62,23 +62,27 @@ class AnnonceList extends Component
         }
 
         $annonces = $query->get();
+        $cacheKeys = $annonces->map(fn($a) => 'gps_v2_adresse_' . $a->idadresse)->toArray();
+        $allCoords = Cache::many($cacheKeys);
 
-        $this->markers = $annonces->map(function ($annonce) {
-        if (!$annonce->adresse) return null;
+        $this->markers = $annonces->map(function ($annonce) use ($allCoords) {
+            if (!$annonce->adresse) return null; 
 
-        $coords = Cache::get('gps_v2_adresse_' . $annonce->idadresse);
-        
-        if (!$coords) return null; 
+            $key = 'gps_v2_adresse_' . $annonce->idadresse;
+            
+            $coords = $allCoords[$key] ?? null;
 
-        return [
-            'id' => $annonce->idannonce,
-            'lat' => $coords['lat'],
-            'lng' => $coords['lng'],
-            'title' => $annonce->titreannonce,
-            'price' => $annonce->prixnuitee,
-            'img' => $annonce->photos->first()->lienphoto ?? null
-        ];
-        })->filter()->values()->toArray();
+            if (!$coords) return null; 
+
+            return [
+                'id' => $annonce->idannonce,
+                'lat' => $coords['lat'],
+                'lng' => $coords['lng'],
+                'title' => $annonce->titreannonce,
+                'price' => $annonce->prixnuitee,
+                'img' => $annonce->photos->first()->lienphoto ?? null 
+            ];
+        })->filter()->values()->toArray(); 
 
         $this->dispatch('update-map');
 

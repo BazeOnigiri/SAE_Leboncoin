@@ -9,10 +9,7 @@ class Adresse extends Model
     protected $table = 'adresse';
     protected $primaryKey = 'idadresse';
     public $timestamps = false;
-
     protected $guarded = [];
-
-    /* Une adresse a beaucoup ou pas de ... */
 
     public function annonces()
     {
@@ -23,11 +20,8 @@ class Adresse extends Model
     {
         return $this->hasMany(User::class, 'idadresse');
     }
-
-    /* Une adresse se réfere à 1 ... */
-
     public function ville()
     {
         return $this->belongsTo(Ville::class, 'idville');
-    }
+    }   
 }

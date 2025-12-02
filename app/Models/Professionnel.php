@@ -16,6 +16,6 @@ class Professionnel extends Model
 
     public function utilisateur()
     {
-        return $this->belongsTo(Utilisateur::class, 'idutlisateur');
+        return $this->belongsTo(Utilisateur::class, 'idutilisateur');
     }
 }
