@@ -17,9 +17,8 @@ class AnnonceController extends Controller
         $annonce = Annonce::with([
             'photos',
             'datePublication',
-            'commodites.typeEquipement', 
+            'commodites.categorie',
             'chambres',
-            'commodites',
             'typehebergement',
             'avis',
             'adresse.ville',
@@ -33,6 +32,18 @@ class AnnonceController extends Controller
         ->withCount('avis')
         ->findOrFail($id);
 
-        return view("annonce-view", ['annonce' => $annonce]);
+        $commoditesGroupees = $annonce->commodites->groupBy(function ($commodite) {
+            return $commodite->categorie->nomcategorie ?? 'Autres';
+        });
+        return view("annonce-view", compact('annonce', 'commoditesGroupees'));
+    }
+
+    public function show($id)
+    {
+        $annonce = Annonce::with('commodites.categorie')->findOrFail($id);
+        $commoditesGroupees = $annonce->commodites->groupBy(function ($commodite) {
+            return $commodite->categorie->nomcategorie;
+        });
+        return view('nom_de_ta_vue', compact('annonce', 'commoditesGroupees'));
     }
 }
