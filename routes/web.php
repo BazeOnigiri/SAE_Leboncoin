@@ -2,12 +2,17 @@
 use App\Http\Controllers\AnnonceController; 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConnexionController;
+use App\Http\Controllers\CNIController;
 use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', [AnnonceController::class, 'index'])->name('home');
 Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
+
+Route::get('/cni', [CNIController::class, 'index'])->name('cni.index');
+Route::post('/cni', [CNIController::class, 'store'])->name('cni.store');
+
 
 
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
