@@ -236,23 +236,33 @@
         </div>
         </div>
         <div>
+        <div class="max-w-md"> <h2 class="text-xl font-bold text-slate-800 mb-6">Équipements et services</h2>
+
         @if ($commoditesGroupees->isNotEmpty())
             <div>
                 @foreach ($commoditesGroupees as $type => $commodites)
-                    <div class="@unless($loop->first) mt-6 @endunless">
-                        <h3 class="font-bold text-lg mb-3 text-neutral-900">{{ $type }}</h3>
-                        <ul class="space-y-2">
+
+                    @unless ($loop->first)
+                        <hr class="border-t border-gray-200 my-6">
+                    @endunless
+
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-4">{{ $type }}</h3>
+
+                        <ul class="space-y-3">
                             @foreach ($commodites as $commodite)
-                                <li class="flex items-center gap-3 text-neutral-700">
-                                    <span class="before:content-['•'] before:mr-2">{{ $commodite->nomcommodite }}</span>
+                                <li class="text-slate-600 font-medium">
+                                    {{ $commodite->nomcommodite }}
                                 </li>
                             @endforeach
                         </ul>
                     </div>
+
                 @endforeach
             </div>
-            <hr class="my-6 opacity-50">
         @endif
+        </div>
+        <hr class="border-t border-gray-200 my-6">
         <p>Publié par
             <a class="underline font-bold"
                 href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
@@ -261,7 +271,6 @@
         </p>
         </div>
 
-        {{-- ANNONCES SIMILAIRES (NOUVEAU BLOC HORIZONTAL) --}}
         <hr class="my-8 opacity-50">
         <div class="my-8">
             <div class="flex justify-between items-center mb-6 px-1">
