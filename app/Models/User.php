@@ -64,6 +64,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function isCNIValidate()
+    {
+        return is_dir(storage_path('app/private/cni/' . $this->getKey()));
+    }
+
     /* Un utilisateur a beaucoup ou pas de ... */
 
     public function annoncesPubliees()

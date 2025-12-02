@@ -16,8 +16,13 @@ class CNIController extends Controller
             'verso' => 'required|file|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
-        $rectoPath = $request->file('recto')->store('cni', 'private');
-        $versoPath = $request->file('verso')->store('cni', 'private');
+        $idutilisateur = auth()->id();
+        if (!$idutilisateur) {
+            return redirect()->back()->withErrors(['error' => 'Aucun ID utilisateur trouvé. Veuillez vous connecter.']);
+        }
+
+        $rectoPath = $request->file('recto')->store('cni/' . $idutilisateur . '/recto', 'local');
+        $versoPath = $request->file('verso')->store('cni/' . $idutilisateur . '/verso', 'local');
 
         return redirect()->back()->with([
             'success' => 'CNI traité avec succès.',

@@ -10,11 +10,6 @@ Route::get('/', [AnnonceController::class, 'index'])->name('home');
 Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
 
-Route::get('/cni', [CNIController::class, 'index'])->name('cni.index');
-Route::post('/cni', [CNIController::class, 'store'])->name('cni.store');
-
-
-
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')
     ->name('auth.check');
@@ -32,4 +27,7 @@ Route::middleware([
             $user = Auth::user();
             return view('dashboard', ['user' => $user]); 
         })->name('dashboard'); 
+
+        Route::get('/cni', [CNIController::class, 'index'])->name('cni.index');
+        Route::post('/cni', [CNIController::class, 'store'])->name('cni.store');
     });

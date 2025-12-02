@@ -6,6 +6,13 @@
                 {{ session('success') }}
             </div>
         @endif
+            
+        @if ($errors->has('error'))
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-800 rounded-md">
+                {{ $errors->first('error') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('cni.store')}}"  enctype="multipart/form-data" class="space-y-6">
             @csrf
 
