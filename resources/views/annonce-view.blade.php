@@ -236,26 +236,15 @@
         </div>
         </div>
         <div>
-        @if ($annonce->commodites->isNotEmpty())
-            <h2 class="text-xl font-black mb-6">Équipements et services</h2>
-            
-            @php
-                $commoditesGroupees = $annonce->commodites->groupBy(function ($item) {
-                    return $item->typeEquipement?->nomtypeequipement ?? 'Divers';
-                });
-            @endphp
-            <div class="grid grid-cols-1 gap-8 mb-8">
+        @if ($commoditesGroupees->isNotEmpty())
+            <div>
                 @foreach ($commoditesGroupees as $type => $commodites)
-                    <div>
+                    <div class="@unless($loop->first) mt-6 @endunless">
                         <h3 class="font-bold text-lg mb-3 text-neutral-900">{{ $type }}</h3>
                         <ul class="space-y-2">
                             @foreach ($commodites as $commodite)
                                 <li class="flex items-center gap-3 text-neutral-700">
-                                    {{-- Icône générique --}}
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-neutral-500">
-
-                                    </svg>
-                                    <span>{{ $commodite->nomcommodite }}</span>
+                                    <span class="before:content-['•'] before:mr-2">{{ $commodite->nomcommodite }}</span>
                                 </li>
                             @endforeach
                         </ul>
