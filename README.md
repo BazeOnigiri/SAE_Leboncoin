@@ -21,3 +21,7 @@ Add inserts
 ```
 php artisan db:seed
 ```
+
+# User from debit seed
+email: ```test@example.com```
+password: ```test@example.com```
