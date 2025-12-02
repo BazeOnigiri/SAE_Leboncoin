@@ -72,12 +72,8 @@
         <div class="flex items-center md:justify-end">
     <div class="flex mr-1">
         @php
-            // On récupère la moyenne calculée par le contrôleur
-            // On arrondit à l'entier le plus proche pour l'affichage des étoiles
             $note = round($user->avis_recus_avg_nombreetoiles); 
         @endphp
-
-        {{-- On boucle 5 fois pour afficher les 5 étoiles --}}
         @foreach(range(1, 5) as $i)
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
                 class="w-4 h-4 {{ $i <= $note ? 'text-orange-500' : 'text-gray-300' }}">
@@ -85,8 +81,6 @@
             </svg>
         @endforeach
     </div>
-
-    {{-- Affichage du texte (ex: "4.8/5 (6 avis)") --}}
     <span class="font-bold text-gray-900 text-sm">
         @if($user->avis_recus_count > 0)
             {{ $user->avis_recus_count }} avis
