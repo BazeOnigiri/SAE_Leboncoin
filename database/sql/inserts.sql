@@ -1037,12 +1037,6 @@ JOIN date d
   ON d.iddate >= a.iddate
 ORDER BY a.idannonce, d.iddate;
 
-UPDATE relier r
-SET estdisponible = FALSE
-FROM reservation res
-WHERE r.idannonce = res.idannonce
-  AND r.iddate BETWEEN res.iddatedebutreservation AND res.iddatefinreservation;
-
 /*==============================================================*/
 /* Table : avis (80 avis)                                       */
 /*==============================================================*/
@@ -3219,6 +3213,12 @@ INSERT INTO reservation(idannonce,iddatedebutreservation,iddatefinreservation,id
  (25,30790,30794,23,'De Witte','Grégoire','0667232663'),
  (25,30810,30814,24,'Garcon','Rachel','0652211742'),
  (25,30830,30834,25,'Rademaker','Quentin','0772562261');
+
+UPDATE relier r
+SET estdisponible = FALSE
+FROM reservation res
+WHERE r.idannonce = res.idannonce
+AND r.iddate BETWEEN res.iddatedebutreservation AND res.iddatefinreservation;
 
 /*==============================================================*/
 /* Table : cibler (38 lignes)                                   */
