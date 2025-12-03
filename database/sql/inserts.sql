@@ -3214,11 +3214,19 @@ INSERT INTO reservation(idannonce,iddatedebutreservation,iddatefinreservation,id
  (25,30810,30814,24,'Garcon','Rachel','0652211742'),
  (25,30830,30834,25,'Rademaker','Quentin','0772562261');
 
+/* met en estdisponible en false pour les annonces réservées */
 UPDATE relier r
 SET estdisponible = FALSE
 FROM reservation res
 WHERE r.idannonce = res.idannonce
 AND r.iddate BETWEEN res.iddatedebutreservation AND res.iddatefinreservation;
+
+/* met en estdisponible en false si pour les dates passées */
+UPDATE relier
+SET estdisponible = false
+FROM date
+WHERE relier.iddate = date.iddate
+AND date.date < CURRENT_DATE;
 
 /*==============================================================*/
 /* Table : cibler (38 lignes)                                   */
