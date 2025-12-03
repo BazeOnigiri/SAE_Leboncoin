@@ -36,4 +36,5 @@ Route::middleware([
         Route::get('/compte/profil-espaces', [UserAccountController::class, 'spaces'])->name('user.spaces');
         Route::get('/compte/connexion-securite', [UserAccountController::class, 'security'])->name('user.security');
         Route::get('/compte/parametres', [UserAccountController::class, 'settings'])->name('user.settings');
+        Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
     });
