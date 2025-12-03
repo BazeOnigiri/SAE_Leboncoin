@@ -793,3 +793,6 @@ ALTER TABLE utilisateur
   ALTER COLUMN solde SET DEFAULT 0,
   ALTER COLUMN phone_verified SET DEFAULT false,
   ALTER COLUMN identity_verified SET DEFAULT false;
+
+
+
