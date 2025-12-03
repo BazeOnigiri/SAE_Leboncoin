@@ -3228,6 +3228,93 @@ FROM date
 WHERE relier.iddate = date.iddate
 AND date.date < CURRENT_DATE;
 
+/* ajoutes des réservations de noel */
+DO $$ 
+DECLARE 
+    new_res_id INT;
+    date_debut INT;
+    date_fin INT;
+    user_id INT := 25; -- Quentin Rademaker
+    annonce_id INT := 28; -- Appartement proche commerces (Capacité 5)
+BEGIN
+    SELECT iddate INTO date_debut FROM date WHERE date = '2025-12-30';
+    SELECT iddate INTO date_fin FROM date WHERE date = '2026-01-03';
+
+    -- 1. Réservation
+    INSERT INTO reservation (idannonce, iddatedebutreservation, iddatefinreservation, idutilisateur, nomclient, prenomclient, telephoneclient)
+    VALUES (annonce_id, date_debut, date_fin, user_id, 'Rademaker', 'Quentin', '0772562261')
+    RETURNING idreservation INTO new_res_id;
+
+    -- 2. Voyageurs (4 Adultes pour le réveillon)
+    INSERT INTO inclure (idreservation, idtypevoyageur, nombrevoyageur) VALUES (new_res_id, 1, 4); 
+
+    -- 3. Transaction (4 nuits * 173€ = 692€)
+    INSERT INTO transaction (iddate, idreservation, idcartebancaire, montanttransaction)
+    VALUES (date_debut, new_res_id, (SELECT idcartebancaire FROM utilisateur WHERE idutilisateur = user_id), 692.00);
+
+    -- 4. Indisponibilité
+    UPDATE relier SET estdisponible = false 
+    WHERE idannonce = annonce_id AND iddate BETWEEN date_debut AND date_fin;
+END $$;
+
+/* ajoutes des réservations de nouvel an */
+DO $$ 
+DECLARE 
+    new_res_id INT;
+    date_debut INT;
+    date_fin INT;
+    user_id INT := 25; -- Quentin Rademaker
+    annonce_id INT := 28; -- Appartement proche commerces (Capacité 5)
+BEGIN
+    SELECT iddate INTO date_debut FROM date WHERE date = '2025-12-30';
+    SELECT iddate INTO date_fin FROM date WHERE date = '2026-01-03';
+
+    -- 1. Réservation
+    INSERT INTO reservation (idannonce, iddatedebutreservation, iddatefinreservation, idutilisateur, nomclient, prenomclient, telephoneclient)
+    VALUES (annonce_id, date_debut, date_fin, user_id, 'Rademaker', 'Quentin', '0772562261')
+    RETURNING idreservation INTO new_res_id;
+
+    -- 2. Voyageurs (4 Adultes pour le réveillon)
+    INSERT INTO inclure (idreservation, idtypevoyageur, nombrevoyageur) VALUES (new_res_id, 1, 4); 
+
+    -- 3. Transaction (4 nuits * 173€ = 692€)
+    INSERT INTO transaction (iddate, idreservation, idcartebancaire, montanttransaction)
+    VALUES (date_debut, new_res_id, (SELECT idcartebancaire FROM utilisateur WHERE idutilisateur = user_id), 692.00);
+
+    -- 4. Indisponibilité
+    UPDATE relier SET estdisponible = false 
+    WHERE idannonce = annonce_id AND iddate BETWEEN date_debut AND date_fin;
+END $$;
+
+/* ajoutes des réservations de debut d'année 2026 */
+DO $$ 
+DECLARE 
+    new_res_id INT;
+    date_debut INT;
+    date_fin INT;
+    user_id INT := 40; -- Claire Berger
+    annonce_id INT := 3; -- Studio idéal pour étudiant
+BEGIN
+    SELECT iddate INTO date_debut FROM date WHERE date = '2026-01-14';
+    SELECT iddate INTO date_fin FROM date WHERE date = '2026-01-17';
+
+    -- 1. Réservation
+    INSERT INTO reservation (idannonce, iddatedebutreservation, iddatefinreservation, idutilisateur, nomclient, prenomclient, telephoneclient)
+    VALUES (annonce_id, date_debut, date_fin, user_id, 'Berger', 'Claire', '0678877669')
+    RETURNING idreservation INTO new_res_id;
+
+    -- 2. Voyageurs (1 Adulte)
+    INSERT INTO inclure (idreservation, idtypevoyageur, nombrevoyageur) VALUES (new_res_id, 1, 1); 
+
+    -- 3. Transaction (3 nuits * 55€ = 165€)
+    INSERT INTO transaction (iddate, idreservation, idcartebancaire, montanttransaction)
+    VALUES (date_debut, new_res_id, (SELECT idcartebancaire FROM utilisateur WHERE idutilisateur = user_id), 165.00);
+
+    -- 4. Indisponibilité
+    UPDATE relier SET estdisponible = false 
+    WHERE idannonce = annonce_id AND iddate BETWEEN date_debut AND date_fin;
+END $$;
+
 /*==============================================================*/
 /* Table : cibler (38 lignes)                                   */
 /*==============================================================*/
