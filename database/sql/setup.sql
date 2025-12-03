@@ -27,7 +27,10 @@ drop table if exists region CASCADE;
 drop table if exists relier CASCADE;
 drop table if exists reservation CASCADE;
 drop table if exists transaction CASCADE;
+drop table if exists typeequipement CASCADE;
+drop table if exists typeexterieur CASCADE;
 drop table if exists typehebergement CASCADE;
+drop table if exists typeservice CASCADE;
 drop table if exists typevoyageur CASCADE;
 drop table if exists utilisateur CASCADE;
 drop table if exists ville CASCADE;
@@ -114,7 +117,7 @@ create table cartebancaire (
 /*==============================================================*/
 create table categorie (
    idcategorie               serial               not null,
-   nomcategorie         varchar(15)          null,
+   nomcategorie         varchar(24)          null,
    constraint pk_categorie primary key (idcategorie)
 );
 
@@ -389,6 +392,7 @@ CREATE TABLE utilisateur (
     idphoto                   INT4            NULL,
     idadresse                 INT4            NOT NULL,
     idcartebancaire           INT4            NULL,
+    iddate                    INT4            NOT NULL,
 
     nomutilisateur            VARCHAR(50)     NOT NULL,
     prenomutilisateur         VARCHAR(50)     NOT NULL,
@@ -713,6 +717,11 @@ alter table utilisateur
       on delete restrict on update restrict;
 
 alter table utilisateur
+   add constraint fk_utilisat_creer_date foreign key (iddate)
+      references date (iddate)
+      on delete restrict on update restrict;
+
+alter table utilisateur
    add constraint fk_utilisat_utiliser_photo foreign key (idphoto)
       references photo (idphoto)
       on delete restrict on update restrict;
@@ -766,7 +775,7 @@ ALTER TABLE utilisateur
   ADD CONSTRAINT chk_utilisateur_telephoneutilisateur_format CHECK (telephoneutilisateur ~ '^0[1-9][0-9]{8}$'),
   ADD CONSTRAINT chk_utilisateur_pseudonyme_longueur CHECK (LENGTH(pseudonyme) BETWEEN 2 AND 50),
   ADD CONSTRAINT chk_utilisateur_solde_minimum CHECK (solde >= 0),
-  ADD CONSTRAINT chk_utilisateur_password_complexity CHECK (password ~* '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$');
+  ADD CONSTRAINT chk_utilisateur_password_complexity CHECK (password ~* '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,}$');
 
 ALTER TABLE particulier
   ADD CONSTRAINT chk_particulier_civilite_valeurs CHECK (civilite IN ('Monsieur', 'Madame', 'Non spécifié'));
@@ -784,6 +793,3 @@ ALTER TABLE utilisateur
   ALTER COLUMN solde SET DEFAULT 0,
   ALTER COLUMN phone_verified SET DEFAULT false,
   ALTER COLUMN identity_verified SET DEFAULT false;
-
-
-

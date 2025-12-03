@@ -30,9 +30,9 @@ INSERT INTO compensation (nomcompensation) VALUES
 
 INSERT INTO categorie (nomcategorie) VALUES
 
+('Équipements'),
 ('Extérieur'),
-('Service'),
-('Équipement'),
+('Services & accessibilité'),
 ('Hébergement');
 
 /*==============================================================*/
@@ -132,7 +132,7 @@ INSERT INTO photo (idannonce, idincident, lienphoto) VALUES
 (null, null, 'https://cdn.pixabay.com/photo/2019/08/09/06/12/car-racing-4394450_1280.jpg');
 
 /*==============================================================*/
-/* Table : date (1000 dates)                                    */
+/* Table : date (nombre de dates variable)                     */
 /*==============================================================*/
 
 INSERT INTO date ("date") 
@@ -141,7 +141,7 @@ SELECT generate_series(
 
     '1938-01-01'::date, 
 
-    '2026-12-31'::date, 
+    (CURRENT_DATE + INTERVAL '2 years')::date, 
 
     '1 day'::interval 
 
@@ -175,63 +175,63 @@ SELECT (generate_series(
 
 INSERT INTO commodite (idcategorie, nomcommodite) VALUES 
 
-(1, 'Jardin'), 
-(1, 'Terrasse'), 
-(1, 'Balcon'), 
-(1, 'Piscine privée'), 
-(1, 'Piscine partagée'), 
-(1, 'Patio'), 
-(1, 'Cour'), 
-(1, 'Jacuzzi extérieur'), 
-(1, 'Toit-terrasse'), 
-(1, 'Balconnet'), 
-(1, 'Loggia'), 
-(1, 'Véranda'),
-(2, 'Parking'), 
-(2, 'Ménage inclus'), 
-(2, 'Accessible en fauteuil roulant'), 
-(2, 'Avec ascenseur'), 
-(2, 'Animaux acceptés'), 
-(2, 'Service de conciergerie'), 
-(2, 'Réception 24h/24'), 
-(2, 'Petit-déjeuner inclus'), 
-(2, 'Location de vélos'), 
-(2, 'Navette aéroport'), 
-(2, 'Livraison de courses'), 
-(2, 'Service de blanchisserie'), 
-(2, 'Prêt de matériel bébé'), 
-(2, 'Service de garde d’enfants'), 
-(2, 'Massage à domicile'),
-(3, 'Wifi gratuit'), 
-(3, 'Télévision'), 
-(3, 'Lave-vaisselle'), 
-(3, 'Cuisine équipée'), 
-(3, 'Lave-linge'), 
-(3, 'Sèche-linge'), 
-(3, 'Chauffage'), 
-(3, 'Climatisation'), 
-(3, 'Draps et linge inclus'), 
-(3, 'Savon et shampoing'), 
-(3, 'Barbecue / grill'), 
-(3, 'Planche à repasser'), 
-(3, 'Chaise haute pour bébé'), 
-(3, 'Fer à repasser'), 
-(3, 'Sèche-cheveux'), 
-(3, 'Réfrigérateur'), 
-(3, 'Congélateur'), 
-(3, 'Four'), 
-(3, 'Micro-ondes'), 
-(3, 'Cafetière'), 
-(3, 'Bouilloire'), 
-(3, 'Grille-pain'), 
-(3, 'Ustensiles de cuisine'), 
-(3, 'Vaisselle et couverts'), 
-(3, 'Lit bébé'), 
-(3, 'Détecteur de fumée'), 
-(3, 'Bureau / espace de travail'), 
-(3, 'Armoire / penderie'), 
-(3, 'Serviettes fournies'), 
-(3, 'Produits d’entretien');
+(2, 'Jardin'), 
+(2, 'Terrasse'), 
+(2, 'Balcon'), 
+(2, 'Piscine privée'), 
+(2, 'Piscine partagée'), 
+(2, 'Patio'), 
+(2, 'Cour'), 
+(2, 'Jacuzzi extérieur'), 
+(2, 'Toit-terrasse'), 
+(2, 'Balconnet'), 
+(2, 'Loggia'), 
+(2, 'Véranda'),
+(3, 'Parking'), 
+(3, 'Ménage inclus'), 
+(3, 'Accessible en fauteuil roulant'), 
+(3, 'Avec ascenseur'), 
+(3, 'Animaux acceptés'), 
+(3, 'Service de conciergerie'), 
+(3, 'Réception 34h/34'), 
+(3, 'Petit-déjeuner inclus'), 
+(3, 'Location de vélos'), 
+(3, 'Navette aéroport'), 
+(3, 'Livraison de courses'), 
+(3, 'Service de blanchisserie'), 
+(3, 'Prêt de matériel bébé'), 
+(3, 'Service de garde d’enfants'), 
+(3, 'Massage à domicile'),
+(1, 'Wifi gratuit'), 
+(1, 'Télévision'), 
+(1, 'Lave-vaisselle'), 
+(1, 'Cuisine équipée'), 
+(1, 'Lave-linge'), 
+(1, 'Sèche-linge'), 
+(1, 'Chauffage'), 
+(1, 'Climatisation'), 
+(1, 'Draps et linge inclus'), 
+(1, 'Savon et shampoing'), 
+(1, 'Barbecue / grill'), 
+(1, 'Planche à repasser'), 
+(1, 'Chaise haute pour bébé'), 
+(1, 'Fer à repasser'), 
+(1, 'Sèche-cheveux'), 
+(1, 'Réfrigérateur'), 
+(1, 'Congélateur'), 
+(1, 'Four'), 
+(1, 'Micro-ondes'), 
+(1, 'Cafetière'), 
+(1, 'Bouilloire'), 
+(1, 'Grille-pain'), 
+(1, 'Ustensiles de cuisine'), 
+(1, 'Vaisselle et couverts'), 
+(1, 'Lit bébé'), 
+(1, 'Détecteur de fumée'), 
+(1, 'Bureau / espace de travail'), 
+(1, 'Armoire / penderie'), 
+(1, 'Serviettes fournies'), 
+(1, 'Produits d’entretien');
 
 /*==============================================================*/
 /* Table : typehebergement (9 typehebergements)                 */
@@ -691,60 +691,60 @@ INSERT INTO adresse (idville, numerorue, nomrue) VALUES
 /* Table : utilisateur (50 utilisateurs)                        */
 /*==============================================================*/
 
-INSERT INTO utilisateur (   idphoto, idadresse, idcartebancaire,
+INSERT INTO utilisateur (   idphoto, idadresse, idcartebancaire, iddate,
                             nomUtilisateur, prenomUtilisateur, pseudonyme, email, email_verified_at, password, telephoneutilisateur, phone_verified, identity_verified, solde,
                             remember_token, two_factor_secret, two_factor_recovery_codes) VALUES
 
-(3,6,null,'Janvier','Sarah','Delsinor','janvier.sarah2417@icloud.com','2020-09-14 08:45:12','zK!7w#pR$vE9','0695638456',false,true,301.52,null,null,null),
-(9,45,null,'Duval','Simon','Varion','d_simon@google.net','2020-10-22 15:30:01','jG@4nB^xL&2q','0717374228',false,false,493.23,null,null,null),
-(10,43,null,'Dam','Rachel','MoonWarden','rachel_dam780@yahoo.com','2020-11-18 22:10:55','8mP*5sH(tY6u','0729484225',true,false,655.85,null,null,null),
-(9,13,null,'Borde','Jeanne','Asteron','jeanne-borde@yahoo.com','2020-12-01 11:05:33','cV#9rF%3dZ@a','0705434475',false,true,458.40,null,null,null),
-(6,26,null,'Lemaire','Caroline','Eltharis','c_lemaire691@icloud.org','2021-01-08 19:22:47','qW1eRtY*uI8o','0689771334',false,false,722.63,null,null,null),
-(8,9,null,'Geelen','Alexis','Velkanor','alexisgeelen2649@yahoo.net','2022-02-20 04:50:18','aS2dF_gH(jK5l','0639185787',false,true,384.45,null,null,null),
-(9,7,null,'Brisbois','Alexandre','Solarys','alexandre.brisbois@yahoo.org','2022-03-15 14:12:03','zX4cV_bN(mQ7w','0722052574',false,false,438.7,null,null,null),
-(10,14,null,'Holt','Olivier','Solaryn','olivierholt8942@hotmail.couk','2020-05-01 09:00:00','pO9iU_yT(R6eW','0622562347',false,true,602.64,null,null,null),
-(6,5,null,'Archambault','Kim','Cyrenith','a.kim@protonmail.org','2020-05-21 23:45:10','lK3jH_gF(dS4a','0703877291',false,false,558.85,null,null,null),
-(8,4,null,'Koopman','Dorian','Skyrune','d.koopman4170@protonmail.org','2020-06-18 12:00:25','mN7bV_cX(Z2qW','0797861221',true,false,676.26,null,null,null),
-(8,36,null,'Tremblay','Jessica','Serynox','t.jessica9600@outlook.com','2020-07-05 18:30:44','rT6yU_iO(P5lK','0753618415',true,true,882.37,null,null,null),
-(2,3,null,'Lane','Leila','MoonWarden','laneleila@outlook.couk','2020-09-01 10:15:59','fD8sA_qW(E3rT','0623466333',true,true,30.85,null,null,null),
-(3,4,null,'Monet','Tanguy','Ormalia','tanguy-monet5088@aol.couk','2018-07-22 20:05:11','gH1jK_lM(N4bV','0698143673',false,false,439.28,null,null,null),
-(6,42,null,'Chaput','Jerome','Cyrenith','jerome_chaput@yahoo.org','2018-05-10 16:40:32','cX5zA_sD(F6gH','0622505865',false,true,402.56,null,null,null),
-(7,26,null,'Van Aalsburg','Ali','Vorlune','v.ali4242@protonmail.couk','2018-09-01 08:00:00','vB2nM_kL(I8oP','0608239111',false,false,876.44,null,null,null),
-(9,23,null,'Lachapelle','Emile','Cyrenith','l-emile8112@protonmail.com','2018-09-30 13:13:13','iU9yT_rE(W1qA','0745648808',true,false,794.17,null,null,null),
-(2,26,null,'Maes','Océane','Varion','ocane_maes@icloud.couk','2018-10-15 21:28:49','sZ4xS_dC(F5vG','0761917131',true,true,649.67,null,null,null),
-(9,34,null,'Lemaire','Valerie','Valkyra','valerie-lemaire@google.couk','2019-12-01 02:17:38','hJ7kL_pO(I3uY','0741448125',true,false,783.14,null,null,null),
-(2,33,null,'Jonker','Valentin','Quilnor','j-valentin@yahoo.ca','2019-12-25 17:50:00','tR6eW_wQ(A2sD','0648633468',true,true,316.69,null,null,null),
-(6,6,null,'Maes','Hugo','Zelyrion','h-maes@protonmail.org','2019-12-31 23:59:59','fG8hJ_kL(M1nB','0710581186',true,false,324.76,null,null,null),
-(4,7,null,'Berg','Helene','Silvaro','b-helene7999@yahoo.com','2020-01-15 11:11:11','vC5xZ_aS(D4fG','0746100284',true,true,687.22,null,null,null),
-(2,4,null,'Travers','Gauthier','Halcyonex','gauthiertravers1649@google.edu','2022-03-01 07:07:07','hJ9kL_pO(I7uY','0771141213',false,false,183.5,null,null,null),
-(8,34,null,'De Witte','Grégoire','NovaLune','g_dewitte@yahoo.couk','2022-03-10 14:25:36','tR2eW_wQ(A6sD','0667232663',false,false,478.38,null,null,null),
-(4,46,null,'Garcon','Rachel','EchoFlare','g_rachel5782@google.edu','2020-08-01 12:34:56','fG5hJ_kL(M9nB','0652211742',false,false,360.62,null,null,null),
-(6,27,null,'Rademaker','Quentin','Nyxian','qrademaker@outlook.ca','2020-08-25 09:19:43','vC8xZ_aS(D1fG','0772562261',false,true,820.5,null,null,null),
-(3,39,null,'Brisbois','Cindy','Bravonex','brisbois-cindy@icloud.ca','2023-02-11 10:15:22','hJ3kL_pO(I4uY','0697518281',true,false,391.58,null,null,null),
-(5,45,null,'Lavigne','Leila','Kymora','lleila@google.com','2023-05-30 18:45:00','tR7eW_wQ(A0sD','0616263732',false,true,432.11,null,null,null),
-(5,33,null,'Van Aalsburg','Laurie','Kymora','v_laurie7403@aol.com','2023-08-19 09:12:48','fG2hJ_kL(M5nB','0757291446',true,false,658.4,null,null,null),
-(10,26,null,'Cruyssen','Nora','DriftShade','nora.cruyssen@hotmail.couk','2023-09-05 22:33:10','vC9xZ_aS(D8fG','0678662325',true,false,51.46,null,null,null),
-(5,19,null,'Aakster','Ali','MoonWarden','a-ali@aol.net','2023-11-21 14:05:59','hJ6kL_pO(I1uY','0607858755',false,false,924.62,null,null,null),
-(7,17,null,'Bezuindenhout','Rachel','Fluxyne','rachel-bezuindenhout@google.couk','2023-12-01 11:00:00','qW3eR_tY(U5iO','0683883328',true,false,6.9,null,null,null),
-(5,21,null,'Van Assen','Dylan','Fyrenza','v.dylan4636@aol.org','2024-01-08 16:28:17','pL8kM_nB(V2cX','0744186257',true,true,789.56,null,null,null),
-(2,15,null,'Garcon','Simon','Kymora','simon.garcon1638@hotmail.couk','2024-01-22 08:55:43','zA7sD_fG(H6jK','0719540158',false,false,121.52,null,null,null),
-(3,45,null,'Haanraads','Camille','Cyrenith','h_camille@protonmail.com','2024-02-14 19:10:02','lP5oI_uY(T4rE','0685277269',false,false,670.0,null,null,null),
-(3,30,null,'Marchand','Elisabeth','Nexilo','marchandelisabeth3377@google.edu','2024-02-29 12:00:00','mN1bV_cX(Z9qW','0677117676',false,false,977.10,null,null,null),
-(6,35,null,'Villenueve','Juliette','Tyvanna','v_juliette1960@hotmail.com','2024-03-18 20:30:15','eR4tY_uI(O2pA','0731686729',true,false,527.53,null,null,null),
-(5,6,null,'Plamondon','Max','Delsinor','pmax9643@hotmail.edu','2024-04-01 00:00:01','sD6fG_hJ(K8lL','0626785246',false,true,175.44,null,null,null),
-(5,16,null,'Brisbois','Mélissa','Elionyx','b_mlissa4@aol.org','2024-04-25 15:15:15','aZ3xS_dC(F5vG','0744910127',true,true,330.14,null,null,null),
-(2,16,null,'Cruyssen','Stephanie','Tyvanna','stephanie_cruyssen@yahoo.ca','2024-05-06 11:40:33','hJ9kL_pO(I1uY','0738540689',true,true,610.73,null,null,null),
-(1,22,null,'Berger','Claire','Vanyth','c-berger3570@protonmail.com','2024-05-17 06:22:58','tR2eW_wQ(A7sD','0678877669',false,false,973.61,null,null,null),
-(4,5,null,'Blanc','Emilie','Lynaro','emilie-blanc@icloud.couk','2024-05-28 13:05:00','fG5hJ_kL(M0nB','0674157020',false,true,521.65,null,null,null),
-(5,45,null,'Eikenboom','Florent','Nyxian','e.florent@aol.couk','2024-06-10 17:30:44','vC8xZ_aS(D3fG','0728285148',false,true,309.37,null,null,null),
-(5,21,null,'Bellamy','Charlotte','Aerionyx','b.charlotte9448@outlook.org','2024-06-21 09:09:09','hJ6kL_pO(I9uY','0688335384',true,false,652.76,null,null,null),
-(7,33,null,'Dubois','Léa','Elionyx','la.dubois@hotmail.com','2024-07-02 21:21:21','qW1eR_tY(U4iO','0755651492',false,true,800.29,null,null,null),
-(8,6,null,'Cousineau','Glenn','Vanyth','c-glenn7427@icloud.org','2024-07-15 12:45:30','pL7kM_nB(V2cX','0678188426',true,false,934.58,null,null,null),
-(2,13,null,'Prinsen','Tristan','Valkyra','tristanprinsen@yahoo.edu','2024-07-28 14:00:00','zA9sD_fG(H5jK','0620373013',true,false,463.90,null,null,null),
-(3,7,null,'Blanc','Danny','Bravonex','d-blanc4650@google.edu','2024-08-08 10:10:10','lP3oI_uY(T8rE','0711557858',true,true,552.3,null,null,null),
-(4,45,null,'Berg','Nora','Silvaro','nora.berg@hotmail.net','2024-08-19 18:50:25','mN6bV_cX(Z1qW','0781877181',true,true,608.85,null,null,null),
-(2,17,null,'Van Alphen','Tristan','Teralis','tristan_vanalphen8272@yahoo.couk','2024-09-01 08:00:00','eR9tY_uI(O4pA','0666374465',true,false,634.46,null,null,null),
-(2,6,null,'Geelen','Ilias','EchoFlare','igeelen@yahoo.edu','2024-09-12 16:16:16','sD2fG_hJ(K7lL','0677425458',false,false,815.79,null,null,null);
+(3,6,null,30208,'Janvier','Sarah','Delsinor','janvier.sarah2417@icloud.com','2020-09-14 08:45:12','zK!7w#pR$vE9','0695638456',false,true,301.52,null,null,null),
+(9,45,null,30246,'Duval','Simon','Varion','d_simon@google.net','2020-10-22 15:30:01','jG@4nB^xL&2q','0717374228',false,false,493.23,null,null,null),
+(10,43,null,30273,'Dam','Rachel','MoonWarden','rachel_dam780@yahoo.com','2020-11-18 22:10:55','8mP*5sH(tY6u','0729484225',true,false,655.85,null,null,null),
+(9,13,null,30286,'Borde','Jeanne','Asteron','jeanne-borde@yahoo.com','2020-12-01 11:05:33','cV#9rF%3dZ@a','0705434475',false,true,458.40,null,null,null),
+(6,26,null,30324,'Lemaire','Caroline','Eltharis','c_lemaire691@icloud.org','2021-01-08 19:22:47','qW1eRtY*uI8o','0689771334',false,false,722.63,null,null,null),
+(8,9,null,30732,'Geelen','Alexis','Velkanor','alexisgeelen2649@yahoo.net','2022-02-20 04:50:18','aS2dF_gH(jK5l','0639185787',false,true,384.45,null,null,null),
+(9,7,null,30755,'Brisbois','Alexandre','Solarys','alexandre.brisbois@yahoo.org','2022-03-15 14:12:03','zX4cV_bN(mQ7w','0722052574',false,false,438.7,null,null,null),
+(10,14,null,30072,'Holt','Olivier','Solaryn','olivierholt8942@hotmail.couk','2020-05-01 09:00:00','pO9iU_yT(R6eW','0622562347',false,true,602.64,null,null,null),
+(6,5,null,30092,'Archambault','Kim','Cyrenith','a.kim@protonmail.org','2020-05-21 23:45:10','lK3jH_gF(dS4a','0703877291',false,false,558.85,null,null,null),
+(8,4,null,30120,'Koopman','Dorian','Skyrune','d.koopman4170@protonmail.org','2020-06-18 12:00:25','mN7bV_cX(Z2qW','0797861221',true,false,676.26,null,null,null),
+(8,36,null,30137,'Tremblay','Jessica','Serynox','t.jessica9600@outlook.com','2020-07-05 18:30:44','rT6yU_iO(P5lK','0753618415',true,true,882.37,null,null,null),
+(2,3,null,30195,'Lane','Leila','MoonWarden','laneleila@outlook.couk','2020-09-01 10:15:59','fD8sA_qW(E3rT','0623466333',true,true,30.85,null,null,null),
+(3,4,null,29423,'Monet','Tanguy','Ormalia','tanguy-monet5088@aol.couk','2018-07-22 20:05:11','gH1jK_lM(N4bV','0698143673',false,false,439.28,null,null,null),
+(6,42,null,29350,'Chaput','Jerome','Cyrenith','jerome_chaput@yahoo.org','2018-05-10 16:40:32','cX5zA_sD(F6gH','0622505865',false,true,402.56,null,null,null),
+(7,26,null,29464,'Van Aalsburg','Ali','Vorlune','v.ali4242@protonmail.couk','2018-09-01 08:00:00','vB2nM_kL(I8oP','0608239111',false,false,876.44,null,null,null),
+(9,23,null,29493,'Lachapelle','Emile','Cyrenith','l-emile8112@protonmail.com','2018-09-30 13:13:13','iU9yT_rE(W1qA','0745648808',true,false,794.17,null,null,null),
+(2,26,null,29508,'Maes','Océane','Varion','ocane_maes@icloud.couk','2018-10-15 21:28:49','sZ4xS_dC(F5vG','0761917131',true,true,649.67,null,null,null),
+(9,34,null,29920,'Lemaire','Valerie','Valkyra','valerie-lemaire@google.couk','2019-12-01 02:17:38','hJ7kL_pO(I3uY','0741448125',true,false,783.14,null,null,null),
+(2,33,null,29944,'Jonker','Valentin','Quilnor','j-valentin@yahoo.ca','2019-12-25 17:50:00','tR6eW_wQ(A2sD','0648633468',true,true,316.69,null,null,null),
+(6,6,null,29950,'Maes','Hugo','Zelyrion','h-maes@protonmail.org','2019-12-31 23:59:59','fG8hJ_kL(M1nB','0710581186',true,false,324.76,null,null,null),
+(4,7,null,29965,'Berg','Helene','Silvaro','b-helene7999@yahoo.com','2020-01-15 11:11:11','vC5xZ_aS(D4fG','0746100284',true,true,687.22,null,null,null),
+(2,4,null,30741,'Travers','Gauthier','Halcyonex','gauthiertravers1649@google.edu','2022-03-01 07:07:07','hJ9kL_pO(I7uY','0771141213',false,false,183.5,null,null,null),
+(8,34,null,30750,'De Witte','Grégoire','NovaLune','g_dewitte@yahoo.couk','2022-03-10 14:25:36','tR2eW_wQ(A6sD','0667232663',false,false,478.38,null,null,null),
+(4,46,null,30164,'Garcon','Rachel','EchoFlare','g_rachel5782@google.edu','2020-08-01 12:34:56','fG5hJ_kL(M9nB','0652211742',false,false,360.62,null,null,null),
+(6,27,null,30188,'Rademaker','Quentin','Nyxian','qrademaker@outlook.ca','2020-08-25 09:19:43','vC8xZ_aS(D1fG','0772562261',false,true,820.5,null,null,null),
+(3,39,null,31088,'Brisbois','Cindy','Bravonex','brisbois-cindy@icloud.ca','2023-02-11 10:15:22','hJ3kL_pO(I4uY','0697518281',true,false,391.58,null,null,null),
+(5,45,null,31196,'Lavigne','Leila','Kymora','lleila@google.com','2023-05-30 18:45:00','tR7eW_wQ(A0sD','0616263732',false,true,432.11,null,null,null),
+(5,33,null,31277,'Van Aalsburg','Laurie','Kymora','v_laurie7403@aol.com','2023-08-19 09:12:48','fG2hJ_kL(M5nB','0757291446',true,false,658.4,null,null,null),
+(10,26,null,31294,'Cruyssen','Nora','DriftShade','nora.cruyssen@hotmail.couk','2023-09-05 22:33:10','vC9xZ_aS(D8fG','0678662325',true,false,51.46,null,null,null),
+(5,19,null,31371,'Aakster','Ali','MoonWarden','a-ali@aol.net','2023-11-21 14:05:59','hJ6kL_pO(I1uY','0607858755',false,false,924.62,null,null,null),
+(7,17,null,31381,'Bezuindenhout','Rachel','Fluxyne','rachel-bezuindenhout@google.couk','2023-12-01 11:00:00','qW3eR_tY(U5iO','0683883328',true,false,6.9,null,null,null),
+(5,21,null,31419,'Van Assen','Dylan','Fyrenza','v.dylan4636@aol.org','2024-01-08 16:28:17','pL8kM_nB(V2cX','0744186257',true,true,789.56,null,null,null),
+(2,15,null,31433,'Garcon','Simon','Kymora','simon.garcon1638@hotmail.couk','2024-01-22 08:55:43','zA7sD_fG(H6jK','0719540158',false,false,121.52,null,null,null),
+(3,45,null,31456,'Haanraads','Camille','Cyrenith','h_camille@protonmail.com','2024-02-14 19:10:02','lP5oI_uY(T4rE','0685277269',false,false,670.0,null,null,null),
+(3,30,null,31471,'Marchand','Elisabeth','Nexilo','marchandelisabeth3377@google.edu','2024-02-29 12:00:00','mN1bV_cX(Z9qW','0677117676',false,false,977.10,null,null,null),
+(6,35,null,31489,'Villenueve','Juliette','Tyvanna','v_juliette1960@hotmail.com','2024-03-18 20:30:15','eR4tY_uI(O2pA','0731686729',true,false,527.53,null,null,null),
+(5,6,null,31503,'Plamondon','Max','Delsinor','pmax9643@hotmail.edu','2024-04-01 00:00:01','sD6fG_hJ(K8lL','0626785246',false,true,175.44,null,null,null),
+(5,16,null,31527,'Brisbois','Mélissa','Elionyx','b_mlissa4@aol.org','2024-04-25 15:15:15','aZ3xS_dC(F5vG','0744910127',true,true,330.14,null,null,null),
+(2,16,null,31538,'Cruyssen','Stephanie','Tyvanna','stephanie_cruyssen@yahoo.ca','2024-05-06 11:40:33','hJ9kL_pO(I1uY','0738540689',true,true,610.73,null,null,null),
+(1,22,null,31549,'Berger','Claire','Vanyth','c-berger3570@protonmail.com','2024-05-17 06:22:58','tR2eW_wQ(A7sD','0678877669',false,false,973.61,null,null,null),
+(4,5,null,31560,'Blanc','Emilie','Lynaro','emilie-blanc@icloud.couk','2024-05-28 13:05:00','fG5hJ_kL(M0nB','0674157020',false,true,521.65,null,null,null),
+(5,45,null,31573,'Eikenboom','Florent','Nyxian','e.florent@aol.couk','2024-06-10 17:30:44','vC8xZ_aS(D3fG','0728285148',false,true,309.37,null,null,null),
+(5,21,null,31584,'Bellamy','Charlotte','Aerionyx','b.charlotte9448@outlook.org','2024-06-21 09:09:09','hJ6kL_pO(I9uY','0688335384',true,false,652.76,null,null,null),
+(7,33,null,31595,'Dubois','Léa','Elionyx','la.dubois@hotmail.com','2024-07-02 21:21:21','qW1eR_tY(U4iO','0755651492',false,true,800.29,null,null,null),
+(8,6,null,31608,'Cousineau','Glenn','Vanyth','c-glenn7427@icloud.org','2024-07-15 12:45:30','pL7kM_nB(V2cX','0678188426',true,false,934.58,null,null,null),
+(2,13,null,31621,'Prinsen','Tristan','Valkyra','tristanprinsen@yahoo.edu','2024-07-28 14:00:00','zA9sD_fG(H5jK','0620373013',true,false,463.90,null,null,null),
+(3,7,null,31632,'Blanc','Danny','Bravonex','d-blanc4650@google.edu','2024-08-08 10:10:10','lP3oI_uY(T8rE','0711557858',true,true,552.3,null,null,null),
+(4,45,null,31643,'Berg','Nora','Silvaro','nora.berg@hotmail.net','2024-08-19 18:50:25','mN6bV_cX(Z1qW','0781877181',true,true,608.85,null,null,null),
+(2,17,null,31656,'Van Alphen','Tristan','Teralis','tristan_vanalphen8272@yahoo.couk','2024-09-01 08:00:00','eR9tY_uI(O4pA','0666374465',true,false,634.46,null,null,null),
+(2,6,null,31667,'Geelen','Ilias','EchoFlare','igeelen@yahoo.edu','2024-09-12 16:16:16','sD2fG_hJ(K7lL','0677425458',false,false,815.79,null,null,null);
 
 /*============================================================================================================================================*/
 /*============================================================================================================================================*/
@@ -1022,20 +1022,6 @@ VALUES
 /* INSERTIONS SEPTIEME NIVEAU                                                                                                                 */
 /*============================================================================================================================================*/
 /*============================================================================================================================================*/
-
-/*==============================================================*/
-/* Table : relier (193435 lignes)                               */
-/*==============================================================*/
-
-INSERT INTO relier (idannonce, iddate, estdisponible)
-SELECT 
-    a.idannonce,
-    d.iddate,
-    TRUE
-FROM annonce a
-JOIN date d
-  ON d.iddate >= a.iddate
-ORDER BY a.idannonce, d.iddate;
 
 /*==============================================================*/
 /* Table : avis (80 avis)                                       */
@@ -3212,108 +3198,10 @@ INSERT INTO reservation(idannonce,iddatedebutreservation,iddatefinreservation,id
  (25,30775,30779,22,'Travers','Gauthier','0771141213'),
  (25,30790,30794,23,'De Witte','Grégoire','0667232663'),
  (25,30810,30814,24,'Garcon','Rachel','0652211742'),
- (25,30830,30834,25,'Rademaker','Quentin','0772562261');
-
-/* met en estdisponible en false pour les annonces réservées */
-UPDATE relier r
-SET estdisponible = FALSE
-FROM reservation res
-WHERE r.idannonce = res.idannonce
-AND r.iddate BETWEEN res.iddatedebutreservation AND res.iddatefinreservation;
-
-/* met en estdisponible en false si pour les dates passées */
-UPDATE relier
-SET estdisponible = false
-FROM date
-WHERE relier.iddate = date.iddate
-AND date.date < CURRENT_DATE;
-
-/* ajoutes des réservations de noel */
-DO $$ 
-DECLARE 
-    new_res_id INT;
-    date_debut INT;
-    date_fin INT;
-    user_id INT := 25; -- Quentin Rademaker
-    annonce_id INT := 28; -- Appartement proche commerces (Capacité 5)
-BEGIN
-    SELECT iddate INTO date_debut FROM date WHERE date = '2025-12-30';
-    SELECT iddate INTO date_fin FROM date WHERE date = '2026-01-03';
-
-    -- 1. Réservation
-    INSERT INTO reservation (idannonce, iddatedebutreservation, iddatefinreservation, idutilisateur, nomclient, prenomclient, telephoneclient)
-    VALUES (annonce_id, date_debut, date_fin, user_id, 'Rademaker', 'Quentin', '0772562261')
-    RETURNING idreservation INTO new_res_id;
-
-    -- 2. Voyageurs (4 Adultes pour le réveillon)
-    INSERT INTO inclure (idreservation, idtypevoyageur, nombrevoyageur) VALUES (new_res_id, 1, 4); 
-
-    -- 3. Transaction (4 nuits * 173€ = 692€)
-    INSERT INTO transaction (iddate, idreservation, idcartebancaire, montanttransaction)
-    VALUES (date_debut, new_res_id, (SELECT idcartebancaire FROM utilisateur WHERE idutilisateur = user_id), 692.00);
-
-    -- 4. Indisponibilité
-    UPDATE relier SET estdisponible = false 
-    WHERE idannonce = annonce_id AND iddate BETWEEN date_debut AND date_fin;
-END $$;
-
-/* ajoutes des réservations de nouvel an */
-DO $$ 
-DECLARE 
-    new_res_id INT;
-    date_debut INT;
-    date_fin INT;
-    user_id INT := 25; -- Quentin Rademaker
-    annonce_id INT := 28; -- Appartement proche commerces (Capacité 5)
-BEGIN
-    SELECT iddate INTO date_debut FROM date WHERE date = '2025-12-30';
-    SELECT iddate INTO date_fin FROM date WHERE date = '2026-01-03';
-
-    -- 1. Réservation
-    INSERT INTO reservation (idannonce, iddatedebutreservation, iddatefinreservation, idutilisateur, nomclient, prenomclient, telephoneclient)
-    VALUES (annonce_id, date_debut, date_fin, user_id, 'Rademaker', 'Quentin', '0772562261')
-    RETURNING idreservation INTO new_res_id;
-
-    -- 2. Voyageurs (4 Adultes pour le réveillon)
-    INSERT INTO inclure (idreservation, idtypevoyageur, nombrevoyageur) VALUES (new_res_id, 1, 4); 
-
-    -- 3. Transaction (4 nuits * 173€ = 692€)
-    INSERT INTO transaction (iddate, idreservation, idcartebancaire, montanttransaction)
-    VALUES (date_debut, new_res_id, (SELECT idcartebancaire FROM utilisateur WHERE idutilisateur = user_id), 692.00);
-
-    -- 4. Indisponibilité
-    UPDATE relier SET estdisponible = false 
-    WHERE idannonce = annonce_id AND iddate BETWEEN date_debut AND date_fin;
-END $$;
-
-/* ajoutes des réservations de debut d'année 2026 */
-DO $$ 
-DECLARE 
-    new_res_id INT;
-    date_debut INT;
-    date_fin INT;
-    user_id INT := 40; -- Claire Berger
-    annonce_id INT := 3; -- Studio idéal pour étudiant
-BEGIN
-    SELECT iddate INTO date_debut FROM date WHERE date = '2026-01-14';
-    SELECT iddate INTO date_fin FROM date WHERE date = '2026-01-17';
-
-    -- 1. Réservation
-    INSERT INTO reservation (idannonce, iddatedebutreservation, iddatefinreservation, idutilisateur, nomclient, prenomclient, telephoneclient)
-    VALUES (annonce_id, date_debut, date_fin, user_id, 'Berger', 'Claire', '0678877669')
-    RETURNING idreservation INTO new_res_id;
-
-    -- 2. Voyageurs (1 Adulte)
-    INSERT INTO inclure (idreservation, idtypevoyageur, nombrevoyageur) VALUES (new_res_id, 1, 1); 
-
-    -- 3. Transaction (3 nuits * 55€ = 165€)
-    INSERT INTO transaction (iddate, idreservation, idcartebancaire, montanttransaction)
-    VALUES (date_debut, new_res_id, (SELECT idcartebancaire FROM utilisateur WHERE idutilisateur = user_id), 165.00);
-
-    -- 4. Indisponibilité
-    UPDATE relier SET estdisponible = false 
-    WHERE idannonce = annonce_id AND iddate BETWEEN date_debut AND date_fin;
-END $$;
+ (25,30830,30834,25,'Rademaker','Quentin','0772562261'),
+ (28,32141,32145,25,'Rademaker','Quentin','0772562261'),
+ (28,32141,32145,25,'Rademaker','Quentin','0772562261'),
+ (3,32156,32159,40,'Berger','Claire','0678877669');
 
 /*==============================================================*/
 /* Table : cibler (38 lignes)                                   */
@@ -6700,6 +6588,26 @@ INSERT INTO filtrer(idcommodite,idrecherche) VALUES (30,20);
 /* INSERTIONS HUITIEME NIVEAU                                                                                                                 */
 /*============================================================================================================================================*/
 /*============================================================================================================================================*/
+
+/*==============================================================*/
+/* Table : relier (193435 lignes)                               */
+/*==============================================================*/
+
+INSERT INTO relier (idannonce, iddate, estdisponible)
+SELECT 
+    a.idannonce,
+    d.iddate,
+    TRUE
+FROM annonce a
+JOIN date d
+  ON d.iddate >= a.iddate
+ORDER BY a.idannonce, d.iddate;
+
+UPDATE relier r
+SET estdisponible = FALSE
+FROM reservation res
+WHERE r.idannonce = res.idannonce
+  AND r.iddate BETWEEN res.iddatedebutreservation AND res.iddatefinreservation;
 
 /*==============================================================*/
 /* Table : inclure (207 lignes)                                 */
