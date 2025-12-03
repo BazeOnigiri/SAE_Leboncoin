@@ -788,45 +788,45 @@ ALTER TABLE utilisateur
 
 --voir annonces pas dispo entre 2 dates
 CREATE OR REPLACE FUNCTION get_annonces_disponibles(
-    p_date_debut DATE, 
-    p_date_fin DATE
+   p_date_debut DATE, 
+   p_date_fin DATE
 )
 RETURNS TABLE (
-    id_annonce INT,
-    titre VARCHAR,
-    type_logement VARCHAR,
-    ville VARCHAR,
-    prix DECIMAL
+   id_annonce INT,
+   titre VARCHAR,
+   type_logement VARCHAR,
+   ville VARCHAR,
+   prix DECIMAL
 ) 
 AS $$
 BEGIN
-    RETURN QUERY
-    SELECT 
-        a.idannonce,
-        a.titreannonce,
-        th.nomtypehebergement,
-        v.nomville,
-        a.prixnuitee
-    FROM 
-        annonce a
-    JOIN 
-        typehebergement th ON a.idtypehebergement = th.idtypehebergement
-    JOIN 
-        adresse adr ON a.idadresse = adr.idadresse
-    JOIN 
-        ville v ON adr.idville = v.idville
-    WHERE 
-        -- LE CŒUR DE LA LOGIQUE EST ICI :
-        -- On exclut les annonces qui ont au moins UN jour "non disponible" dans la période
-        a.idannonce NOT IN (
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      th.nomtypehebergement,
+      v.nomville,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      typehebergement th ON a.idtypehebergement = th.idtypehebergement
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   WHERE 
+      -- LE CŒUR DE LA LOGIQUE EST ICI :
+      -- On exclut les annonces qui ont au moins UN jour "non disponible" dans la période
+      a.idannonce NOT IN (
             SELECT r.idannonce
             FROM relier r
             JOIN date d ON r.iddate = d.iddate
             WHERE d.date BETWEEN p_date_debut AND p_date_fin
             AND r.estdisponible = false
-        )
-    ORDER BY 
-        v.nomville, 
-        a.prixnuitee ASC; -- Trié par ville puis par prix croissant
+      )
+   ORDER BY 
+      v.nomville, 
+      a.prixnuitee ASC; -- Trié par ville puis par prix croissant
 END;
 $$ LANGUAGE plpgsql;
