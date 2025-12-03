@@ -9,7 +9,7 @@ use App\Models\Particulier;
 use App\Models\Professionnel;
 use App\Models\Departement;
 use App\Models\Region;
-use App\Models\Date as DateNaissance;
+use App\Models\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -58,7 +58,6 @@ class CreateNewUser implements CreatesNewUsers
             'secteuractivite' => ['nullable', 'string', 'required_if:role,professionnel'],
         ])->validate();
 
-
         $ville = Ville::where('nomville', strtoupper($input['ville']))
             ->where('codepostal', $input['codepostal'])
             ->first();
@@ -81,13 +80,13 @@ class CreateNewUser implements CreatesNewUsers
             $departement = Departement::where('numerodepartement', $depNumero)->first();
             if (!$departement) {
                 $departement = new Departement();
-                $departement->idregion         = $region->idregion;
+                $departement->idregion          = $region->idregion;
                 $departement->numerodepartement = $depNumero;
                 $departement->nomdepartement    = 'DEPARTEMENT ' . $depNumero;
                 $departement->save();
             }
 
-            $taxe = random_int(50, 250) / 100;
+            $taxe = random_int(50, 300) / 100;
 
             $ville = new Ville();
             $ville->iddepartement = $departement->iddepartement;
@@ -103,25 +102,32 @@ class CreateNewUser implements CreatesNewUsers
         $adresse->nomrue    = $input['nomrue'];
         $adresse->save();
 
+        $creationDate = Date::firstOrCreate([
+            'date' => now()->toDateString(),
+        ]);
+
         $user = new User();
-        $user->idadresse          = $adresse->idadresse;
-        $user->nomutilisateur     = $input['nom'] ?? ($input['nomsociete'] ?? '');
-        $user->prenomutilisateur  = $input['prenom'] ?? '';
-        $user->pseudonyme         = $input['pseudo'];
-        $user->email              = $input['email'];
+        $user->idadresse            = $adresse->idadresse;
+        $user->iddate               = $creationDate->iddate; 
+        $user->nomutilisateur       = $input['nom'] ?? ($input['nomsociete'] ?? '');
+        $user->prenomutilisateur    = $input['prenom'] ?? '';
+        $user->pseudonyme           = $input['pseudo'];
+        $user->email                = $input['email'];
         $user->telephoneutilisateur = $input['telephone'];
-        $user->solde              = 0;
-        $user->password           = Hash::make($input['password']);
+        $user->solde                = 0;
+        $user->password             = Hash::make($input['password']);
         $user->save();
 
+
         if ($input['role'] === 'particulier') {
-            $date = new DateNaissance();
-            $date->date = $input['date_naissance'];   
-            $date->save();
+            $birthDate = Date::firstOrCreate([
+                'date' => $input['date_naissance'],
+            ]);
+
             $particulier = new Particulier();
             $particulier->idutilisateur = $user->idutilisateur;
             $particulier->civilite      = $input['civilite'];
-            $particulier->iddate        = $date->iddate;   
+            $particulier->iddate        = $birthDate->iddate;
             $particulier->save();
         }
 
@@ -133,7 +139,6 @@ class CreateNewUser implements CreatesNewUsers
             $professionnel->secteuractivite = $input['secteuractivite'];
             $professionnel->save();
         }
-
         return $user;
     }
 }
