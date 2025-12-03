@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             'nomutilisateur' => 'TestNom',
             'prenomutilisateur' => 'TestPrenom',
             'pseudonyme' => 'TestPseudo',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('passwordT67!'),
             'email' => 'test@example.com',
             'solde' => 67.00,
             'idadresse' => 1,
