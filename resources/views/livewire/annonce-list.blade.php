@@ -141,25 +141,43 @@
 
             let bounds = L.latLngBounds();
 
+            // 1. Grouper les marqueurs par coordonnées identiques
+            let groups = {};
             markersData.forEach(marker => {
-                let lat = parseFloat(marker.lat);
-                let lng = parseFloat(marker.lng);
+                let key = marker.lat + '_' + marker.lng;
+                if (!groups[key]) groups[key] = [];
+                groups[key].push(marker);
+            });
 
-                const offset = 0.0005; 
-                lat += (Math.random() - 0.5) * offset;
-                lng += (Math.random() - 0.5) * offset;
+            // 2. Traiter chaque groupe
+            Object.values(groups).forEach(group => {
+                let count = group.length;
+                
+                group.forEach((marker, index) => {
+                    let lat = parseFloat(marker.lat);
+                    let lng = parseFloat(marker.lng);
 
-                let popupContent = `
-                    <div class="text-center min-w-[150px]">
-                        ${marker.img ? `<img src="${marker.img}" class="w-full h-24 object-cover rounded mb-2">` : ''}
-                        <b class="text-sm block mb-1">${marker.title}</b>
-                        <span class="font-bold text-white bg-orange-600 px-2 py-1 rounded text-xs">${marker.price} €</span>
-                    </div>
-                `;
+                    // Si plusieurs marqueurs au même endroit, on les décale en cercle
+                    if (count > 1) {
+                        let angle = (index / count) * Math.PI * 2; // Distribution uniforme
+                        let radius = 0.0006; // ~60-70 mètres de décalage
+                        
+                        lat += Math.sin(angle) * radius;
+                        lng += Math.cos(angle) * radius;
+                    }
 
-                let m = L.marker([lat, lng]).bindPopup(popupContent);
-                markersLayer.addLayer(m);
-                bounds.extend([lat, lng]);
+                    let popupContent = `
+                        <div class="text-center min-w-[150px]">
+                            ${marker.img ? `<img src="${marker.img}" class="w-full h-24 object-cover rounded mb-2">` : ''}
+                            <b class="text-sm block mb-1">${marker.title}</b>
+                            <span class="font-bold text-white bg-orange-600 px-2 py-1 rounded text-xs">${marker.price} €</span>
+                        </div>
+                    `;
+
+                    let m = L.marker([lat, lng]).bindPopup(popupContent);
+                    markersLayer.addLayer(m);
+                    bounds.extend([lat, lng]);
+                });
             });
 
             if (markersData.length > 0) map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
