@@ -141,7 +141,7 @@ SELECT generate_series(
 
     '1938-01-01'::date, 
 
-    '2028-12-31'::date, 
+    '2026-12-31'::date, 
 
     '1 day'::interval 
 
