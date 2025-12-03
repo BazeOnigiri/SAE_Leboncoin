@@ -366,24 +366,6 @@ create table transaction (
 );
 
 /*==============================================================*/
-/* Table : typeequipement                                       */
-/*==============================================================*/
-create table typeequipement (
-   idtypeequipement     serial               not null,
-   nomtypeequipement    varchar(30)          not null unique,
-   constraint pk_typeequipement primary key (idtypeequipement)
-);
-
-/*==============================================================*/
-/* Table : typeexterieur                                        */
-/*==============================================================*/
-create table typeexterieur (
-   idtypeexterieur          serial               not null,
-   nomexterieur         varchar(30)          not null unique,
-   constraint pk_typeexterieur primary key (idtypeexterieur)
-);
-
-/*==============================================================*/
 /* Table : typehebergement                                      */
 /*==============================================================*/
 create table typehebergement (
@@ -391,15 +373,6 @@ create table typehebergement (
    idcategorie               int4                 not null,
    nomtypehebergement   varchar(30)          null,
    constraint pk_typehebergement primary key (idtypehebergement)
-);
-
-/*==============================================================*/
-/* Table : typeservice                                          */
-/*==============================================================*/
-create table typeservice (
-   idtypeservice        serial               not null,
-   nomtypeservice       varchar(30)          not null unique,
-   constraint pk_typeservice primary key (idtypeservice)
 );
 
 /*==============================================================*/
