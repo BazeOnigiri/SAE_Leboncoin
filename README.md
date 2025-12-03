@@ -28,6 +28,16 @@ php artisan db:seed
 ```
 Faire clique droit sur la DB --> Refresh dans PgAdmin4 pour voir les changements.
 
+## Cache config
+Charger les markers sur la map
+```
+php artisan geo:cache
+```
+Vider le cache
+```
+php artisan geo:clear
+```
+
 ## User from debit seed
 email: ```test@example.com```
 password: ```password```

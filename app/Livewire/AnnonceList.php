@@ -52,13 +52,13 @@ class AnnonceList extends Component
         if (!empty($this->filterTypes)) {
             $query->whereIn('idtypehebergement', $this->filterTypes);
         }
-        if (!empty($this->dateArrivee) && !empty($this->dateDepart)) {
-            $start = $this->dateArrivee;
-            $end = $this->dateDepart;
-            $dateIds = Date::whereBetween('date', [$start, $end])->pluck('iddate');
-            $query->whereHas('dates', function ($q) use ($dateIds) {
-                $q->whereIn('relier.iddate', $dateIds)->where('relier.estdisponible', true);
-            });
+        if (!empty($this->dateArrivee) || !empty($this->dateDepart)) {
+            $debut = $this->dateArrivee ?: $this->dateDepart;
+            $fin   = $this->dateDepart  ?: $this->dateArrivee;
+            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_disponibles(?, ?))", [
+                $debut,
+                $fin
+            ]);
         }
 
         $annonces = $query->get();
