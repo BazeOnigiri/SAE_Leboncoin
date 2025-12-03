@@ -9,16 +9,13 @@
     <div class="bg-[#f8f9fb] min-h-screen pb-12">
         <main id="mainContent" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             
-            <!-- EN-TÊTE PROFIL -->
             <div class="flex flex-col md:flex-row gap-6 mb-8">
                 <div class="bg-white border border-gray-200 flex w-full grow flex-col rounded-xl shadow-sm">
                     <div class="p-6">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-6">
                                 
-                                <!-- AVATAR AVEC STYLO EN OVERLAY -->
                                 <div class="relative flex-shrink-0">
-                                    <!-- Image ronde masquée -->
                                     <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
                                         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && Auth::user()->profile_photo_url)
                                             <img class="h-full w-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->prenomutilisateur }}" />
@@ -27,7 +24,6 @@
                                         @endif
                                     </div>
                                     
-                                    <!-- Bouton Stylo (Sorti du cercle, positionné par dessus) -->
                                     <a href="{{ route('user.edit') }}" class="absolute bottom-0 -right-1 bg-white text-gray-700 p-2 rounded-full shadow-md border border-gray-100 hover:bg-gray-50 z-20 flex items-center justify-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                             <path d="M21.731 2.269a2.625 2.625 0 113.71 3.71l-9.399 9.399-1.127 1.127a2.25 2.25 0 01-1.59.659h-5.376a.75.75 0 01-.75-.75v-5.376a2.25 2.25 0 01.659-1.59l1.128-1.127 9.399-9.399zM8.679 13.72a.75.75 0 10-1.06-1.06L5.25 15.031v2.421l2.421.26 2.369-2.369z" />
@@ -35,7 +31,6 @@
                                     </a>
                                 </div>
 
-                                <!-- Infos -->
                                 <div class="flex flex-col">
                                     <a href="{{ route('user.edit') }}" class="group">
                                         <h2 class="text-2xl font-bold text-gray-900 group-hover:underline mb-1">
@@ -53,7 +48,6 @@
                     </div>
                 </div>
 
-                <!-- Carte Porte-monnaie -->
                 <div class="md:w-96 bg-white border border-gray-200 rounded-xl shadow-sm p-6 pl-12 relative overflow-hidden flex flex-col justify-center">
                     <div class="absolute -left-20 top-0 h-full flex items-center"><svg width="200" height="200" viewBox="0 0 385 418" fill="none"><circle cx="192.629" cy="225.167" r="136" fill="#ea580c" fill-opacity="0.1"></circle></svg></div>
                     <h2 class="text-lg font-bold text-gray-900 z-10">Porte-monnaie</h2>
@@ -62,7 +56,6 @@
                 </div>
             </div>
 
-            <!-- GRILLE NAVIGATION -->
             <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 
                 <a href="{{ route('user.annonces') }}" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex items-start gap-4">
@@ -86,7 +79,6 @@
                     <div><h2 class="text-lg font-bold text-gray-900">Réservations</h2><p class="text-gray-500 text-sm mt-1">Vos séjours</p></div>
                 </a>
 
-                <!-- Carte PROFIL (Renommée) -->
                 <a href="{{ route('user.spaces') }}" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex items-start gap-4">
                     <div class="w-10 h-10 flex-shrink-0 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
@@ -115,7 +107,6 @@
                     <div><h2 class="text-lg font-bold text-gray-900">Factures</h2><p class="text-gray-500 text-sm mt-1">Télécharger factures</p></div>
                 </a>
 
-                <!-- BOUTON CNI -->
                 <a href="{{ route('cni.index') }}" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex items-center justify-between">
                 <div class="flex items-center gap-4">
                         <div class="w-10 h-10 flex-shrink-0 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600">

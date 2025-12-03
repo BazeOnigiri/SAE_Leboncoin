@@ -17,4 +17,9 @@ class Date extends Model
         return $this->belongsToMany(Annonce::class, 'relier', 'iddate', 'idannonce')
                     ->withPivot('estdisponible');
     }
+
+    public function particulier()
+    {
+        return $this->hasOne(Particulier::class, 'iddate', 'iddate');
+    }
 }
