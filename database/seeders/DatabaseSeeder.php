@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         Particulier::create([
             'idutilisateur' => $user->idutilisateur, 
             'civilite' => 'Monsieur',
-            'iddate' => 10,
+            'iddate' => 30200,
         ]);
     }
 }
