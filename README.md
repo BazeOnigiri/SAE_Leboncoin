@@ -14,14 +14,19 @@ git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
 ```
 ## DB conf
-Setup tables : 
+Créer la DB pour la première fois :
 ```
 php artisan migrate
 ```
-Add inserts
+Ou mettre à jour la DB :
+```
+php artisan migrate:fresh
+```
+Dans les deux cas il faut ajouter les inserts ensuite :
 ```
 php artisan db:seed
 ```
+Faire clique droit sur la DB --> Refresh dans PgAdmin4 pour voir les changements.
 
 ## User from debit seed
 email: ```test@example.com```
