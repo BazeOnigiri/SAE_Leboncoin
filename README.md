@@ -33,6 +33,10 @@ Charger les markers sur la map
 ```
 php artisan geo:cache
 ```
+Vider le cache
+```
+php artisan geo:clear
+```
 
 ## User from debit seed
 email: ```test@example.com```
