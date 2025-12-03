@@ -14,7 +14,7 @@ class AnnonceList extends Component
     public $location = ''; 
     public $filterTypes = [];
     public $dateArrivee = '';
-    public $dateDepart = '';
+    public $dateDepart = '2026-12-31';
 
     #[On('locationSelected')] 
     public function updateLocation($nom) { $this->location = $nom; }
@@ -53,12 +53,10 @@ class AnnonceList extends Component
             $query->whereIn('idtypehebergement', $this->filterTypes);
         }
         if (!empty($this->dateArrivee) && !empty($this->dateDepart)) {
-            $start = $this->dateArrivee;
-            $end = $this->dateDepart;
-            $dateIds = Date::whereBetween('date', [$start, $end])->pluck('iddate');
-            $query->whereHas('dates', function ($q) use ($dateIds) {
-                $q->whereIn('relier.iddate', $dateIds)->where('relier.estdisponible', true);
-            });
+            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_disponibles(?, ?))", [
+                $this->dateArrivee,
+                $this->dateDepart
+            ]);
         }
 
         $annonces = $query->get();
