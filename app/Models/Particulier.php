@@ -16,11 +16,10 @@ class Particulier extends Model
 
     public function utilisateur()
     {
-        return $this->belongsTo(Utilisateur::class, 'idutilisateur');
+        return $this->belongsTo(User::class, 'idutilisateur');
     }
 
-    public function date()
-    {
-        return $this->belongsTo(Date::class, 'iddate');
+    public function dateNaissance() {
+        return $this->belongsTo(\App\Models\Date::class, 'iddate');
     }
 }
