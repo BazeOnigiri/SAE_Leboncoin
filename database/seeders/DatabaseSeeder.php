@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(InsertSeeder::class);
         $user = User::create([
+            'iddate' => 30200,
             'nomutilisateur' => 'TestNom',
             'prenomutilisateur' => 'TestPrenom',
             'pseudonyme' => 'TestPseudo',
@@ -30,7 +31,6 @@ class DatabaseSeeder extends Seeder
         Particulier::create([
             'idutilisateur' => $user->idutilisateur, 
             'civilite' => 'Monsieur',
-            'iddate' => 30200,
         ]);
     }
 }
