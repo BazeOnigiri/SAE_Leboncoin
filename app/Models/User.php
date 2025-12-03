@@ -106,7 +106,7 @@ class User extends Authenticatable
         return $this->hasMany(Incident::class, 'idutilisateur');
     }
 
-    public function particuliers()
+    public function particulier()
     {
         return $this->hasOne(Particulier::class, 'idutilisateur');
     }
@@ -161,5 +161,19 @@ class User extends Authenticatable
             'idutilisateur',   
             'idannonce'       
         );
+    }
+    public function telephoneEstVerifie(){
+        return (bool) $this->phone_verified;
+    }
+    public function identiteEstVerifie(){
+        return (bool) $this->identity_verified;
+    }
+    public function estRecommande()
+    {
+        $bonneNote = ($this->avis_recus_avg_nombreetoiles ?? 0) >= 4;
+        $assezAvis = ($this->avis_recus_count ?? 0) >= 10;
+        $identiteOk = $this->identiteEstVerifie();
+        $telephoneOk = $this->telephoneEstVerifie();
+        return $bonneNote && $assezAvis && $identiteOk && $telephoneOk;
     }
 }

@@ -142,6 +142,7 @@
 
         </div>
     </header>
+    <x-alert/>
     @yield('content')
     {{ $slot ?? '' }}
     @stack('modals')

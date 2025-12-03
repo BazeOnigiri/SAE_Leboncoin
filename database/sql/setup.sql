@@ -27,10 +27,7 @@ drop table if exists region CASCADE;
 drop table if exists relier CASCADE;
 drop table if exists reservation CASCADE;
 drop table if exists transaction CASCADE;
-drop table if exists typeequipement CASCADE;
-drop table if exists typeexterieur CASCADE;
 drop table if exists typehebergement CASCADE;
-drop table if exists typeservice CASCADE;
 drop table if exists typevoyageur CASCADE;
 drop table if exists utilisateur CASCADE;
 drop table if exists ville CASCADE;
@@ -366,24 +363,6 @@ create table transaction (
 );
 
 /*==============================================================*/
-/* Table : typeequipement                                       */
-/*==============================================================*/
-create table typeequipement (
-   idtypeequipement     serial               not null,
-   nomtypeequipement    varchar(30)          not null unique,
-   constraint pk_typeequipement primary key (idtypeequipement)
-);
-
-/*==============================================================*/
-/* Table : typeexterieur                                        */
-/*==============================================================*/
-create table typeexterieur (
-   idtypeexterieur          serial               not null,
-   nomexterieur         varchar(30)          not null unique,
-   constraint pk_typeexterieur primary key (idtypeexterieur)
-);
-
-/*==============================================================*/
 /* Table : typehebergement                                      */
 /*==============================================================*/
 create table typehebergement (
@@ -391,15 +370,6 @@ create table typehebergement (
    idcategorie               int4                 not null,
    nomtypehebergement   varchar(30)          null,
    constraint pk_typehebergement primary key (idtypehebergement)
-);
-
-/*==============================================================*/
-/* Table : typeservice                                          */
-/*==============================================================*/
-create table typeservice (
-   idtypeservice        serial               not null,
-   nomtypeservice       varchar(30)          not null unique,
-   constraint pk_typeservice primary key (idtypeservice)
 );
 
 /*==============================================================*/

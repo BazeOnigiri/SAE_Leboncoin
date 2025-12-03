@@ -141,7 +141,7 @@ SELECT generate_series(
 
     '1938-01-01'::date, 
 
-    '2028-12-31'::date, 
+    '2026-12-31'::date, 
 
     '1 day'::interval 
 
@@ -1036,12 +1036,6 @@ FROM annonce a
 JOIN date d
   ON d.iddate >= a.iddate
 ORDER BY a.idannonce, d.iddate;
-
-UPDATE relier r
-SET estdisponible = FALSE
-FROM reservation res
-WHERE r.idannonce = res.idannonce
-  AND r.iddate BETWEEN res.iddatedebutreservation AND res.iddatefinreservation;
 
 /*==============================================================*/
 /* Table : avis (80 avis)                                       */
@@ -3219,6 +3213,20 @@ INSERT INTO reservation(idannonce,iddatedebutreservation,iddatefinreservation,id
  (25,30790,30794,23,'De Witte','Grégoire','0667232663'),
  (25,30810,30814,24,'Garcon','Rachel','0652211742'),
  (25,30830,30834,25,'Rademaker','Quentin','0772562261');
+
+/* met en estdisponible en false pour les annonces réservées */
+UPDATE relier r
+SET estdisponible = FALSE
+FROM reservation res
+WHERE r.idannonce = res.idannonce
+AND r.iddate BETWEEN res.iddatedebutreservation AND res.iddatefinreservation;
+
+/* met en estdisponible en false si pour les dates passées */
+UPDATE relier
+SET estdisponible = false
+FROM date
+WHERE relier.iddate = date.iddate
+AND date.date < CURRENT_DATE;
 
 /*==============================================================*/
 /* Table : cibler (38 lignes)                                   */

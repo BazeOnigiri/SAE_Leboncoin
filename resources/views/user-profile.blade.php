@@ -11,15 +11,14 @@
             <div>
                 <div class="flex items-center gap-2 mb-1">
                     <h1 class="text-xl font-bold text-gray-900">{{ $user->pseudonyme }}</h1>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 mr-1">
-                            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
-                        </svg>
-                        Profil recommandé // A Faire
-                    </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                    </svg>
+                    @if($user->estRecommande())
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 mr-1">
+                                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                            </svg>
+                            Profil recommandé
+                        </span>
+                    @endif
                 </div>
 
                 <div class="space-y-1">
@@ -27,13 +26,13 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                         </svg>
-                        Pièce d'identité{{ $user->isCNIValidate() ? '' : ' non' }} vérifiée
+                        Pièce d'identité {{ $user->identiteEstVerifie() ? 'vérifié' : 'non vérifié' }}
                     </div>
                     <div class="flex items-center text-gray-700 text-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
                         </svg>
-                        Numéro de téléphone vérifié // A Faire
+                        Numéro de téléphone {{ $user->telephoneEstVerifie() ? 'vérifié' : 'non vérifié' }}
                     </div>
                 </div>
             </div>
@@ -68,27 +67,45 @@
             </svg>
             <span>{{ $user->adresse?->ville?->departement?->nomdepartement ?? 'Non renseigné' }}</span>
         </div>
-
         <div class="flex items-center md:justify-end">
-    <div class="flex mr-1">
-        @php
-            $note = round($user->avis_recus_avg_nombreetoiles); 
-        @endphp
-        @foreach(range(1, 5) as $i)
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
-                class="w-4 h-4 {{ $i <= $note ? 'text-orange-500' : 'text-gray-300' }}">
-                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
-            </svg>
-        @endforeach
-    </div>
-    <span class="font-bold text-gray-900 text-sm">
-        @if($user->avis_recus_count > 0)
-            {{ $user->avis_recus_count }} avis
-        @else
-            Aucun avis
-        @endif
-    </span>
-</div>
+            @php
+                $rawScore = $user->avis_recus_avg_nombreetoiles ?? 0;
+            @endphp
+
+            <div class="flex mr-2">
+                @foreach(range(1, 5) as $i)
+                    <div class="relative w-4 h-4 mr-0.5">
+                        {{-- Fond gris --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
+                            class="w-full h-full text-gray-300 absolute top-0 left-0">
+                            <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                        </svg>
+                        @if($rawScore >= $i)
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
+                                class="w-full h-full text-orange-500 absolute top-0 left-0">
+                                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                            </svg>
+                        @elseif($rawScore > ($i - 1))
+                            @php
+                                $pct = ($rawScore - ($i - 1)) * 100;
+                            @endphp
+                            <div class="absolute top-0 left-0 h-full overflow-hidden text-orange-500" style="width: {{ $pct }}%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+            <span class="text-sm">
+                @if($user->avis_recus_count > 0)
+                    <span class="text-gray-600 font-medium">{{ $user->avis_recus_count }} avis</span>
+                @else
+                    <span class="text-gray-400 font-normal">Aucun avis</span>
+                @endif
+            </span>
+        </div>
     </div>
 </div>
         <p class=" font-bold">{{ $user->annonces_publiees_count }} annonce.s</p>
