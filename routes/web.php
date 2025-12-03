@@ -11,6 +11,12 @@ Route::get('/', [AnnonceController::class, 'index'])->name('home');
 Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
 
+use App\Http\Controllers\ReservationController;
+
+Route::get('/mes-reservations', [ReservationController::class, 'mesReservations'])
+    ->middleware('auth')
+    ->name('user.mesReservations'); 
+
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')
     ->name('auth.check');
