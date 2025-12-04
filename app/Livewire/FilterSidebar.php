@@ -10,14 +10,13 @@ use Illuminate\Support\Facades\Cache;
 class FilterSidebar extends Component
 {
     public array $typesHebergement = [];
-    public array $selectedTypes = []; // Stocke les IDs des types cochés
-    public bool $showTypes = false; // Pour ouvrir/fermer la section
+    public array $selectedTypes = []; 
+    public bool $showTypes = false; 
     public $dateArrivee = '';
     public $dateDepart = '';
 
     public function mount()
     {
-        // On charge les types depuis la BDD (avec cache pour la perf)
         $this->typesHebergement = Cache::rememberForever('types_hebergement', function () {
             return TypeHebergement::select('idtypehebergement', 'nomtypehebergement')
                 ->orderBy('nomtypehebergement')
@@ -31,7 +30,6 @@ class FilterSidebar extends Component
         $this->showTypes = !$this->showTypes;
     }
 
-    // Cette fonction est appelée quand on clique sur "Rechercher"
     public function applyFilters()
     {
         $this->dispatch('filtersUpdated', 
