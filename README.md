@@ -1,5 +1,5 @@
 # Usage
-# Docker
+## Docker
 ```
 docker build -t laravel-app . 
 ```
