@@ -160,7 +160,7 @@
                     // Si plusieurs marqueurs au même endroit, on les décale en cercle
                     if (count > 1) {
                         let angle = (index / count) * Math.PI * 2; // Distribution uniforme
-                        let radius = 0.0006; // ~60-70 mètres de décalage
+                        let radius = 0.0001; // ~10 mètres de décalage
                         
                         lat += Math.sin(angle) * radius;
                         lng += Math.cos(angle) * radius;
