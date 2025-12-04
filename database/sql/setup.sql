@@ -919,3 +919,40 @@ BEGIN
       a.prixnuitee ASC;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_annonces_par_types(
+   p_types_noms VARCHAR[] 
+)
+RETURNS TABLE (
+   id_annonce INT,
+   titre VARCHAR,
+   ville VARCHAR,
+   type_logement VARCHAR,
+   prix DECIMAL
+) 
+AS $$
+BEGIN
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      v.nomville,
+      th.nomtypehebergement,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      typehebergement th ON a.idtypehebergement = th.idtypehebergement
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   WHERE 
+      p_types_noms IS NULL 
+      OR cardinality(p_types_noms) = 0
+      OR th.nomtypehebergement = ANY(p_types_noms)
+   ORDER BY 
+      th.nomtypehebergement,
+      a.prixnuitee ASC;
+END;
+$$ LANGUAGE plpgsql;
