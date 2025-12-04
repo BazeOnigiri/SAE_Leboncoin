@@ -39,12 +39,12 @@ class AnnonceList extends Component
         if (!empty($this->location)) {
             $loc = $this->location;
             $query->whereHas('adresse.ville', function ($q) use ($loc) {
-                $q->where('nomville', 'like', "%{$loc}%")
-                ->orWhere('codepostal', 'like', "{$loc}%")
+                $q->where('nomville', 'ilike', "%{$loc}%")
+                ->orWhere('codepostal', 'like', "{$loc}%") 
                 ->orWhereHas('departement', function ($q2) use ($loc) {
-                    $q2->where('nomdepartement', 'like', "%{$loc}%")
+                    $q2->where('nomdepartement', 'ilike', "%{$loc}%")
                         ->orWhereHas('region', function ($q3) use ($loc) {
-                            $q3->where('nomregion', 'like', "%{$loc}%");
+                            $q3->where('nomregion', 'ilike', "%{$loc}%");
                         });
                 });
             });
