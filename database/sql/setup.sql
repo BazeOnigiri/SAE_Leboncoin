@@ -794,7 +794,7 @@ ALTER TABLE utilisateur
   ALTER COLUMN phone_verified SET DEFAULT false,
   ALTER COLUMN identity_verified SET DEFAULT false;
 
---voir annonces pas dispo entre 2 dates
+--voir annonces dispo entre 2 dates
 CREATE OR REPLACE FUNCTION get_annonces_disponibles(
     p_date_debut DATE, 
     p_date_fin DATE
@@ -824,12 +824,18 @@ BEGIN
    JOIN 
       ville v ON adr.idville = v.idville
    WHERE 
+      (p_date_debut IS NULL AND p_date_fin IS NULL)
+      OR
       a.idannonce NOT IN (
             SELECT r.idannonce
             FROM relier r
             JOIN date d ON r.iddate = d.iddate
-            WHERE d.date BETWEEN p_date_debut AND p_date_fin
-            AND r.estdisponible = false
+            WHERE 
+               r.estdisponible = false 
+               AND
+               (p_date_debut IS NULL OR d.date >= p_date_debut)
+               AND
+               (p_date_fin IS NULL OR d.date <= p_date_fin)
       )
    ORDER BY 
       v.nomville, 
