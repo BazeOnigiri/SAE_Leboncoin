@@ -920,6 +920,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--voir annonces par type de logement
 CREATE OR REPLACE FUNCTION get_annonces_par_types(
    p_types_noms VARCHAR[] 
 )
@@ -957,6 +958,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--voir annonces par nb de chambres
 CREATE OR REPLACE FUNCTION get_annonces_par_nb_chambres(
    p_min_chambres INT,
    p_max_chambres INT DEFAULT NULL
