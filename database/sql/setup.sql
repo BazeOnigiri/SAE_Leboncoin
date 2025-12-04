@@ -956,3 +956,51 @@ BEGIN
       a.prixnuitee ASC;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_annonces_par_nb_chambres(
+   p_min_chambres INT,
+   p_max_chambres INT DEFAULT NULL
+)
+RETURNS TABLE (
+   id_annonce INT,
+   titre VARCHAR,
+   ville VARCHAR,
+   type_logement VARCHAR,
+   nb_chambres BIGINT, 
+   prix DECIMAL
+) 
+AS $$
+BEGIN
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      v.nomville,
+      th.nomtypehebergement,
+      COUNT(d.idchambre) AS total_chambres,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      disposer d ON a.idannonce = d.idannonce
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   JOIN 
+      typehebergement th ON a.idtypehebergement = th.idtypehebergement
+   GROUP BY 
+      a.idannonce, a.titreannonce, v.nomville, th.nomtypehebergement, a.prixnuitee
+   HAVING 
+      (p_min_chambres IS NULL AND p_max_chambres IS NULL)
+      OR
+      (p_min_chambres IS NOT NULL AND p_max_chambres IS NOT NULL AND 
+      COUNT(d.idchambre) BETWEEN p_min_chambres AND p_max_chambres)
+      OR
+      (p_min_chambres IS NOT NULL AND (p_max_chambres IS NULL OR p_min_chambres = p_max_chambres) AND 
+      COUNT(d.idchambre) = p_min_chambres)
+   ORDER BY 
+      total_chambres ASC,
+      a.prixnuitee ASC;
+END;
+$$ LANGUAGE plpgsql;
