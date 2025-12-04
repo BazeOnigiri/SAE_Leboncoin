@@ -839,37 +839,77 @@ $$ LANGUAGE plpgsql;
 
 --voir annonces entre 2 prix (null possible)
 CREATE OR REPLACE FUNCTION get_annonces_par_prix(
-    p_prix_min DECIMAL, 
-    p_prix_max DECIMAL
+   p_prix_min DECIMAL, 
+   p_prix_max DECIMAL
 )
 RETURNS TABLE (
-    id_annonce INT,
-    titre VARCHAR,
-    ville VARCHAR,
-    prix DECIMAL
+   id_annonce INT,
+   titre VARCHAR,
+   ville VARCHAR,
+   prix DECIMAL
 ) 
 AS $$
 BEGIN
-    RETURN QUERY
-    SELECT 
-        a.idannonce,
-        a.titreannonce,
-        v.nomville,
-        a.prixnuitee
-    FROM 
-        annonce a
-    JOIN 
-        adresse adr ON a.idadresse = adr.idadresse
-    JOIN 
-        ville v ON adr.idville = v.idville
-    WHERE 
-        -- Si p_prix_min est NULL, on ignore cette condition (OR true), sinon on vérifie le prix
-        (p_prix_min IS NULL OR a.prixnuitee >= p_prix_min)
-        AND
-        -- Si p_prix_max est NULL, on ignore cette condition (OR true), sinon on vérifie le prix
-        (p_prix_max IS NULL OR a.prixnuitee <= p_prix_max)
-    ORDER BY 
-        a.prixnuitee ASC;
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      v.nomville,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   WHERE
+      (p_prix_min IS NULL OR a.prixnuitee >= p_prix_min)
+      AND
+      (p_prix_max IS NULL OR a.prixnuitee <= p_prix_max)
+   ORDER BY 
+      a.prixnuitee ASC;
 END;
 $$ LANGUAGE plpgsql;
 
+--voir les annonces en fonction du nb de voyageurs
+CREATE OR REPLACE FUNCTION get_annonces_capacite(
+   p_nb_voyageurs INT
+)
+RETURNS TABLE (
+   id_annonce INT,
+   titre VARCHAR,
+   ville VARCHAR,
+   type_logement VARCHAR,
+   capacite_totale BIGINT,
+   prix DECIMAL
+) 
+AS $$
+BEGIN
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      v.nomville,
+      th.nomtypehebergement,
+      SUM(c.capacitechambre) AS total_cap,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      disposer d ON a.idannonce = d.idannonce
+   JOIN 
+      chambre c ON d.idchambre = c.idchambre
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   JOIN 
+      typehebergement th ON a.idtypehebergement = th.idtypehebergement
+   GROUP BY 
+      a.idannonce, a.titreannonce, v.nomville, th.nomtypehebergement, a.prixnuitee
+   HAVING 
+      (p_nb_voyageurs IS NULL OR SUM(c.capacitechambre) = p_nb_voyageurs)
+   ORDER BY 
+      a.prixnuitee ASC;
+END;
+$$ LANGUAGE plpgsql;
