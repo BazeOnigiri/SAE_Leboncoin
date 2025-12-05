@@ -1007,3 +1007,54 @@ BEGIN
       a.prixnuitee ASC;
 END;
 $$ LANGUAGE plpgsql;
+
+--voir annonces par particulier/pro
+CREATE OR REPLACE FUNCTION get_annonces_par_vendeur(
+   p_types_vendeur VARCHAR[]
+)
+RETURNS TABLE (
+   id_annonce INT,
+   titre VARCHAR,
+   ville VARCHAR,
+   type_logement VARCHAR,
+   type_vendeur TEXT, 
+   prix DECIMAL
+) 
+AS $$
+BEGIN
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      v.nomville,
+      th.nomtypehebergement,
+      CASE 
+            WHEN part.idutilisateur IS NOT NULL THEN 'Particulier'
+            WHEN pro.idutilisateur IS NOT NULL THEN 'Professionnel'
+            ELSE 'Autre'
+      END AS vendeur_type,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      typehebergement th ON a.idtypehebergement = th.idtypehebergement
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   LEFT JOIN 
+      particulier part ON a.idutilisateur = part.idutilisateur
+   LEFT JOIN 
+      professionnel pro ON a.idutilisateur = pro.idutilisateur
+   WHERE 
+      (p_types_vendeur IS NULL OR cardinality(p_types_vendeur) = 0)
+      OR
+      (
+            ('Particulier' = ANY(p_types_vendeur) AND part.idutilisateur IS NOT NULL)
+            OR
+            ('Professionnel' = ANY(p_types_vendeur) AND pro.idutilisateur IS NOT NULL)
+      )
+   ORDER BY 
+      a.prixnuitee ASC;
+END;
+$$ LANGUAGE plpgsql;
