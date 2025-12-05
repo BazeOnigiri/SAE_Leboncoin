@@ -389,29 +389,29 @@ create table typevoyageur (
 /* Table : utilisateur                                          */
 /*==============================================================*/
 CREATE TABLE utilisateur (
-    idutilisateur             SERIAL          NOT NULL,
-    idphoto                   INT4            NULL,
-    idadresse                 INT4            NOT NULL,
-    idcartebancaire           INT4            NULL,
-    iddate                    INT4            NOT NULL,
+   idutilisateur             SERIAL          NOT NULL,
+   idphoto                   INT4            NULL,
+   idadresse                 INT4            NOT NULL,
+   idcartebancaire           INT4            NULL,
+   iddate                    INT4            NOT NULL,
 
-    nomutilisateur            VARCHAR(50)     NOT NULL,
-    prenomutilisateur         VARCHAR(50)     NOT NULL,
-    pseudonyme                VARCHAR(50)     NOT NULL,
-    email                     VARCHAR(320)    NOT NULL UNIQUE,
-    email_verified_at         TIMESTAMP       NULL,
-    password                  VARCHAR(255)    NOT NULL,
-    telephoneutilisateur      CHAR(10)        NULL,
-    phone_verified            BOOLEAN         NOT NULL,
-    identity_verified         BOOLEAN         NOT NULL,
-    solde                     DECIMAL(10,2)   NOT NULL,
+   nomutilisateur            VARCHAR(50)     NOT NULL,
+   prenomutilisateur         VARCHAR(50)     NOT NULL,
+   pseudonyme                VARCHAR(50)     NOT NULL,
+   email                     VARCHAR(320)    NOT NULL UNIQUE,
+   email_verified_at         TIMESTAMP       NULL,
+   password                  VARCHAR(255)    NOT NULL,
+   telephoneutilisateur      CHAR(10)        NULL,
+   phone_verified            BOOLEAN         NOT NULL,
+   identity_verified         BOOLEAN         NOT NULL,
+   solde                     DECIMAL(10,2)   NOT NULL,
 
-    -- Jetstream / 2FA
-    remember_token            VARCHAR(100)    NULL,
-    two_factor_secret         TEXT            NULL,
-    two_factor_recovery_codes TEXT            NULL,
+   -- Jetstream / 2FA
+   remember_token            VARCHAR(100)    NULL,
+   two_factor_secret         TEXT            NULL,
+   two_factor_recovery_codes TEXT            NULL,
 
-    CONSTRAINT pk_utilisateur PRIMARY KEY (idutilisateur)
+   CONSTRAINT pk_utilisateur PRIMARY KEY (idutilisateur)
 );
 
 /*==============================================================*/
@@ -698,8 +698,7 @@ alter table transaction
 
 alter table transaction
    add constraint fk_transact_regler_reservat foreign key (idreservation)
-      references reservation (idreservation
-	  )
+      references reservation (idreservation)
       on delete restrict on update restrict;
 
 alter table typehebergement
@@ -734,78 +733,78 @@ alter table ville
 
 /*CHECKS*/
 ALTER TABLE annonce
-  ADD CONSTRAINT chk_annonce_prixnuitee CHECK (prixnuitee > 0),
-  ADD CONSTRAINT chk_annonce_montantacompte CHECK (montantacompte >= 0),
-  ADD CONSTRAINT chk_annonce_pourcentageacompte CHECK (pourcentageacompte >= 0 AND pourcentageacompte <= 100),
-  ADD CONSTRAINT chk_annonce_minimumnuitee CHECK (minimumnuitee >= 1),
-  ADD CONSTRAINT chk_annonce_nombreanimauxmax CHECK (nombreanimauxmax >= 0),
-  ADD CONSTRAINT chk_annonce_nombrebebesmax CHECK (nombrebebesmax >= 0),
-  ADD CONSTRAINT chk_annonce_etoiles CHECK (nombreetoilesleboncoin >= 1 AND nombreetoilesleboncoin <= 5),
-  ADD CONSTRAINT chk_annonce_montantacompte_pourcentageacompte_exclusivite CHECK (montantacompte IS NULL OR pourcentageacompte IS NULL);
+   ADD CONSTRAINT chk_annonce_prixnuitee CHECK (prixnuitee > 0),
+   ADD CONSTRAINT chk_annonce_montantacompte CHECK (montantacompte >= 0),
+   ADD CONSTRAINT chk_annonce_pourcentageacompte CHECK (pourcentageacompte >= 0 AND pourcentageacompte <= 100),
+   ADD CONSTRAINT chk_annonce_minimumnuitee CHECK (minimumnuitee >= 1),
+   ADD CONSTRAINT chk_annonce_nombreanimauxmax CHECK (nombreanimauxmax >= 0),
+   ADD CONSTRAINT chk_annonce_nombrebebesmax CHECK (nombrebebesmax >= 0),
+   ADD CONSTRAINT chk_annonce_etoiles CHECK (nombreetoilesleboncoin >= 1 AND nombreetoilesleboncoin <= 5),
+   ADD CONSTRAINT chk_annonce_montantacompte_pourcentageacompte_exclusivite CHECK (montantacompte IS NULL OR pourcentageacompte IS NULL);
 
 ALTER TABLE avis
-  ADD CONSTRAINT chk_avis_nombreetoiles CHECK (nombreetoiles >= 1.0 AND nombreetoiles <= 5.0);
+   ADD CONSTRAINT chk_avis_nombreetoiles CHECK (nombreetoiles >= 1.0 AND nombreetoiles <= 5.0);
 
 ALTER TABLE cartebancaire
-  ADD CONSTRAINT chk_cartebancaire_dateexpiration CHECK (dateexpiration > CURRENT_DATE);
+   ADD CONSTRAINT chk_cartebancaire_dateexpiration CHECK (dateexpiration > CURRENT_DATE);
 
 ALTER TABLE chambre
-  ADD CONSTRAINT chk_chambre_capacite CHECK (capacitechambre > 0);
+   ADD CONSTRAINT chk_chambre_capacite CHECK (capacitechambre > 0);
 
 ALTER TABLE inclure
-  ADD CONSTRAINT chk_inclure_nombrevoyageur CHECK (nombrevoyageur >= 0);
+   ADD CONSTRAINT chk_inclure_nombrevoyageur CHECK (nombrevoyageur >= 0);
 
 
 ALTER TABLE recherche
-  ADD CONSTRAINT chk_recherche_capacite CHECK (capaciteminimumvoyageur >= 1),
-  ADD CONSTRAINT chk_recherche_prixmin CHECK (prixminimum >= 0),
-  ADD CONSTRAINT chk_recherche_prixmax CHECK (prixmaximum >= 0),
-  ADD CONSTRAINT chk_recherche_prix_coherence CHECK (prixmaximum >= prixminimum),
-  ADD CONSTRAINT chk_recherche_nbminchambre CHECK (nombreminimumchambre >= 0),
-  ADD CONSTRAINT chk_recherche_nbmaxchambre CHECK (nombremaximumchambre >= 0),
-  ADD CONSTRAINT chk_recherche_chambre_coherence CHECK (nombremaximumchambre >= nombreminimumchambre);
+   ADD CONSTRAINT chk_recherche_capacite CHECK (capaciteminimumvoyageur >= 1),
+   ADD CONSTRAINT chk_recherche_prixmin CHECK (prixminimum >= 0),
+   ADD CONSTRAINT chk_recherche_prixmax CHECK (prixmaximum >= 0),
+   ADD CONSTRAINT chk_recherche_prix_coherence CHECK (prixmaximum >= prixminimum),
+   ADD CONSTRAINT chk_recherche_nbminchambre CHECK (nombreminimumchambre >= 0),
+   ADD CONSTRAINT chk_recherche_nbmaxchambre CHECK (nombremaximumchambre >= 0),
+   ADD CONSTRAINT chk_recherche_chambre_coherence CHECK (nombremaximumchambre >= nombreminimumchambre);
 
 ALTER TABLE transaction
-  ADD CONSTRAINT chk_transaction_montant CHECK (montanttransaction >= 0);
+   ADD CONSTRAINT chk_transaction_montant CHECK (montanttransaction >= 0);
 
 ALTER TABLE reservation
-  ADD CONSTRAINT chk_reservation_telephoneclient_format CHECK (telephoneclient ~ '^0[1-9][0-9]{8}$');
+   ADD CONSTRAINT chk_reservation_telephoneclient_format CHECK (telephoneclient ~ '^0[1-9][0-9]{8}$');
 
 ALTER TABLE utilisateur
-  ADD CONSTRAINT chk_utilisateur_email_format CHECK (email LIKE '%_@_%._%'),
-  ADD CONSTRAINT chk_utilisateur_telephoneutilisateur_format CHECK (telephoneutilisateur ~ '^0[1-9][0-9]{8}$'),
-  ADD CONSTRAINT chk_utilisateur_pseudonyme_longueur CHECK (LENGTH(pseudonyme) BETWEEN 2 AND 50),
-  ADD CONSTRAINT chk_utilisateur_solde_minimum CHECK (solde >= 0),
-  ADD CONSTRAINT chk_utilisateur_password_complexity CHECK (password ~* '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,}$');
+   ADD CONSTRAINT chk_utilisateur_email_format CHECK (email LIKE '%_@_%._%'),
+   ADD CONSTRAINT chk_utilisateur_telephoneutilisateur_format CHECK (telephoneutilisateur ~ '^0[1-9][0-9]{8}$'),
+   ADD CONSTRAINT chk_utilisateur_pseudonyme_longueur CHECK (LENGTH(pseudonyme) BETWEEN 2 AND 50),
+   ADD CONSTRAINT chk_utilisateur_solde_minimum CHECK (solde >= 0),
+   ADD CONSTRAINT chk_utilisateur_password_complexity CHECK (password ~* '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,}$');
 
 ALTER TABLE particulier
-  ADD CONSTRAINT chk_particulier_civilite_valeurs CHECK (civilite IN ('Monsieur', 'Madame', 'Non spécifié'));
+   ADD CONSTRAINT chk_particulier_civilite_valeurs CHECK (civilite IN ('Monsieur', 'Madame', 'Non spécifié'));
 
 ALTER TABLE ville
-  ADD CONSTRAINT chk_ville_taxedesejour CHECK (taxedesejour >= 0);
+   ADD CONSTRAINT chk_ville_taxedesejour CHECK (taxedesejour >= 0);
 
 ALTER TABLE inclure
-  ALTER COLUMN nombrevoyageur SET DEFAULT 0;
+   ALTER COLUMN nombrevoyageur SET DEFAULT 0;
 
 ALTER TABLE relier
-  ALTER COLUMN estdisponible SET DEFAULT false;
+   ALTER COLUMN estdisponible SET DEFAULT false;
 
 ALTER TABLE utilisateur
-  ALTER COLUMN solde SET DEFAULT 0,
-  ALTER COLUMN phone_verified SET DEFAULT false,
-  ALTER COLUMN identity_verified SET DEFAULT false;
+   ALTER COLUMN solde SET DEFAULT 0,
+   ALTER COLUMN phone_verified SET DEFAULT false,
+   ALTER COLUMN identity_verified SET DEFAULT false;
 
 --voir annonces dispo entre 2 dates
 CREATE OR REPLACE FUNCTION get_annonces_disponibles(
-    p_date_debut DATE, 
-    p_date_fin DATE
+   p_date_debut DATE, 
+   p_date_fin DATE
 )
 RETURNS TABLE (
-    id_annonce INT,
-    titre VARCHAR,
-    type_logement VARCHAR,
-    ville VARCHAR,
-    prix DECIMAL
+   id_annonce INT,
+   titre VARCHAR,
+   type_logement VARCHAR,
+   ville VARCHAR,
+   prix DECIMAL
 ) 
 AS $$
 BEGIN
