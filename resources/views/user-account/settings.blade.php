@@ -68,29 +68,78 @@
 
                     <h2 class="text-xl font-bold mb-6">Coordonnées</h2>
 
+                    {{-- Champ de recherche d’adresse via Google --}}
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            Rechercher votre adresse
+                        </label>
+                        <input
+                            id="autocomplete"
+                            type="text"
+                            placeholder="Commencez à taper votre adresse..."
+                            class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                            autocomplete="off"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">
+                            Le champ ci-dessus remplit automatiquement les champs N°, Voie, Code postal et Ville.
+                        </p>
+                    </div>
+
+                    {{-- Champs visibles (lecture seule) --}}
                     <div class="grid grid-cols-4 gap-4 mb-6">
                         <div class="col-span-1">
                             <label class="block text-sm font-bold text-gray-700 mb-2">N°</label>
-                            <input type="number" name="numerorue" value="{{ old('numerorue', $user->adresse->numerorue ?? '') }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                            <input
+                                id="street_number_display"
+                                type="number"
+                                value="{{ old('numerorue', $user->adresse->numerorue ?? '') }}"
+                                class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
+                                readonly
+                            >
                         </div>
                         <div class="col-span-3">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Voie</label>
-                            <input type="text" name="nomrue" value="{{ old('nomrue', $user->adresse->nomrue ?? '') }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500" placeholder="Nom de la rue">
+                            <input
+                                id="route_display"
+                                type="text"
+                                value="{{ old('nomrue', $user->adresse->nomrue ?? '') }}"
+                                class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
+                                placeholder="Nom de la rue"
+                                readonly
+                            >
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-6">
+                    <div class="grid grid-cols-2 gap-6 mb-2">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Code postal</label>
-                            <input type="text" name="codepostal" value="{{ old('codepostal', $user->adresse->ville->codepostal ?? '') }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                            <input
+                                id="postal_code_display"
+                                type="text"
+                                value="{{ old('codepostal', $user->adresse->ville->codepostal ?? '') }}"
+                                class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
+                                readonly
+                            >
                             @error('codepostal') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Ville</label>
-                            <input type="text" name="nomville" value="{{ old('nomville', $user->adresse->ville->nomville ?? '') }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                            <input
+                                id="locality_display"
+                                type="text"
+                                value="{{ old('nomville', $user->adresse->ville->nomville ?? '') }}"
+                                class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
+                                readonly
+                            >
                             @error('nomville') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
+
+                    {{-- Champs cachés réellement envoyés au backend --}}
+                    <input type="hidden" id="numerorue"  name="numerorue"  value="{{ old('numerorue',  $user->adresse->numerorue ?? '') }}">
+                    <input type="hidden" id="nomrue"    name="nomrue"    value="{{ old('nomrue',    $user->adresse->nomrue ?? '') }}">
+                    <input type="hidden" id="codepostal" name="codepostal" value="{{ old('codepostal', $user->adresse->ville->codepostal ?? '') }}">
+                    <input type="hidden" id="nomville"   name="nomville"   value="{{ old('nomville',   $user->adresse->ville->nomville ?? '') }}">
 
                     <div class="mt-8 flex justify-end">
                         <button type="submit" class="bg-orange-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-orange-700 transition shadow-sm">
@@ -101,5 +150,74 @@
             </div>
         </div>
     </div>
+
+    {{-- SCRIPT GOOGLE MAPS AUTOCOMPLETE (même logique que sur register) --}}
+    <script>
+        function initAutocomplete() {
+            const input = document.getElementById('autocomplete');
+            if (!input) return;
+
+            const autocomplete = new google.maps.places.Autocomplete(input, {
+                types: ['address'],
+                componentRestrictions: { country: 'fr' }
+            });
+
+            autocomplete.addListener('place_changed', function () {
+                const place = autocomplete.getPlace();
+                if (!place.address_components) return;
+
+                let streetNumber = '';
+                let route = '';
+                let city = '';
+                let postalCode = '';
+
+                place.address_components.forEach(function (component) {
+                    const types = component.types;
+
+                    if (types.includes('street_number')) {
+                        streetNumber = component.long_name;
+                    }
+                    if (types.includes('route')) {
+                        route = component.long_name;
+                    }
+                    if (types.includes('locality')) {
+                        city = component.long_name;
+                    }
+                    if (types.includes('postal_code')) {
+                        postalCode = component.long_name;
+                    }
+                });
+
+                // champs visibles
+                const streetNumberDisplay = document.getElementById('street_number_display');
+                const routeDisplay        = document.getElementById('route_display');
+                const postalDisplay       = document.getElementById('postal_code_display');
+                const cityDisplay         = document.getElementById('locality_display');
+
+                if (streetNumberDisplay) streetNumberDisplay.value = streetNumber || '';
+                if (routeDisplay)        routeDisplay.value        = route || '';
+                if (postalDisplay)       postalDisplay.value       = postalCode || '';
+                if (cityDisplay)         cityDisplay.value         = city || '';
+
+                // champs cachés envoyés au backend
+                const numHidden   = document.getElementById('numerorue');
+                const routeHidden = document.getElementById('nomrue');
+                const cpHidden    = document.getElementById('codepostal');
+                const villeHidden = document.getElementById('nomville');
+
+                if (numHidden)   numHidden.value   = streetNumber || 1;
+                if (routeHidden) routeHidden.value = route || '';
+                if (cpHidden)    cpHidden.value    = postalCode || '';
+                if (villeHidden) villeHidden.value = city || '';
+            });
+        }
+
+        window.initAutocomplete = initAutocomplete;
+    </script>
+
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places&callback=initAutocomplete"
+        async defer>
+    </script>
     @endsection
 </x-app-layout>
