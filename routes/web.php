@@ -33,7 +33,10 @@ Route::middleware([
         Route::get('/dashboard', function () { 
             $user = Auth::user();
             return view('dashboard', ['user' => $user]); 
-        })->name('dashboard'); 
+        })->name('dashboard');
+
+        Route::get('/deposer-une-annonce', [AnnonceController::class, 'create'])->name('annonce.create');
+        Route::post('/annonce', [AnnonceController::class, 'store'])->name('annonce.store');
 
         Route::get('/cni', [CNIController::class, 'index'])->name('cni.index');
         Route::post('/cni', [CNIController::class, 'store'])->name('cni.store');

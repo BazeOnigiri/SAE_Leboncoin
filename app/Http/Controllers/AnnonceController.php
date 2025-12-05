@@ -4,7 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Annonce;
+use App\Models\TypeHebergement;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use App\Models\Adresse;
+use App\Models\Photo;
+use App\Models\Date as DateModel;
+use App\Models\Heure;
+use App\Models\Ville;
+use Illuminate\Http\RedirectResponse;
 
 class AnnonceController extends Controller
 {
@@ -45,5 +55,65 @@ class AnnonceController extends Controller
             return $commodite->categorie->nomcategorie;
         });
         return view('nom_de_ta_vue', compact('annonce', 'commoditesGroupees'));
+    }
+
+    public function create()
+    {
+        $typeHebergements = TypeHebergement::all();
+        return view("annonce-create", compact('typeHebergements'));
+    }
+
+    public function store(Request $request)
+    {
+        // Une erreur est survenue lors de la création de l'annonce.Add [idannonce] to fillable property to allow mass assignment on [App\Models\Photo].
+
+
+        $validated = $request->validate([
+            'titre' => ['required', 'string', 'max:50'],
+            'description' => ['required', 'string', 'max:4000'],
+            'photos' => ['nullable', 'array'],
+            'photos.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
+
+        try {
+            $annonce = DB::transaction(function () use ($validated, $request) {
+
+                $annonce = Annonce::create([
+                    'idadresse' => '1',
+                    'iddate' => '1',
+                    'idheuredepart' => '1',
+                    'idtypehebergement' => '1',
+                    'idheurearrivee' => '1',
+                    'idutilisateur' => Auth::id(),
+                    'titreannonce' => $validated['titre'],
+                    'descriptionannonce' => $validated['description'],
+                    'prixnuitee' => 10,
+                    'possibilitefumeur' => false,
+                ]);
+
+                // Save photos if present
+                if ($request->hasFile('photos')) {
+                    foreach ($request->file('photos') as $file) {
+                        if (!$file->isValid()) continue;
+                        $path = $file->store('annonces', 'public');
+                        $url = Storage::url($path);
+                        Photo::create([
+                            'idannonce' => $annonce->idannonce,
+                            'idincident' => null,
+                            'lienphoto' => $url,
+                        ]);
+                    }
+                }
+
+                
+                
+                return $annonce;
+            });
+            
+            return back()->with('success', 'Annonce publiée avec succès.');
+        } catch (\Exception $e) {
+            report($e);
+            return back()->withInput()->withErrors(['error' => 'Une erreur est survenue lors de la création de l\'annonce.' . $e->getMessage()]);
+        }
     }
 }

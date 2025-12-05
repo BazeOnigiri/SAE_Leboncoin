@@ -69,6 +69,7 @@ create table annonce (
    montantacompte       decimal(10,2)        null,
    pourcentageacompte   int4                 null,
    prixnuitee           decimal(10,2)        not null,
+   capacite             int4                 null,
    minimumnuitee        int4                 null,
    nombreanimauxmax     int4                 null,
    nombrebebesmax       int4                 null,

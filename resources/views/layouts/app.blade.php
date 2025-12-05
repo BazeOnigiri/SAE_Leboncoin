@@ -58,7 +58,7 @@
                 />
             </a>
 
-            <a href="#"
+            <a href="{{ route('annonce.create') }}"
                 class="hidden md:flex items-center gap-2 bg-[#ea580c] hover:bg-[#c2410c] text-white transition-colors  font-bold py-2.5 px-5 rounded-xl  shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-6 h-6 text-white">
@@ -147,6 +147,8 @@
     @yield('content')
     {{ $slot ?? '' }}
     @stack('modals')
+
+    @stack('scripts')
 
     @livewireScripts
 </body>

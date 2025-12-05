@@ -10,6 +10,25 @@ class Annonce extends Model
     protected $primaryKey = 'idannonce';
     public $timestamps = false;
 
+    protected $fillable = [
+        'idadresse',
+        'iddate',
+        'idheuredepart',
+        'idtypehebergement',
+        'idheurearrivee',
+        'idutilisateur',
+        'titreannonce',
+        'descriptionannonce',
+        'montantacompte',
+        'pourcentageacompte',
+        'prixnuitee',
+        'capacite',
+        'minimumnuitee',
+        'nombreanimauxmax',
+        'nombrebebesmax',
+        'possibilitefumeur',
+    ];
+
     /* Une annonce a beaucoup ou pas de ... */
 
     public function photos()

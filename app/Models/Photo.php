@@ -10,6 +10,12 @@ class Photo extends Model
     protected $primaryKey = 'idphoto';
     public $timestamps = false;
 
+    protected $fillable = [
+        'idannonce',
+        'idincident',
+        'lienphoto',
+    ];
+
     /* Une photo a beaucoup ou pas de ... */
 
     public function utilisateurs()
