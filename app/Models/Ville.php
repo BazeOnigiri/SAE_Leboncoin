@@ -9,6 +9,9 @@ class Ville extends Model
     protected $table = 'ville';
     protected $primaryKey = 'idville';
     public $timestamps = false;
+
+    protected $guarded = [];
+    
     public function adresse()
     {
         return $this->hasMany(Adresse::class, 'idville');
