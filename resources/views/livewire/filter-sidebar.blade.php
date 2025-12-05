@@ -23,6 +23,8 @@
                     <input 
                         type="date" 
                         wire:model="dateArrivee"
+                        max="{{ (date('Y') + 1) }}-12-31"
+                        min="{{ date('Y-m-d') }}"
                         class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
                     >
                 </div>
@@ -32,6 +34,8 @@
                     <input 
                         type="date" 
                         wire:model="dateDepart"
+                        max="{{ (date('Y') + 1) }}-12-31"
+                        min="{{ date('Y-m-d') }}"
                         class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
                     >
                 </div>
