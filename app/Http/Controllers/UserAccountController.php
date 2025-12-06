@@ -55,13 +55,11 @@ class UserAccountController extends Controller
             'nom'      => ['required', 'string', 'max:50'],
             'prenom'   => ['required', 'string', 'max:50'],
             
-            // AJOUT : Validation de l'email
             'email' => [
                 'required', 
                 'string', 
                 'email', 
                 'max:320', 
-                // Vérifie l'unicité dans la table 'utilisateur', colonne 'email', en ignorant l'ID actuel
                 Rule::unique('utilisateur', 'email')->ignore($user->idutilisateur, 'idutilisateur')
             ],
 
@@ -85,7 +83,7 @@ class UserAccountController extends Controller
         $user->nomutilisateur        = $validated['nom'];
         $user->prenomutilisateur     = $validated['prenom'];
         $user->telephoneutilisateur  = $validated['telephone'] ?? null;
-        $user->email                 = $validated['email']; // AJOUT : Sauvegarde de l'email
+        $user->email                 = $validated['email']; 
         $user->save();
 
         $dateModel = DateModel::firstOrCreate(['date' => $validated['date_naissance']]);
