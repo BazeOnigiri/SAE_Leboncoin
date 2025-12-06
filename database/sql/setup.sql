@@ -397,6 +397,7 @@ CREATE TABLE utilisateur (
    CONSTRAINT pk_utilisateur PRIMARY KEY (idutilisateur)
 );
 
+ALTER TABLE utilisateur ADD COLUMN two_factor_confirmed_at TIMESTAMP NULL;
 /*==============================================================*/
 /* Table : ville                                                */
 /*==============================================================*/
