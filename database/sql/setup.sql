@@ -41,6 +41,13 @@ drop table if exists ressembler CASCADE;
 drop table if exists commodite CASCADE;
 drop table if exists categorie CASCADE;
 
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES TABLES                                                                       */
+/*===========================================================================================*/
+/*===========================================================================================*/
+
+
 /*==============================================================*/
 /* Table : adresse                                              */
 /*==============================================================*/
@@ -317,14 +324,14 @@ create table relier (
 /* Table : reservation                                          */
 /*==============================================================*/
 create table reservation (
-   idreservation       serial               not null,
+   idreservation       serial                not null,
    idannonce            int4                 not null,
-   iddatedebutreservation int4                 not null,
+   iddatedebutreservation int4               not null,
    iddatefinreservation int4                 not null,
    idutilisateur        int4                 not null,
    nomclient            varchar(50)          not null,
    prenomclient         varchar(50)          not null,
-   telephoneclient      char(10)              null,
+   telephoneclient      char(10)             null,
    constraint pk_reservation primary key (idreservation)
 );
 
@@ -354,7 +361,7 @@ create table transaction (
 /*==============================================================*/
 create table typehebergement (
    idtypehebergement    serial               not null,
-   idcategorie               int4                 not null,
+   idcategorie               int4            not null,
    nomtypehebergement   varchar(30)          null,
    constraint pk_typehebergement primary key (idtypehebergement)
 );
@@ -393,11 +400,11 @@ CREATE TABLE utilisateur (
    remember_token            VARCHAR(100)    NULL,
    two_factor_secret         TEXT            NULL,
    two_factor_recovery_codes TEXT            NULL,
+   two_factor_confirmed_at   TIMESTAMP       NULL,
 
    CONSTRAINT pk_utilisateur PRIMARY KEY (idutilisateur)
 );
 
-ALTER TABLE utilisateur ADD COLUMN two_factor_confirmed_at TIMESTAMP NULL;
 /*==============================================================*/
 /* Table : ville                                                */
 /*==============================================================*/
@@ -409,6 +416,12 @@ create table ville (
    taxedesejour         decimal(10,2)        not null,
    constraint pk_ville primary key (idville)
 );
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES CLES ETRANGERES                                                              */
+/*===========================================================================================*/
+/*===========================================================================================*/
 
 alter table adresse
    add constraint fk_adresse_posseder_ville foreign key (idville)
@@ -705,7 +718,12 @@ alter table ville
       references departement (iddepartement)
       on delete restrict on update restrict;
 
-/*CHECKS*/
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES CONTRAINTES CHECK                                                            */
+/*===========================================================================================*/
+/*===========================================================================================*/
+
 ALTER TABLE annonce
    ADD CONSTRAINT chk_annonce_prixnuitee CHECK (prixnuitee > 0),
    ADD CONSTRAINT chk_annonce_montantacompte CHECK (montantacompte >= 0),
@@ -754,6 +772,12 @@ ALTER TABLE particulier
 ALTER TABLE ville
    ADD CONSTRAINT chk_ville_taxedesejour CHECK (taxedesejour >= 0);
 
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* ATTRIBUTION DES VALEURS PAR DEFAUT                                                        */
+/*===========================================================================================*/
+/*===========================================================================================*/
+
 ALTER TABLE inclure
    ALTER COLUMN nombrevoyageur SET DEFAULT 0;
 
@@ -764,6 +788,12 @@ ALTER TABLE utilisateur
    ALTER COLUMN solde SET DEFAULT 0,
    ALTER COLUMN phone_verified SET DEFAULT false,
    ALTER COLUMN identity_verified SET DEFAULT false;
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES FONCTIONS                                                                    */
+/*===========================================================================================*/
+/*===========================================================================================*/
 
 --voir annonces dispo entre 2 dates
 CREATE OR REPLACE FUNCTION get_annonces_disponibles(
