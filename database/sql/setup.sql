@@ -291,19 +291,19 @@ create table proposer (
 /* Table : recherche                                            */
 /*==============================================================*/
 create table recherche (
-   idrecherche          serial               not null,
-   idutilisateur        int4                 not null,
-   idville              int4                 null,
-   iddatefinrecherche   int4                 null,	
-   iddepartement        int4                 null,
-   idregion             int4                 null,
-   iddatedebutrecherche int4                 null,
-   paiementenligne      bool                 null,
-   capaciteminimumvoyageur int4              null,
-   prixminimum          decimal(10,2)        null,
-   prixmaximum          decimal(10,2)        null,
-   nombreminimumchambre int4                 null,
-   nombremaximumchambre int4                 null,
+   idrecherche             serial               not null,
+   idutilisateur           int4                 not null,
+   idville                 int4                 null,
+   iddatefinrecherche      int4                 null,	
+   iddepartement           int4                 null,
+   idregion                int4                 null,
+   iddatedebutrecherche    int4                 null,
+   paiementenligne         BOOLEAN              NOT NULL,
+   capaciteminimumvoyageur int4                 null,
+   prixminimum             decimal(10,2)        null,
+   prixmaximum             decimal(10,2)        null,
+   nombreminimumchambre    int4                 null,
+   nombremaximumchambre    int4                 null,
    constraint pk_recherche primary key (idrecherche)
 );
 
@@ -798,6 +798,8 @@ ALTER TABLE utilisateur
    ALTER COLUMN phone_verified SET DEFAULT false,
    ALTER COLUMN identity_verified SET DEFAULT false;
 
+ALTER TABLE recherche
+   ALTER COLUMN paiementenligne SET DEFAULT false;
 
 /*===========================================================================================*/
 /*===========================================================================================*/
