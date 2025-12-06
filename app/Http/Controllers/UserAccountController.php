@@ -50,57 +50,79 @@ class UserAccountController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'civilite' => 'required|in:Monsieur,Madame',
-            'nom' => 'required|string|max:50',
-            'prenom' => 'required|string|max:50',
-            'date_naissance' => 'required|date',
-            'telephone' => 'nullable|regex:/^0[1-9][0-9]{8}$/',
-            'numerorue' => 'nullable|integer',
-            'nomrue' => 'required|string|max:39',
-            'codepostal' => 'required|string|size:5',
-            'nomville' => 'required|string|max:40',
+            'civilite' => ['required', 'in:Monsieur,Madame'],
+            'nom'      => ['required', 'string', 'max:50'],
+            'prenom'   => ['required', 'string', 'max:50'],
+            
+            'date_naissance' => [
+                'required',
+                'date',
+                'before_or_equal:' . now()->subYears(18)->toDateString(),
+            ],
+
+            'telephone' => [
+                'required',
+                'regex:/^0[1-9][0-9]{8}$/', 
+            ],
+
+            'numerorue'  => ['nullable', 'integer', 'min:1', 'max:99999'],
+            'nomrue'     => ['required', 'string', 'max:39'],
+            'codepostal' => ['required', 'string', 'size:5', 'regex:/^[0-9]{5}$/'],
+            'nomville'   => ['required', 'string', 'max:40'],
         ]);
 
-        // Mise à jour table Utilisateur
-        $user->nomutilisateur = $validated['nom'];
-        $user->prenomutilisateur = $validated['prenom'];
-        $user->telephoneutilisateur = $validated['telephone'];
+        $user->nomutilisateur        = $validated['nom'];
+        $user->prenomutilisateur     = $validated['prenom'];
+        $user->telephoneutilisateur  = $validated['telephone'] ?? null;
         $user->save();
 
-        // Mise à jour table Particulier
         $dateModel = DateModel::firstOrCreate(['date' => $validated['date_naissance']]);
-        
+
         $particulier = $user->particulier;
         if (!$particulier) {
             $particulier = new Particulier();
             $particulier->idutilisateur = $user->idutilisateur;
         }
         $particulier->civilite = $validated['civilite'];
-        $particulier->iddate = $dateModel->iddate;
+        $particulier->iddate   = $dateModel->iddate;
         $particulier->save();
 
-        // Mise à jour Adresse et Ville
-        $ville = Ville::firstOrCreate(
-            ['codepostal' => $validated['codepostal'], 'nomville' => strtoupper($validated['nomville'])],
-            ['iddepartement' => 1, 'taxedesejour' => 0] 
-        );
+        $nomVille   = strtoupper($validated['nomville']);
+        $codePostal = $validated['codepostal'];
 
-        // Mise à jour de l'adresse liée
-        $adresse = $user->adresse;
-        if (!$adresse) {
-            $adresse = new Adresse();
+        $ville = Ville::where('nomville', $nomVille)->first();
+
+        if (!$ville) {
+        $ville = new Ville();
+        $ville->nomville      = $nomVille;
+        $ville->codepostal    = $codePostal;
+        $ville->iddepartement = 1;   
+        $ville->taxedesejour  = 0;
+        $ville->save();
+    } else {
+        if ($ville->codepostal !== $codePostal) {
+            $ville->codepostal = $codePostal;
+            $ville->save();
         }
-        $adresse->numerorue = $validated['numerorue'];
-        $adresse->nomrue = $validated['nomrue'];
-        $adresse->idville = $ville->idville;
-        $adresse->save();
+    }
 
-        // Lier la nouvelle adresse si c'était une création
-        if ($user->idadresse !== $adresse->idadresse) {
-            $user->idadresse = $adresse->idadresse;
-            $user->save();
-        }
+    $adresse = $user->adresse;
+    if (!$adresse) {
+        $adresse = new Adresse();
+    }
 
-        return redirect()->route('user.settings')->with('status', 'Profil mis à jour avec succès !');
+    $adresse->numerorue = $validated['numerorue'] ?? null;
+    $adresse->nomrue    = $validated['nomrue'];
+    $adresse->idville   = $ville->idville;
+    $adresse->save();
+
+    if ($user->idadresse !== $adresse->idadresse) {
+        $user->idadresse = $adresse->idadresse;
+        $user->save();
+    }
+
+    return redirect()
+        ->route('user.settings')
+        ->with('status', 'Profil mis à jour avec succès !');
     }
 }

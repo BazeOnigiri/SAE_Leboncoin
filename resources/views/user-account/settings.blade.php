@@ -24,13 +24,23 @@
                         <label class="block text-sm font-bold text-gray-700 mb-2">Civilité</label>
                         <div class="flex gap-4">
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="civilite" value="Madame" class="text-orange-600 focus:ring-orange-600" 
-                                    {{ optional($user->particulier)->civilite == 'Madame' ? 'checked' : '' }}>
+                                <input
+                                    type="radio"
+                                    name="civilite"
+                                    value="Madame"
+                                    class="text-orange-600 focus:ring-orange-600"
+                                    {{ optional($user->particulier)->civilite == 'Madame' ? 'checked' : '' }}
+                                >
                                 <span>Madame</span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="civilite" value="Monsieur" class="text-orange-600 focus:ring-orange-600"
-                                    {{ optional($user->particulier)->civilite == 'Monsieur' ? 'checked' : '' }}>
+                                <input
+                                    type="radio"
+                                    name="civilite"
+                                    value="Monsieur"
+                                    class="text-orange-600 focus:ring-orange-600"
+                                    {{ optional($user->particulier)->civilite == 'Monsieur' ? 'checked' : '' }}
+                                >
                                 <span>Monsieur</span>
                             </label>
                         </div>
@@ -40,27 +50,52 @@
                     <div class="grid grid-cols-2 gap-6 mb-6">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Nom</label>
-                            <input type="text" name="nom" value="{{ old('nom', $user->nomutilisateur) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                            <input
+                                type="text"
+                                name="nom"
+                                maxlength="50"
+                                value="{{ old('nom', $user->nomutilisateur) }}"
+                                class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                            >
                             @error('nom') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Prénom</label>
-                            <input type="text" name="prenom" value="{{ old('prenom', $user->prenomutilisateur) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                            <input
+                                type="text"
+                                name="prenom"
+                                maxlength="50"
+                                value="{{ old('prenom', $user->prenomutilisateur) }}"
+                                class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                            >
                             @error('prenom') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
                     <div class="mb-6">
                         <label class="block text-sm font-bold text-gray-700 mb-2">Date de naissance</label>
-                        <input type="date" name="date_naissance" 
-                            value="{{ old('date_naissance', optional(optional($user->particulier)->dateNaissance)->date) }}" 
-                            class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                        <input
+                            type="date"
+                            name="date_naissance"
+                            max="{{ now()->subYears(18)->toDateString() }}"
+                            value="{{ old('date_naissance', optional(optional($user->particulier)->dateNaissance)->date) }}"
+                            class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                        >
                         @error('date_naissance') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-6">
                         <label class="block text-sm font-bold text-gray-700 mb-2">Téléphone</label>
-                        <input type="tel" name="telephone" value="{{ old('telephone', $user->telephoneutilisateur) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                        <input
+                            type="tel"
+                            name="telephone"
+                            maxlength="10"
+                            pattern="0[1-9][0-9]{8}"
+                            inputmode="numeric"
+                            placeholder="Ex : 0612345678"
+                            value="{{ old('telephone', $user->telephoneutilisateur) }}"
+                            class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                        >
                         @error('telephone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
 
@@ -92,6 +127,8 @@
                             <input
                                 id="street_number_display"
                                 type="number"
+                                min="1"
+                                max="99999"
                                 value="{{ old('numerorue', $user->adresse->numerorue ?? '') }}"
                                 class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
                                 readonly
@@ -102,6 +139,7 @@
                             <input
                                 id="route_display"
                                 type="text"
+                                maxlength="39"
                                 value="{{ old('nomrue', $user->adresse->nomrue ?? '') }}"
                                 class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
                                 placeholder="Nom de la rue"
@@ -116,6 +154,9 @@
                             <input
                                 id="postal_code_display"
                                 type="text"
+                                maxlength="5"
+                                pattern="[0-9]{5}"
+                                inputmode="numeric"
                                 value="{{ old('codepostal', $user->adresse->ville->codepostal ?? '') }}"
                                 class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
                                 readonly
@@ -127,6 +168,7 @@
                             <input
                                 id="locality_display"
                                 type="text"
+                                maxlength="40"
                                 value="{{ old('nomville', $user->adresse->ville->nomville ?? '') }}"
                                 class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
                                 readonly
@@ -136,10 +178,30 @@
                     </div>
 
                     {{-- Champs cachés réellement envoyés au backend --}}
-                    <input type="hidden" id="numerorue"  name="numerorue"  value="{{ old('numerorue',  $user->adresse->numerorue ?? '') }}">
-                    <input type="hidden" id="nomrue"    name="nomrue"    value="{{ old('nomrue',    $user->adresse->nomrue ?? '') }}">
-                    <input type="hidden" id="codepostal" name="codepostal" value="{{ old('codepostal', $user->adresse->ville->codepostal ?? '') }}">
-                    <input type="hidden" id="nomville"   name="nomville"   value="{{ old('nomville',   $user->adresse->ville->nomville ?? '') }}">
+                    <input
+                        type="hidden"
+                        id="numerorue"
+                        name="numerorue"
+                        value="{{ old('numerorue',  $user->adresse->numerorue ?? '') }}"
+                    >
+                    <input
+                        type="hidden"
+                        id="nomrue"
+                        name="nomrue"
+                        value="{{ old('nomrue', $user->adresse->nomrue ?? '') }}"
+                    >
+                    <input
+                        type="hidden"
+                        id="codepostal"
+                        name="codepostal"
+                        value="{{ old('codepostal', $user->adresse->ville->codepostal ?? '') }}"
+                    >
+                    <input
+                        type="hidden"
+                        id="nomville"
+                        name="nomville"
+                        value="{{ old('nomville', $user->adresse->ville->nomville ?? '') }}"
+                    >
 
                     <div class="mt-8 flex justify-end">
                         <button type="submit" class="bg-orange-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-orange-700 transition shadow-sm">
@@ -151,7 +213,6 @@
         </div>
     </div>
 
-    {{-- SCRIPT GOOGLE MAPS AUTOCOMPLETE (même logique que sur register) --}}
     <script>
         function initAutocomplete() {
             const input = document.getElementById('autocomplete');
