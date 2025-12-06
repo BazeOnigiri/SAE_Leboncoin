@@ -40,7 +40,7 @@ php artisan geo:clear
 
 ## User from debit seed
 email: ```test@example.com```
-password: ```password```
+password: ```passwordT67!```
 
 # Doc
 ## Allerts
