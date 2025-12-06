@@ -72,25 +72,7 @@ INSERT INTO typevoyageur (nomtypevoyageur) VALUES
 
 ('Bébé'), 
 
-('Animal de compagnie'); 
-
-/*==============================================================*/
-/* Table : photo (10 photos pour les profils d'utilisateur)     */
-/*==============================================================*/
-
-INSERT INTO photo (idannonce, idincident, lienphoto) VALUES
-
--- 1/3. Photos de profil
-(null, null, 'https://cdn.pixabay.com/photo/2022/04/15/07/58/sunset-7133867_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2022/05/10/14/37/glacier-7187291_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2024/12/28/03/20/parrot-9295172_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2016/11/11/11/26/christmas-decorations-1816478_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2021/12/20/16/28/moose-6883432_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2017/08/26/21/40/people-2684421_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2024/11/04/01/41/woman-9172599_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2017/01/05/20/28/skin-retouching-1956247_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2024/07/13/07/40/cars-8891625_1280.jpg'),
-(null, null, 'https://cdn.pixabay.com/photo/2019/08/09/06/12/car-racing-4394450_1280.jpg');
+('Animal de compagnie');
 
 /*==============================================================*/
 /* Table : date (nombre de dates variable)                      */
@@ -981,12 +963,12 @@ INSERT INTO avis(idannonce, iddate, idutilisateur, texteavis, nombreetoiles) VAL
 (25,44693,24,'Très bel emplacement, au calme et avec une jolie vue.',5.0);
 
 /*==============================================================*/
-/* Table : photo (10 photos + 82 photos pour les annonces)      */
+/* Table : photo (82 photos pour les annonces)                  */
 /*==============================================================*/
 
 INSERT INTO photo (idannonce, idincident, lienphoto) VALUES
 
--- 2/3. Photos annonce
+-- 1/2. Photos annonce
 (1, null,   'https://cdn.pixabay.com/photo/2016/11/18/17/20/living-room-1835923_1280.jpg'),
 (1, null,   'https://cdn.pixabay.com/photo/2017/09/09/18/25/living-room-2732939_1280.jpg'),
 (2, null,   'https://cdn.pixabay.com/photo/2015/10/20/18/57/furniture-998265_1280.jpg'),
@@ -6704,12 +6686,12 @@ INSERT INTO incident(idutilisateur, idreservation, iddate, motifincident, descri
 /*============================================================================================================================================*/
 
 /*==============================================================*/
-/* Table : photo (92 photos + 4 photos pour les incidents)      */
+/* Table : photo (82 photos + 4 photos pour les incidents)      */
 /*==============================================================*/
 
 INSERT INTO photo (idannonce, idincident, lienphoto) VALUES
 
--- 3/3. Photos incident
+-- 2/2. Photos incident
 (null, 1, 'https://tse4.mm.bing.net/th/id/OIP.zvHdgquaBDY68leSlLCl4gAAAA?w=300&h=200&rs=1&pid=ImgDetMain&o=7&rm=3'),
 (null, 1, 'https://www.galuft.de/wp-content/uploads/2023/07/Schimmel-Wand-800x533.jpg'),
 (null, 2, 'https://tse2.mm.bing.net/th/id/OIP.WqNrMvafLth5nF9xsE_YuAHaJ4?w=1350&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3'),

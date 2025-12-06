@@ -386,7 +386,6 @@ create table typevoyageur (
 /*==============================================================*/
 CREATE TABLE utilisateur (
    idutilisateur             SERIAL          NOT NULL,
-   idphoto                   INT4            NULL,
    idadresse                 INT4            NOT NULL,
    idcartebancaire           INT4            NULL,
    iddate                    INT4            NOT NULL,
@@ -407,6 +406,7 @@ CREATE TABLE utilisateur (
    two_factor_secret         TEXT            NULL,
    two_factor_recovery_codes TEXT            NULL,
    two_factor_confirmed_at   TIMESTAMP       NULL,
+   profile_photo_path        VARCHAR(2048)   NULL,
 
    CONSTRAINT pk_utilisateur PRIMARY KEY (idutilisateur)
 );
@@ -713,11 +713,6 @@ alter table utilisateur
 alter table utilisateur
    add constraint fk_utilisat_creer_date foreign key (iddate)
       references date (iddate)
-      on delete restrict on update restrict;
-
-alter table utilisateur
-   add constraint fk_utilisat_utiliser_photo foreign key (idphoto)
-      references photo (idphoto)
       on delete restrict on update restrict;
 
 alter table ville
