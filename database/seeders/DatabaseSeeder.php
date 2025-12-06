@@ -25,10 +25,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'solde' => 67.00,
             'idadresse' => 1,
+            'iddate' => 1,
         ]);
         
         Particulier::create([
-            'iddate' => 30200,
+            'iddate' => 1,
             'idutilisateur' => $user->idutilisateur, 
             'civilite' => 'Monsieur',
         ]);

@@ -73,18 +73,24 @@ class AnnonceController extends Controller
             'description' => ['required', 'string', 'max:4000'],
             'photos' => ['nullable', 'array'],
             'photos.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'capacite' => ['required', 'integer', 'min:1'],
         ]);
 
         try {
             $annonce = DB::transaction(function () use ($validated, $request) {
 
+                $date = DateModel::firstOrCreate(
+                    ['date' => now()->toDateString()]
+                );
+
                 $annonce = Annonce::create([
                     'idadresse' => '1',
-                    'iddate' => '1',
+                    'iddate' => $date->iddate,
+                    'idutilisateur' => Auth::id(),
+                    'capacite' => $validated['capacite'],
                     'idheuredepart' => '1',
                     'idtypehebergement' => '1',
                     'idheurearrivee' => '1',
-                    'idutilisateur' => Auth::id(),
                     'titreannonce' => $validated['titre'],
                     'descriptionannonce' => $validated['description'],
                     'prixnuitee' => 10,

@@ -80,16 +80,8 @@
         </script>
         <h1 class=" text-2xl font-bold mb-3">{{ $annonce->titreannonce }}</h1>
         <div class=" text-sm mb-3">
-            @php $totalPlaces = 0; @endphp
-            @foreach ($annonce->chambres ?? [] as $chambre)
-                @php
-                    $cap = $chambre->capacitechambre ?? ($chambre->capacite_chambre ?? null);
-                    $totalPlaces += (int) ($cap ?? 0);
-                @endphp
-            @endforeach
-            {{ $annonce->typehebergement->nomtypehebergement }}
             <span class="mx-sm text-neutral inline-block font-bold">·</span>
-            {{ $totalPlaces ?? '?' }} pers.
+            {{ $annonce->capacite ?? '?' }} pers.
             <span class="mx-sm text-neutral inline-block font-bold">·</span>
             {{ $annonce->chambres->count() ?? '?' }} chambres
             <span class="mx-sm text-neutral inline-block font-bold">·</span>
@@ -149,7 +141,7 @@
                 <div class="flex flex-col">
                     <span class="text-xs text-gray-500 mb-0.5">Capacité</span>
                     <span class="font-bold text-sm text-neutral-900">
-                        {{ $totalPlaces ?? '?' }} personnes
+                        {{ $annonce->capacite ?? '?' }} personnes
                     </span>
                 </div>
             </div>

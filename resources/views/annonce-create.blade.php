@@ -59,6 +59,15 @@
                 </div>
             </div>
 
+            <div>
+                <label for="capacite" class="block text-sm font-medium text-gray-700">Quelle est la capacité totale du bien ?</label>
+                <input type="number" name="capacite" id="capacite" min="1" step="1" required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                @error('capacite')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
             {{-- <h3 class="text-lg font-semibold mt-6 mb-2">Localisation</h3>
             <div>
                 <label for="adresse" class="block text-sm font-medium text-gray-700">Quel est l'adresse de votre bien ?</label>
@@ -80,15 +89,6 @@
                     @endforeach
                 </select>
                 @error('typebien')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="capacite" class="block text-sm font-medium text-gray-700">Quelle est la capacité totale du bien ?</label>
-                <input type="number" name="capacite" id="capacite" min="1" step="1" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('capacite')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
