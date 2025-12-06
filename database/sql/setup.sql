@@ -4,6 +4,12 @@
 /* Derniere modification : ajout des incidents et regroupement des types 19/11/2025          */
 /*===========================================================================================*/
 
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* SUPPRESSION DES ANCIENNES TABLES                                                          */
+/*===========================================================================================*/
+/*===========================================================================================*/
+
 drop table if exists adresse CASCADE;
 drop table if exists annonce CASCADE;
 drop table if exists avis CASCADE;
@@ -40,6 +46,13 @@ drop table if exists compensation CASCADE;
 drop table if exists ressembler CASCADE;
 drop table if exists commodite CASCADE;
 drop table if exists categorie CASCADE;
+
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES TABLES                                                                       */
+/*===========================================================================================*/
+/*===========================================================================================*/
 
 /*==============================================================*/
 /* Table : adresse                                              */
@@ -317,14 +330,14 @@ create table relier (
 /* Table : reservation                                          */
 /*==============================================================*/
 create table reservation (
-   idreservation       serial               not null,
+   idreservation       serial                not null,
    idannonce            int4                 not null,
-   iddatedebutreservation int4                 not null,
+   iddatedebutreservation int4               not null,
    iddatefinreservation int4                 not null,
    idutilisateur        int4                 not null,
    nomclient            varchar(50)          not null,
    prenomclient         varchar(50)          not null,
-   telephoneclient      char(10)              null,
+   telephoneclient      char(10)             null,
    constraint pk_reservation primary key (idreservation)
 );
 
@@ -354,7 +367,7 @@ create table transaction (
 /*==============================================================*/
 create table typehebergement (
    idtypehebergement    serial               not null,
-   idcategorie               int4                 not null,
+   idcategorie               int4            not null,
    nomtypehebergement   varchar(30)          null,
    constraint pk_typehebergement primary key (idtypehebergement)
 );
@@ -393,11 +406,11 @@ CREATE TABLE utilisateur (
    remember_token            VARCHAR(100)    NULL,
    two_factor_secret         TEXT            NULL,
    two_factor_recovery_codes TEXT            NULL,
+   two_factor_confirmed_at   TIMESTAMP       NULL,
 
    CONSTRAINT pk_utilisateur PRIMARY KEY (idutilisateur)
 );
 
-ALTER TABLE utilisateur ADD COLUMN two_factor_confirmed_at TIMESTAMP NULL;
 /*==============================================================*/
 /* Table : ville                                                */
 /*==============================================================*/
@@ -409,6 +422,13 @@ create table ville (
    taxedesejour         decimal(10,2)        not null,
    constraint pk_ville primary key (idville)
 );
+
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES CLES ETRANGERES                                                              */
+/*===========================================================================================*/
+/*===========================================================================================*/
 
 alter table adresse
    add constraint fk_adresse_posseder_ville foreign key (idville)
@@ -705,7 +725,13 @@ alter table ville
       references departement (iddepartement)
       on delete restrict on update restrict;
 
-/*CHECKS*/
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES CONTRAINTES CHECK                                                            */
+/*===========================================================================================*/
+/*===========================================================================================*/
+
 ALTER TABLE annonce
    ADD CONSTRAINT chk_annonce_prixnuitee CHECK (prixnuitee > 0),
    ADD CONSTRAINT chk_annonce_montantacompte CHECK (montantacompte >= 0),
@@ -754,6 +780,13 @@ ALTER TABLE particulier
 ALTER TABLE ville
    ADD CONSTRAINT chk_ville_taxedesejour CHECK (taxedesejour >= 0);
 
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* ATTRIBUTION DES VALEURS PAR DEFAUT                                                        */
+/*===========================================================================================*/
+/*===========================================================================================*/
+
 ALTER TABLE inclure
    ALTER COLUMN nombrevoyageur SET DEFAULT 0;
 
@@ -764,6 +797,129 @@ ALTER TABLE utilisateur
    ALTER COLUMN solde SET DEFAULT 0,
    ALTER COLUMN phone_verified SET DEFAULT false,
    ALTER COLUMN identity_verified SET DEFAULT false;
+
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES INDEXS                                                                       */
+/*===========================================================================================*/
+/*===========================================================================================*/
+
+/* adresse */
+CREATE INDEX idx_adresse_idville ON adresse(idville);
+
+/* annonce */
+CREATE INDEX idx_annonce_idadresse ON annonce(idadresse);
+CREATE INDEX idx_annonce_iddate ON annonce(iddate);
+CREATE INDEX idx_annonce_idheuredepart ON annonce(idheuredepart);
+CREATE INDEX idx_annonce_idtypehebergement ON annonce(idtypehebergement);
+CREATE INDEX idx_annonce_idheurearrivee ON annonce(idheurearrivee);
+CREATE INDEX idx_annonce_idutilisateur ON annonce(idutilisateur);
+
+/* demander */
+CREATE INDEX idx_demander_idincident ON demander(idincident);
+CREATE INDEX idx_demander_idcompensation ON demander(idcompensation);
+
+/* avis */
+CREATE INDEX idx_avis_idannonce ON avis(idannonce);
+CREATE INDEX idx_avis_iddate ON avis(iddate);
+CREATE INDEX idx_avis_idutilisateur ON avis(idutilisateur);
+
+/* cartebancaire */
+CREATE INDEX idx_cartebancaire_idutilisateur ON cartebancaire(idutilisateur);
+
+/* cibler */
+CREATE INDEX idx_cibler_idtypehebergement ON cibler(idtypehebergement);
+CREATE INDEX idx_cibler_idrecherche ON cibler(idrecherche);
+
+/* commodite */
+CREATE INDEX idx_commodite_idcategorie ON commodite(idcategorie);
+
+/* departement */
+CREATE INDEX idx_departement_idregion ON departement(idregion);
+
+/* favoriser */
+CREATE INDEX idx_favoriser_idutilisateur ON favoriser(idutilisateur);
+CREATE INDEX idx_favoriser_idannonce ON favoriser(idannonce);
+
+/* filtrer */
+CREATE INDEX idx_filtrer_idrecherche ON filtrer(idrecherche);
+CREATE INDEX idx_filtrer_idcommodite ON filtrer(idcommodite);
+
+/* incident */
+CREATE INDEX idx_incident_idutilisateur ON incident(idutilisateur);
+CREATE INDEX idx_incident_idreservation ON incident(idreservation);
+CREATE INDEX idx_incident_iddate ON incident(iddate);
+
+/* inclure */
+CREATE INDEX idx_inclure_idreservation ON inclure(idreservation);
+CREATE INDEX idx_inclure_idtypevoyageur ON inclure(idtypevoyageur);
+
+/* message */
+CREATE INDEX idx_message_idutilisateurreceveur ON message(idutilisateurreceveur);
+CREATE INDEX idx_message_idutilisateurexpediteur ON message(idutilisateurexpediteur);
+CREATE INDEX idx_message_iddate ON message(iddate);
+
+/* particulier */
+CREATE INDEX idx_particulier_idutilisateur ON particulier(idutilisateur);
+CREATE INDEX idx_particulier_iddate ON particulier(iddate);
+
+/* photo */
+CREATE INDEX idx_photo_idincident ON photo(idincident);
+CREATE INDEX idx_photo_idannonce ON photo(idannonce);
+
+/* professionnel */
+CREATE INDEX idx_professionnel_idutilisateur ON professionnel(idutilisateur);
+
+/* proposer */
+CREATE INDEX idx_proposer_idcommodite ON proposer(idcommodite);
+CREATE INDEX idx_proposer_idannonce ON proposer(idannonce);
+
+/* recherche */
+CREATE INDEX idx_recherche_idutilisateur ON recherche(idutilisateur);
+CREATE INDEX idx_recherche_idville ON recherche(idville);
+CREATE INDEX idx_recherche_iddatedebutrecherche ON recherche(iddatedebutrecherche);
+CREATE INDEX idx_recherche_iddepartement ON recherche(iddepartement);
+CREATE INDEX idx_recherche_idregion ON recherche(idregion);
+CREATE INDEX idx_recherche_iddatefinrecherche ON recherche(iddatefinrecherche);
+
+/* relier */
+CREATE INDEX idx_relier_idannonce ON relier(idannonce);
+CREATE INDEX idx_relier_iddate ON relier(iddate);
+
+/* reservation */
+CREATE INDEX idx_reservation_idannonce ON reservation(idannonce);
+CREATE INDEX idx_reservation_iddatedebutreservation ON reservation(iddatedebutreservation);
+CREATE INDEX idx_reservation_iddatefinreservation ON reservation(iddatefinreservation);
+CREATE INDEX idx_reservation_idutilisateur ON reservation(idutilisateur);
+
+/* ressembler */
+CREATE INDEX idx_ressembler_idannonce_a ON ressembler(idannonce_a);
+CREATE INDEX idx_ressembler_idannonce_b ON ressembler(idannonce_b);
+
+/* transaction */
+CREATE INDEX idx_transaction_iddate ON transaction(iddate);
+CREATE INDEX idx_transaction_idreservation ON transaction(idreservation);
+CREATE INDEX idx_transaction_idcartebancaire ON transaction(idcartebancaire);
+
+/* typehebergement */
+CREATE INDEX idx_typehebergement_idcategorie ON typehebergement(idcategorie);
+
+/* utilisateur */
+CREATE INDEX idx_utilisateur_idphoto ON utilisateur(idphoto);
+CREATE INDEX idx_utilisateur_idadresse ON utilisateur(idadresse);
+CREATE INDEX idx_utilisateur_idcartebancaire ON utilisateur(idcartebancaire);
+CREATE INDEX idx_utilisateur_iddate ON utilisateur(iddate);
+
+/* ville */
+CREATE INDEX idx_ville_iddepartement ON ville(iddepartement);
+
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES FONCTIONS                                                                    */
+/*===========================================================================================*/
+/*===========================================================================================*/
 
 --voir annonces dispo entre 2 dates
 CREATE OR REPLACE FUNCTION get_annonces_disponibles(
