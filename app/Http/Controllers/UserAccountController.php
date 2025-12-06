@@ -50,7 +50,7 @@ class UserAccountController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'civilite' => ['required', 'in:Monsieur,Madame'],
+            'civilite' => ['required', 'in:Monsieur,Madame,Non spécifié'],
             'nom'      => ['required', 'string', 'max:50'],
             'prenom'   => ['required', 'string', 'max:50'],
             

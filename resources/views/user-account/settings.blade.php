@@ -43,6 +43,16 @@
                                 >
                                 <span>Monsieur</span>
                             </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="civilite"
+                                    value="Non spécifié"
+                                    class="text-orange-600 focus:ring-orange-600"
+                                    {{ optional($user->particulier)->civilite == 'Non spécifié' ? 'checked' : '' }}
+                                >
+                                <span>Non spécifié</span>
+                            </label>
                         </div>
                         @error('civilite') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
