@@ -51,7 +51,7 @@
                 <div class="md:w-96 bg-white border border-gray-200 rounded-xl shadow-sm p-6 pl-12 relative overflow-hidden flex flex-col justify-center">
                     <div class="absolute -left-20 top-0 h-full flex items-center"><svg width="200" height="200" viewBox="0 0 385 418" fill="none"><circle cx="192.629" cy="225.167" r="136" fill="#ea580c" fill-opacity="0.1"></circle></svg></div>
                     <h2 class="text-lg font-bold text-gray-900 z-10">Porte-monnaie</h2>
-                    <div class="mt-2 z-10"><span class="text-3xl font-bold text-gray-900">0,00 €</span></div>
+                    <div class="mt-2 z-10"><span class="text-3xl font-bold text-gray-900">{{ auth()->user()->solde }} €</span></div>
                     <span class="text-sm text-gray-500 z-10">Solde disponible</span>
                 </div>
             </div>
