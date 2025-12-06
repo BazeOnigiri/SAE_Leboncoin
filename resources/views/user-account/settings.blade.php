@@ -187,6 +187,23 @@
                         </div>
                     </div>
 
+                    {{-- AJOUT : Section Email --}}
+                    <hr class="my-8 border-gray-200">
+
+                    <h2 class="text-xl font-bold mb-6">Informations de connexion</h2>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Adresse email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            maxlength="320"
+                            value="{{ old('email', $user->email) }}"
+                            class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                        >
+                        @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
                     {{-- Champs cachés réellement envoyés au backend --}}
                     <input
                         type="hidden"

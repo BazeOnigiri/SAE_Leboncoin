@@ -3,7 +3,6 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
@@ -18,9 +17,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     public function update(User $user, array $input): void
     {
         Validator::make($input, [
-            'nom' => ['required', 'string', 'max:255'],
-            'prenom' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'nomutilisateur' => ['required', 'string', 'max:50'],
+            'prenomutilisateur' => ['required', 'string', 'max:50'],
+            'pseudonyme' => ['required', 'string', 'min:2', 'max:50'],
+            // L'email a été retiré de la validation car il n'est pas modifiable ici
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
 
@@ -28,32 +28,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->updateProfilePhoto($input['photo']);
         }
 
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
-            $this->updateVerifiedUser($user, $input);
-        } else {
-            $user->forceFill([
-                'nomutilisateur' => $input['nom'],
-                'prenomutilisateur' => $input['prenom'],
-                'email' => $input['email'],
-            ])->save();
-        }
-    }
-
-    /**
-     * Update the given verified user's profile information.
-     *
-     * @param  array<string, string>  $input
-     */
-    protected function updateVerifiedUser(User $user, array $input): void
-    {
+        // On met à jour uniquement les champs autorisés (sans l'email)
         $user->forceFill([
-            'nomutilisateur' => $input['nom'],
-            'prenomutilisateur' => $input['prenom'],
-            'email' => $input['email'],
-            'email_verified_at' => null,
+            'nomutilisateur' => $input['nomutilisateur'],
+            'prenomutilisateur' => $input['prenomutilisateur'],
+            'pseudonyme' => $input['pseudonyme'],
         ])->save();
-
-        $user->sendEmailVerificationNotification();
     }
 }
