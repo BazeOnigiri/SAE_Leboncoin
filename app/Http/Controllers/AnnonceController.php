@@ -58,12 +58,20 @@ class AnnonceController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->isCNIValidate())
+        {
+            return redirect()->route('cni.index')->with('info', 'Vous devez valider votre identité avant de pouvoir publier une annonce.');
+        }
         $typeHebergements = TypeHebergement::all();
         return view("annonce-create", compact('typeHebergements'));
     }
 
     public function store(Request $request)
     {
+        if (!auth()->user()->isCNIValidate())
+        {
+            return redirect()->route('cni.index')->with('info', 'Vous devez valider votre identité avant de pouvoir publier une annonce.');
+        }
 
         $validated = $request->validate([
             'titre' => ['required', 'string', 'max:50'],
