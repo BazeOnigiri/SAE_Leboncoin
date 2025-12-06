@@ -909,7 +909,6 @@ CREATE INDEX idx_typehebergement_idcategorie ON typehebergement(idcategorie);
 CREATE INDEX idx_utilisateur_idadresse ON utilisateur(idadresse);
 CREATE INDEX idx_utilisateur_idcartebancaire ON utilisateur(idcartebancaire);
 CREATE INDEX idx_utilisateur_iddate ON utilisateur(iddate);
-CREATE INDEX idx_utilisateur_idphoto ON utilisateur(idphoto);
 
 /* ville */
 CREATE INDEX idx_ville_iddepartement ON ville(iddepartement);
