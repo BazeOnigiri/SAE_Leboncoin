@@ -9,6 +9,7 @@ use App\Models\Date as DateModel;
 use App\Models\Ville;
 use App\Models\Adresse;
 use App\Models\Particulier;
+use Illuminate\Validation\Rule; // Import nécessaire pour la validation unique
 
 class UserAccountController extends Controller
 {
@@ -54,6 +55,16 @@ class UserAccountController extends Controller
             'nom'      => ['required', 'string', 'max:50'],
             'prenom'   => ['required', 'string', 'max:50'],
             
+            // AJOUT : Validation de l'email
+            'email' => [
+                'required', 
+                'string', 
+                'email', 
+                'max:320', 
+                // Vérifie l'unicité dans la table 'utilisateur', colonne 'email', en ignorant l'ID actuel
+                Rule::unique('utilisateur', 'email')->ignore($user->idutilisateur, 'idutilisateur')
+            ],
+
             'date_naissance' => [
                 'required',
                 'date',
@@ -74,6 +85,7 @@ class UserAccountController extends Controller
         $user->nomutilisateur        = $validated['nom'];
         $user->prenomutilisateur     = $validated['prenom'];
         $user->telephoneutilisateur  = $validated['telephone'] ?? null;
+        $user->email                 = $validated['email']; // AJOUT : Sauvegarde de l'email
         $user->save();
 
         $dateModel = DateModel::firstOrCreate(['date' => $validated['date_naissance']]);
@@ -93,36 +105,36 @@ class UserAccountController extends Controller
         $ville = Ville::where('nomville', $nomVille)->first();
 
         if (!$ville) {
-        $ville = new Ville();
-        $ville->nomville      = $nomVille;
-        $ville->codepostal    = $codePostal;
-        $ville->iddepartement = 1;   
-        $ville->taxedesejour  = 0;
-        $ville->save();
-    } else {
-        if ($ville->codepostal !== $codePostal) {
-            $ville->codepostal = $codePostal;
+            $ville = new Ville();
+            $ville->nomville      = $nomVille;
+            $ville->codepostal    = $codePostal;
+            $ville->iddepartement = 1;   
+            $ville->taxedesejour  = 0;
             $ville->save();
+        } else {
+            if ($ville->codepostal !== $codePostal) {
+                $ville->codepostal = $codePostal;
+                $ville->save();
+            }
         }
-    }
 
-    $adresse = $user->adresse;
-    if (!$adresse) {
-        $adresse = new Adresse();
-    }
+        $adresse = $user->adresse;
+        if (!$adresse) {
+            $adresse = new Adresse();
+        }
 
-    $adresse->numerorue = $validated['numerorue'] ?? null;
-    $adresse->nomrue    = $validated['nomrue'];
-    $adresse->idville   = $ville->idville;
-    $adresse->save();
+        $adresse->numerorue = $validated['numerorue'] ?? null;
+        $adresse->nomrue    = $validated['nomrue'];
+        $adresse->idville   = $ville->idville;
+        $adresse->save();
 
-    if ($user->idadresse !== $adresse->idadresse) {
-        $user->idadresse = $adresse->idadresse;
-        $user->save();
-    }
+        if ($user->idadresse !== $adresse->idadresse) {
+            $user->idadresse = $adresse->idadresse;
+            $user->save();
+        }
 
-    return redirect()
-        ->route('user.settings')
-        ->with('status', 'Profil mis à jour avec succès !');
+        return redirect()
+            ->route('user.settings')
+            ->with('status', 'Profil mis à jour avec succès !');
     }
 }
