@@ -70,6 +70,7 @@ create table annonce (
    pourcentageacompte   int4                 null,
    prixnuitee           decimal(10,2)        not null,
    capacite             int4                 null,
+   nbChambres           int4                 null,
    minimumnuitee        int4                 null,
    nombreanimauxmax     int4                 null,
    nombrebebesmax       int4                 null,
@@ -123,15 +124,6 @@ create table categorie (
 );
 
 /*==============================================================*/
-/* Table : chambre                                              */
-/*==============================================================*/
-create table chambre (
-   idchambre            serial               not null,
-   capacitechambre      int4                 null,
-   constraint pk_chambre primary key (idchambre)
-);
-
-/*==============================================================*/
 /* Table : cibler                                               */
 /*==============================================================*/
 create table cibler (
@@ -177,15 +169,6 @@ create table departement (
    numerodepartement    varchar(3)           null,
    nomdepartement       varchar(25)          null,
    constraint pk_departement primary key (iddepartement)
-);
-
-/*==============================================================*/
-/* Table : disposer                                             */
-/*==============================================================*/
-create table disposer (
-   idannonce            int4                 not null,
-   idchambre            int4                 not null,
-   constraint pk_disposer primary key (idannonce, idchambre)
 );
 
 /*==============================================================*/
@@ -511,16 +494,6 @@ alter table departement
       references region (idregion)
       on delete restrict on update restrict;
 
-alter table disposer
-   add constraint fk_disposer_disposer_annonce foreign key (idannonce)
-      references annonce (idannonce)
-      on delete restrict on update restrict;
-
-alter table disposer
-   add constraint fk_disposer_disposer2_chambre foreign key (idchambre)
-      references chambre (idchambre)
-      on delete restrict on update restrict;
-
 alter table favoriser
    add constraint fk_favorise_favoriser_utilisateur foreign key (idutilisateur)
       references utilisateur (idutilisateur)
@@ -748,9 +721,6 @@ ALTER TABLE avis
 ALTER TABLE cartebancaire
    ADD CONSTRAINT chk_cartebancaire_dateexpiration CHECK (dateexpiration > CURRENT_DATE);
 
-ALTER TABLE chambre
-   ADD CONSTRAINT chk_chambre_capacite CHECK (capacitechambre > 0);
-
 ALTER TABLE inclure
    ADD CONSTRAINT chk_inclure_nombrevoyageur CHECK (nombrevoyageur >= 0);
 
@@ -877,49 +847,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
---voir les annonces en fonction du nb de voyageurs
-CREATE OR REPLACE FUNCTION get_annonces_capacite(
-   p_nb_voyageurs INT
-)
-RETURNS TABLE (
-   id_annonce INT,
-   titre VARCHAR,
-   ville VARCHAR,
-   type_logement VARCHAR,
-   capacite_totale BIGINT,
-   prix DECIMAL
-) 
-AS $$
-BEGIN
-   RETURN QUERY
-   SELECT 
-      a.idannonce,
-      a.titreannonce,
-      v.nomville,
-      th.nomtypehebergement,
-      SUM(c.capacitechambre) AS total_cap,
-      a.prixnuitee
-   FROM 
-      annonce a
-   JOIN 
-      disposer d ON a.idannonce = d.idannonce
-   JOIN 
-      chambre c ON d.idchambre = c.idchambre
-   JOIN 
-      adresse adr ON a.idadresse = adr.idadresse
-   JOIN 
-      ville v ON adr.idville = v.idville
-   JOIN 
-      typehebergement th ON a.idtypehebergement = th.idtypehebergement
-   GROUP BY 
-      a.idannonce, a.titreannonce, v.nomville, th.nomtypehebergement, a.prixnuitee
-   HAVING 
-      (p_nb_voyageurs IS NULL OR SUM(c.capacitechambre) = p_nb_voyageurs)
-   ORDER BY 
-      a.prixnuitee ASC;
-END;
-$$ LANGUAGE plpgsql;
-
 --voir annonces par type de logement
 CREATE OR REPLACE FUNCTION get_annonces_par_types(
    p_types_noms VARCHAR[] 
@@ -954,55 +881,6 @@ BEGIN
       OR th.nomtypehebergement = ANY(p_types_noms)
    ORDER BY 
       th.nomtypehebergement,
-      a.prixnuitee ASC;
-END;
-$$ LANGUAGE plpgsql;
-
---voir annonces par nb de chambres
-CREATE OR REPLACE FUNCTION get_annonces_par_nb_chambres(
-   p_min_chambres INT,
-   p_max_chambres INT DEFAULT NULL
-)
-RETURNS TABLE (
-   id_annonce INT,
-   titre VARCHAR,
-   ville VARCHAR,
-   type_logement VARCHAR,
-   nb_chambres BIGINT, 
-   prix DECIMAL
-) 
-AS $$
-BEGIN
-   RETURN QUERY
-   SELECT 
-      a.idannonce,
-      a.titreannonce,
-      v.nomville,
-      th.nomtypehebergement,
-      COUNT(d.idchambre) AS total_chambres,
-      a.prixnuitee
-   FROM 
-      annonce a
-   JOIN 
-      disposer d ON a.idannonce = d.idannonce
-   JOIN 
-      adresse adr ON a.idadresse = adr.idadresse
-   JOIN 
-      ville v ON adr.idville = v.idville
-   JOIN 
-      typehebergement th ON a.idtypehebergement = th.idtypehebergement
-   GROUP BY 
-      a.idannonce, a.titreannonce, v.nomville, th.nomtypehebergement, a.prixnuitee
-   HAVING 
-      (p_min_chambres IS NULL AND p_max_chambres IS NULL)
-      OR
-      (p_min_chambres IS NOT NULL AND p_max_chambres IS NOT NULL AND 
-      COUNT(d.idchambre) BETWEEN p_min_chambres AND p_max_chambres)
-      OR
-      (p_min_chambres IS NOT NULL AND (p_max_chambres IS NULL OR p_min_chambres = p_max_chambres) AND 
-      COUNT(d.idchambre) = p_min_chambres)
-   ORDER BY 
-      total_chambres ASC,
       a.prixnuitee ASC;
 END;
 $$ LANGUAGE plpgsql;

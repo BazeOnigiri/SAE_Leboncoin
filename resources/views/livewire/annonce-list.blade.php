@@ -74,11 +74,7 @@
                                 </div>
                                 <p>{{ $annonce->nombreetoilesleboncoin }} / 5</p>
                                 <div class=" text-sm">
-                                    @php $totalPlaces = 0; @endphp
-                                    @foreach ($annonce->chambres ?? [] as $chambre)
-                                        @php $cap = $chambre->capacitechambre ?? $chambre->capacite_chambre ?? null; $totalPlaces += (int) ($cap ?? 0); @endphp
-                                    @endforeach
-                                    {{ $totalPlaces ?? '?' }} pers.
+                                    {{ $annonce->capacite ?? '?' }} pers.
                                     <span class="mx-sm text-neutral inline-block font-bold">·</span>
                                     {{ $annonce->typehebergement->nomtypehebergement }}
                                 </div>

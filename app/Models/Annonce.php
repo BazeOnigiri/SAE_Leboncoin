@@ -23,6 +23,7 @@ class Annonce extends Model
         'pourcentageacompte',
         'prixnuitee',
         'capacite',
+        'nbchambres',
         'minimumnuitee',
         'nombreanimauxmax',
         'nombrebebesmax',
@@ -79,11 +80,6 @@ class Annonce extends Model
     }
 
     /* Une annonce se réfere à beaucoup ou pas de ... */
-
-    public function chambres()
-    {
-        return $this->belongsToMany(Chambre::class, 'disposer', 'idannonce', 'idchambre');
-    }
 
     public function commodites()
     {

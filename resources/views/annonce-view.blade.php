@@ -83,7 +83,7 @@
             <span class="mx-sm text-neutral inline-block font-bold">·</span>
             {{ $annonce->capacite ?? '?' }} pers.
             <span class="mx-sm text-neutral inline-block font-bold">·</span>
-            {{ $annonce->chambres->count() ?? '?' }} chambres
+            {{ $annonce->nbchambres ?? '?' }} chambres
             <span class="mx-sm text-neutral inline-block font-bold">·</span>
             {{ $annonce->adresse->ville->nomville ?? 'Ville inconnue' }}
             <span class="mx-sm text-neutral inline-block font-bold">·</span>
@@ -169,7 +169,7 @@
                 <div class="flex flex-col">
                     <span class="text-xs text-gray-500 mb-0.5">Nombre de chambres</span>
                     <span class="font-bold text-sm text-neutral-900">
-                        {{ $annonce->chambres->count() ?? 0 }} chambres
+                        {{ $annonce->nbchambres ?? 0 }} chambres
                     </span>
                 </div>
             </div>

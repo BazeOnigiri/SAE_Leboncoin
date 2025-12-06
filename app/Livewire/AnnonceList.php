@@ -31,9 +31,9 @@ class AnnonceList extends Component
     {
         $query = Annonce::select(
             'idannonce', 'idadresse', 'idtypehebergement', 'titreannonce', 
-            'prixnuitee', 'nombreetoilesleboncoin'
+            'prixnuitee', 'nombreetoilesleboncoin', 'capacite'
         )->with([
-            'photos', 'chambres', 'typehebergement', 'adresse.ville.departement.region', 
+            'photos', 'typehebergement', 'adresse.ville.departement.region', 
         ]);
 
         if (!empty($this->location)) {

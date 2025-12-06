@@ -2,13 +2,15 @@
 @section('content')
     <div class="bg-white p-7 max-w-6xl mx-auto px-6 md:px-12 xl:px-6 pt-32">
         <h1 class="text-2xl font-semibold text-gray-800 mb-6">Déposer une annonce</h1>
-        <form method="POST" action="{{ route('annonce.store') }}" enctype="multipart/form-data" class="space-y-6">
+        <form id="annonce-form" method="POST" action="{{ route('annonce.store') }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
+
+            <div id="form-errors" class="text-red-600 text-sm space-y-1"></div>
 
             <h3 class="text-lg font-semibold mt-4 mb-2">Informations générales</h3>
             <div>
                 <label for="titre" class="block text-sm font-medium text-gray-700">Quel est le titre de l'annonce ?</label>
-                <input type="text" name="titre" id="titre" required
+                <input type="text" name="titre" id="titre" required value="{{ old('titre') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                 @error('titre')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -18,7 +20,7 @@
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                 <textarea name="description" id="description" rows="4" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500"></textarea>
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">{{ old('description') }}</textarea>
                 @error('description')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
@@ -61,9 +63,18 @@
 
             <div>
                 <label for="capacite" class="block text-sm font-medium text-gray-700">Quelle est la capacité totale du bien ?</label>
-                <input type="number" name="capacite" id="capacite" min="1" step="1" required
+                <input type="number" name="capacite" id="capacite" min="1" step="1" required value="{{ old('capacite') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                 @error('capacite')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="nbchambres" class="block text-sm font-medium text-gray-700">Rentrer le nombre de chambres du bien</label>
+                <input type="number" name="nbchambres" id="nbchambres" min="0" step="1" required value="{{ old('nbchambres') }}"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                @error('nbchambres')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>

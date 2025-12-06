@@ -28,7 +28,6 @@ class AnnonceController extends Controller
             'photos',
             'datePublication',
             'commodites.categorie',
-            'chambres',
             'typehebergement',
             'avis',
             'adresse.ville',
@@ -65,8 +64,6 @@ class AnnonceController extends Controller
 
     public function store(Request $request)
     {
-        // Une erreur est survenue lors de la création de l'annonce.Add [idannonce] to fillable property to allow mass assignment on [App\Models\Photo].
-
 
         $validated = $request->validate([
             'titre' => ['required', 'string', 'max:50'],
@@ -74,6 +71,7 @@ class AnnonceController extends Controller
             'photos' => ['nullable', 'array'],
             'photos.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'capacite' => ['required', 'integer', 'min:1'],
+            'nbchambres' => ['required', 'integer', 'min:0'],
         ]);
 
         try {
@@ -95,6 +93,7 @@ class AnnonceController extends Controller
                     'descriptionannonce' => $validated['description'],
                     'prixnuitee' => 10,
                     'possibilitefumeur' => false,
+                    'nbchambres' => $validated['nbchambres'],
                 ]);
 
                 // Save photos if present
@@ -110,8 +109,6 @@ class AnnonceController extends Controller
                         ]);
                     }
                 }
-
-                
                 
                 return $annonce;
             });
