@@ -1053,7 +1053,7 @@ INSERT INTO photo (idannonce, idincident, lienphoto) VALUES
 (80, null,  'https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg');
 
 /*==============================================================*/
-/* Table : ressembler (1891 lignes)                           */
+/* Table : ressembler (1891 lignes)                             */
 /*==============================================================*/
 
 INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (1,2);
@@ -6329,7 +6329,7 @@ INSERT INTO filtrer(idcommodite,idrecherche) VALUES (30,20);
 /*============================================================================================================================================*/
 
 /*==============================================================*/
-/* Table : relier (193435 lignes)                               */
+/* Table : relier (162235 lignes)                               */
 /*==============================================================*/
 
 INSERT INTO relier (idannonce, iddate, estdisponible)
