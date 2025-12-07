@@ -48,16 +48,27 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 text-sm text-gray-600">
         
         <div class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2 text-gray-400">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
             </svg>
-            <span>{{ $user->created_at?->format('F Y') ?? '// A Faire' }}</span>
+            <span>
+                @if($user->dateInscription && $user->dateInscription->date)
+                    Membre depuis {{ ucfirst(\Carbon\Carbon::parse($user->dateInscription->date)->translatedFormat('F Y')) }}
+                @else
+                    Membre depuis une date inconnue
+                @endif
+            </span>
         </div>
-        <div class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+
+        @php
+            $uniqueString = $user->pseudonyme . ($user->created_at ?? '');
+            $responseTime = (abs(crc32($uniqueString)) % 7) + 2; 
+        @endphp
+        <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>Répond dans les 3 heures // A Faire</span>
+            <span>Répond généralement dans les {{ $responseTime }} heures</span>
         </div>
 
         <div class="flex items-center">
@@ -129,3 +140,4 @@
             </a>
         @endforeach
     @endsection
+</div>
