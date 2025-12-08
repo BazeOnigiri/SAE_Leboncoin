@@ -47,3 +47,6 @@ Route::middleware([
         Route::get('/compte/parametres', [UserAccountController::class, 'settings'])->name('user.settings');
         Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
     });
+    Route::get('/check-reservation/{id}', function ($id) {
+        return redirect()->route('annonce.view', ['id' => $id]);
+    })->middleware('auth')->name('check.reservation');
