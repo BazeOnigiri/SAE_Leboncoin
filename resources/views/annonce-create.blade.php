@@ -78,6 +78,80 @@
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
+            
+            <div>
+                <label for="typebien" class="block text-sm font-medium text-gray-700">Choisissez une votre type de bien</label>
+                <select name="typebien" id="typebien" required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                    <option value="">-- Sélectionner un type de bien --</option>
+                    @foreach ($typeHebergements as $type)
+                        <option value="{{ $type->idtypehebergement }}" {{ old('typebien') == $type->idtypehebergement ? 'selected' : '' }}>{{ $type->nomtypehebergement }}</option>
+                    @endforeach
+                </select>
+                @error('typebien')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <h3 class="text-lg font-semibold mt-6 mb-2">Horaires</h3>
+            <div class=" flex">
+                <div class="mr-4 w-60">
+                    <label for="heuredepart" class="block text-sm font-medium text-gray-700">Heure de départ</label>
+                    <input type="time" name="heuredepart" id="heuredepart" required value="{{ old('heuredepart') }}"
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                    @error('heuredepart')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="w-60">
+                    <label for="heurearrivee" class="block text-sm font-medium text-gray-700">Heure d'arrivée</label>
+                    <input type="time" name="heurearrivee" id="heurearrivee" required value="{{ old('heurearrivee') }}"
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                    @error('heurearrivee')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            @if(isset($categories) && $categories->isNotEmpty())
+                <h3 class="text-lg font-semibold mt-6 mb-2">Équipements</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach ($categories as $categorie)
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <p class="font-semibold text-gray-800 mb-2">{{ $categorie->nomcategorie }}</p>
+                            <div class="space-y-2">
+                                @foreach ($categorie->commodites as $commodite)
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" name="commodites[]" value="{{ $commodite->idcommodite }}" class="rounded text-orange-600"
+                                            {{ in_array($commodite->idcommodite, old('commodites', [])) ? 'checked' : '' }}>
+                                        <span class="text-sm text-gray-700">{{ $commodite->nomcommodite }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                @error('commodites')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+                @error('commodites.*')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            @endif
+
+            <div>
+                <label for="possibilitefumeur" class="block text-sm font-medium text-gray-700">Fumeur autorisé</label>
+                <select name="possibilitefumeur" id="possibilitefumeur" required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                    <option value="">-- Sélectionner une option --</option>
+                    <option value="1" {{ old('possibilitefumeur') === '1' ? 'selected' : '' }}>Oui</option>
+                    <option value="0" {{ old('possibilitefumeur') === '0' ? 'selected' : '' }}>Non</option>
+                </select>
+                @error('possibilitefumeur')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
             {{-- <h3 class="text-lg font-semibold mt-6 mb-2">Localisation</h3>
             <div>
@@ -90,50 +164,6 @@
             </div>
 
             <h3 class="text-lg font-semibold mt-6 mb-2">Caractéristiques</h3>
-            <div>
-                <label for="typebien" class="block text-sm font-medium text-gray-700">Choisissez une votre type de bien</label>
-                <select name="typebien" id="typebien" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                    <option value="">-- Sélectionner un type de bien --</option>
-                    @foreach ($typeHebergements as $type)
-                        <option value="{{ $type->idtypehebergement }}">{{ $type->nomtypehebergement }}</option>
-                    @endforeach
-                </select>
-                @error('typebien')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="chambres" class="block text-sm font-medium text-gray-700">Rentrer le nombre de chambres du bien</label>
-                <input type="number" name="chambres" id="chambres" min="0" step="1" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('chambres')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-
-            <h3 class="text-lg font-semibold mt-6 mb-2">Horaires</h3>
-            <div class=" flex">
-                <div class="mr-4 w-60">
-                    <label for="heuredepart" class="block text-sm font-medium text-gray-700">Heure de départ</label>
-                    <input type="time" name="heuredepart" id="heuredepart" required
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                    @error('heuredepart')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="w-60">
-                    <label for="heurearrivee" class="block text-sm font-medium text-gray-700">Heure d'arrivée</label>
-                    <input type="time" name="heurearrivee" id="heurearrivee" required
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                    @error('heurearrivee')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
 
             <h3 class="text-lg font-semibold mt-6 mb-2">Tarifs & conditions</h3>
             <div>
@@ -190,19 +220,7 @@
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
-
-            <div>
-                <label for="possibilitefumeur" class="block text-sm font-medium text-gray-700">Fumeur autorisé</label>
-                <select name="possibilitefumeur" id="possibilitefumeur" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                    <option value="">-- Sélectionner une option --</option>
-                    <option value="1">Oui</option>
-                    <option value="0">Non</option>
-                </select>
-                @error('possibilitefumeur')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div> --}}
+             --}}
 
             <div>
                 <button type="submit"

@@ -10,6 +10,10 @@ class Heure extends Model
     protected $primaryKey = 'idheure';
     public $timestamps = false;
 
+    protected $fillable = [
+        'heure',
+    ];
+
     public function annoncesDepart()
     {
         return $this->hasMany(Annonce::class, 'idheuredepart');

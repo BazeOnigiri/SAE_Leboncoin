@@ -14,6 +14,7 @@ use App\Models\Photo;
 use App\Models\Date as DateModel;
 use App\Models\Heure;
 use App\Models\Ville;
+use App\Models\Categorie;
 use Illuminate\Http\RedirectResponse;
 
 class AnnonceController extends Controller
@@ -63,7 +64,8 @@ class AnnonceController extends Controller
             return redirect()->route('cni.index')->with('info', 'Vous devez valider votre identité avant de pouvoir publier une annonce.');
         }
         $typeHebergements = TypeHebergement::all();
-        return view("annonce-create", compact('typeHebergements'));
+        $categories = Categorie::with('commodites')->get();
+        return view("annonce-create", compact('typeHebergements', 'categories'));
     }
 
     public function store(Request $request)
@@ -80,6 +82,12 @@ class AnnonceController extends Controller
             'photos.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'capacite' => ['required', 'integer', 'min:1'],
             'nbchambres' => ['required', 'integer', 'min:0'],
+            'typebien' => ['required', 'integer', 'exists:typehebergement,idtypehebergement'],
+            'heuredepart' => ['required', 'date_format:H:i'],
+            'heurearrivee' => ['required', 'date_format:H:i'],
+            'possibilitefumeur' => ['required', 'in:0,1'],
+            'commodites' => ['nullable', 'array'],
+            'commodites.*' => ['integer', 'exists:commodite,idcommodite'],
         ]);
 
         try {
@@ -89,18 +97,28 @@ class AnnonceController extends Controller
                     ['date' => now()->toDateString()]
                 );
 
+                // Create or find departure time
+                $heureDepart = Heure::firstOrCreate(
+                    ['heure' => $validated['heuredepart']]
+                );
+
+                // Create or find arrival time
+                $heureArrivee = Heure::firstOrCreate(
+                    ['heure' => $validated['heurearrivee']]
+                );
+
                 $annonce = Annonce::create([
                     'idadresse' => '1',
                     'iddate' => $date->iddate,
                     'idutilisateur' => Auth::id(),
                     'capacite' => $validated['capacite'],
-                    'idheuredepart' => '1',
-                    'idtypehebergement' => '1',
-                    'idheurearrivee' => '1',
+                    'idheuredepart' => $heureDepart->idheure,
+                    'idtypehebergement' => $validated['typebien'],
+                    'idheurearrivee' => $heureArrivee->idheure,
                     'titreannonce' => $validated['titre'],
                     'descriptionannonce' => $validated['description'],
                     'prixnuitee' => 10,
-                    'possibilitefumeur' => false,
+                    'possibilitefumeur' => (bool) $validated['possibilitefumeur'],
                     'nbchambres' => $validated['nbchambres'],
                 ]);
 
@@ -116,6 +134,11 @@ class AnnonceController extends Controller
                             'lienphoto' => $url,
                         ]);
                     }
+                }
+
+                // Attach commodites if provided
+                if (!empty($validated['commodites'])) {
+                    $annonce->commodites()->sync($validated['commodites']);
                 }
                 
                 return $annonce;

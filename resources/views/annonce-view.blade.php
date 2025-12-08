@@ -223,7 +223,9 @@
                 </svg>
                 <div class="flex flex-col">
                     <span class="text-xs text-gray-500 mb-0.5">Logement</span>
-                    <span class="font-bold text-sm text-neutral-900">Non-fumeur</span>
+                    <span class="font-bold text-sm text-neutral-900">
+                        {{ $annonce->possibilitefumeur ? 'Fumeur autorisé' : 'Non-fumeur' }}
+                    </span>
                 </div>
         </div>
         </div>
