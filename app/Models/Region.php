@@ -9,6 +9,8 @@ class Region extends Model
     protected $table = 'region';
     protected $primaryKey = 'idregion';
     public $timestamps = false;
+    
+    protected $guarded = [];
 
     /* Une region a beaucoup ou pas de ... */
 

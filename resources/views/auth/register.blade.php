@@ -24,13 +24,15 @@
                     }
                 }"
             >
-
-            <div x-show="step === 1" x-transition>
+                <div x-show="step === 1" x-transition>
                     <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Créez un compte</h2>
                     <p class="text-center text-gray-500 text-sm mb-8">Choisissez votre profil pour commencer</p>
 
                     <div class="space-y-4">
-                        <div @click="selectRole('particulier')" class="cursor-pointer group border rounded-lg p-4 hover:border-orange-500 hover:bg-orange-50 transition flex items-center">
+                        <div
+                            @click="selectRole('particulier')"
+                            class="cursor-pointer group border rounded-lg p-4 hover:border-orange-500 hover:bg-orange-50 transition flex items-center"
+                        >
                             <div class="h-6 w-6 rounded-full border-2 border-gray-300 flex items-center justify-center mr-4 group-hover:border-orange-500">
                                 <div class="h-3 w-3 rounded-full bg-orange-500 opacity-0 group-hover:opacity-100 transition"></div>
                             </div>
@@ -40,7 +42,10 @@
                             </div>
                         </div>
 
-                        <div @click="selectRole('professionnel')" class="cursor-pointer group border rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition flex items-center">
+                        <div
+                            @click="selectRole('professionnel')"
+                            class="cursor-pointer group border rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition flex items-center"
+                        >
                             <div class="h-6 w-6 rounded-full border-2 border-gray-300 flex items-center justify-center mr-4 group-hover:border-blue-500">
                                 <div class="h-3 w-3 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 transition"></div>
                             </div>
@@ -61,7 +66,14 @@
                     </div>
                 </div>
 
-                <form x-show="step === 2" method="POST" action="{{ route('register') }}" x-cloak class="space-y-5">
+                <form
+                    x-show="step === 2"
+                    x-cloak
+                    id="register-form"
+                    method="POST"
+                    action="{{ route('register') }}"
+                    class="space-y-5"
+                >
                     @csrf
 
                     <input type="hidden" name="role" x-model="role">
@@ -74,6 +86,7 @@
                         <h3 class="text-xl font-bold text-gray-900" x-text="role === 'particulier' ? 'Compte Particulier' : 'Compte Professionnel'"></h3>
                     </div>
 
+                    {{-- EMAIL (affichage readonly) --}}
                     <div>
                         <label class="block font-bold text-sm text-gray-700 mb-1">E-mail</label>
                         <input
@@ -84,6 +97,7 @@
                         >
                     </div>
 
+                    {{-- INFO PARTICULIER --}}
                     <div x-show="role === 'particulier'" class="space-y-5">
                         <div class="flex gap-6">
                             <label class="inline-flex items-center cursor-pointer">
@@ -138,11 +152,11 @@
                                 class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 bg-white"
                                 max="{{ now()->subYears(18)->toDateString() }}"
                                 value="{{ old('date_naissance') }}"
-                                required
                             >
                         </div>
                     </div>
 
+                    {{-- INFO PROFESSIONNEL --}}
                     <div x-show="role === 'professionnel'" class="space-y-5">
                         <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
                             <label class="block font-bold text-sm text-blue-800 mb-1">Numéro SIRET *</label>
@@ -181,11 +195,10 @@
                         </div>
                     </div>
 
+                    {{-- ADRESSE --}}
                     @php
                         $hasAddressOld = old('numerorue') || old('nomrue') || old('codepostal') || old('ville');
-                        $addressOld = trim(
-                            (old('numerorue').' '.old('nomrue').' '.old('codepostal').' '.old('ville'))
-                        );
+                        $addressOld = trim(old('numerorue').' '.old('nomrue').' '.old('codepostal').' '.old('ville'));
                     @endphp
 
                     <div class="border-t pt-5">
@@ -201,8 +214,8 @@
                                     placeholder="Commencez à taper votre adresse..."
                                     class="w-full border-gray-300 rounded-[10px] py-3 pl-10 px-4 focus:border-[#ec5a13] focus:ring-0"
                                     autocomplete="off"
-                                    value="{{ $hasAddressOld ? $addressOld : '' }}"
                                     required
+                                    value="{{ $hasAddressOld ? $addressOld : '' }}"
                                 >
                             </div>
                         </div>
@@ -248,18 +261,31 @@
 
                             <div class="col-span-2">
                                 <label class="block font-bold text-xs text-gray-500 mb-1">Ville</label>
-                                <input
-                                    type="text"
-                                    id="locality_display"
-                                    value="{{ old('ville') }}"
-                                    class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600"
-                                    disabled
-                                >
+                                <div class="flex gap-2">
+                                    <input
+                                        type="text"
+                                        id="locality_display"
+                                        value="{{ old('ville') }}"
+                                        class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600"
+                                        disabled
+                                    >
+                                    <button
+                                        type="button"
+                                        id="open-city-chooser"
+                                        class="shrink-0 px-3 py-2 text-xs font-bold rounded-[10px] border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Choisir
+                                    </button>
+                                </div>
                                 <input type="hidden" id="ville" name="ville" value="{{ old('ville') }}">
+                                <p class="mt-1 text-[11px] text-gray-500">
+                                    Si le code postal correspond à plusieurs villes, cliquez sur <strong>Choisir</strong>.
+                                </p>
                             </div>
                         </div>
                     </div>
 
+                    {{-- IDENTIFIANTS --}}
                     <div class="border-t pt-5">
                         <h4 class="font-bold text-gray-900 mb-4 text-lg">Identifiants</h4>
 
@@ -277,9 +303,13 @@
                             <div>
                                 <label class="block font-bold text-sm text-gray-700 mb-1">Téléphone *</label>
                                 <input
-                                    type="text"
+                                    type="tel"
                                     name="telephone"
                                     value="{{ old('telephone') }}"
+                                    pattern="^0[1-9][0-9]{8}$"
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
                                     class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0"
                                     required
                                 >
@@ -292,9 +322,9 @@
                                 <div class="relative">
                                     <input
                                         id="password"
-                                        class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10"
-                                        :type="show ? 'text' : 'password'"
                                         name="password"
+                                        :type="show ? 'text' : 'password'"
+                                        class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10"
                                         required
                                     >
                                 </div>
@@ -305,9 +335,9 @@
                                 <div class="relative">
                                     <input
                                         id="password_confirmation"
-                                        class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10"
-                                        :type="show ? 'text' : 'password'"
                                         name="password_confirmation"
+                                        :type="show ? 'text' : 'password'"
+                                        class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10"
                                         required
                                     >
                                     <button
@@ -334,10 +364,44 @@
         </x-authentication-card>
     </div>
 
-    {{-- SCRIPT GOOGLE MAPS --}}
+    {{-- CHOIX DE VILLE --}}
+    <div
+        id="city-chooser-modal"
+        class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden"
+    >
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Choisir une ville</h3>
+            <p class="text-sm text-gray-600 mb-4">
+                Plusieurs villes existent pour le code postal
+                <span id="modal-cp" class="font-semibold"></span>. Sélectionnez celle qui vous concerne.
+            </p>
+
+            <div id="city-radio-list" class="space-y-2 max-h-60 overflow-y-auto mb-4">
+                {{-- Radios générés en JS --}}
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button
+                    type="button"
+                    id="city-chooser-cancel"
+                    class="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100"
+                >
+                    Annuler
+                </button>
+                <button
+                    type="button"
+                    id="city-chooser-ok"
+                    class="px-4 py-2 text-sm rounded-lg bg-[#ec5a13] text-white font-bold hover:bg-[#d64d0e]"
+                >
+                    Valider
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function initAutocomplete() {
-            const input = document.getElementById('autocomplete');
+            const input = document.querySelector('#autocomplete');
             if (!input) return;
 
             const autocomplete = new google.maps.places.Autocomplete(input, {
@@ -354,49 +418,132 @@
                 let city = '';
                 let postalCode = '';
 
-                place.address_components.forEach(function (component) {
+                place.address_components.forEach(component => {
                     const types = component.types;
 
-                    if (types.includes('street_number')) {
-                        streetNumber = component.long_name;
-                    }
-                    if (types.includes('route')) {
-                        route = component.long_name;
-                    }
-                    if (types.includes('locality')) {
-                        city = component.long_name;
-                    }
-                    if (types.includes('postal_code')) {
-                        postalCode = component.long_name;
-                    }
+                    if (types.includes('street_number')) streetNumber = component.long_name;
+                    if (types.includes('route'))          route       = component.long_name;
+                    if (types.includes('locality'))       city        = component.long_name;
+                    if (types.includes('postal_code'))    postalCode  = component.long_name;
                 });
 
-                // champs visibles
-                const streetNumberDisplay = document.getElementById('street_number_display');
-                const routeDisplay        = document.getElementById('route_display');
-                const postalDisplay       = document.getElementById('postal_code_display');
-                const cityDisplay         = document.getElementById('locality_display');
+                // Affichage
+                document.querySelector('#street_number_display').value = streetNumber;
+                document.querySelector('#route_display').value         = route;
+                document.querySelector('#postal_code_display').value   = postalCode;
+                document.querySelector('#locality_display').value      = city;
 
-                if (streetNumberDisplay) streetNumberDisplay.value = streetNumber || '';
-                if (routeDisplay)        routeDisplay.value        = route || '';
-                if (postalDisplay)       postalDisplay.value       = postalCode || '';
-                if (cityDisplay)         cityDisplay.value         = city || '';
+                // Champs cachés envoyés au backend
+                document.querySelector('#numerorue').value  = streetNumber || 1;
+                document.querySelector('#nomrue').value     = route;
+                document.querySelector('#codepostal').value = postalCode;
+                document.querySelector('#ville').value      = city;
+            });
 
-                // champs cachés envoyés au backend
-                const numHidden   = document.getElementById('numerorue');
-                const routeHidden = document.getElementById('nomrue');
-                const cpHidden    = document.getElementById('codepostal');
-                const villeHidden = document.getElementById('ville');
+            // Contrôle JS : bloquer si adresse incomplète
+            const form = document.querySelector('#register-form');
+            form.addEventListener('submit', (e) => {
+                const num   = document.querySelector('#numerorue').value;
+                const rue   = document.querySelector('#nomrue').value;
+                const cp    = document.querySelector('#codepostal').value;
+                const ville = document.querySelector('#ville').value;
 
-                if (numHidden)   numHidden.value   = streetNumber || 1;
-                if (routeHidden) routeHidden.value = route || '';
-                if (cpHidden)    cpHidden.value    = postalCode || '';
-                if (villeHidden) villeHidden.value = city || '';
+                if (!num || !rue || !cp || !ville) {
+                    e.preventDefault();
+                    alert("Veuillez sélectionner une adresse dans la liste proposée.");
+                    input.focus();
+                }
+            });
+
+            // Choix de la ville via API Gouv
+            const openBtn   = document.querySelector('#open-city-chooser');
+            const modal     = document.querySelector('#city-chooser-modal');
+            const okBtn     = document.querySelector('#city-chooser-ok');
+            const cancelBtn = document.querySelector('#city-chooser-cancel');
+            const listDiv   = document.querySelector('#city-radio-list');
+            const cpSpan    = document.querySelector('#modal-cp');
+
+            if (!openBtn) return;
+
+            openBtn.addEventListener('click', async () => {
+                const cp = document.querySelector('#codepostal').value;
+
+                if (!cp || cp.length !== 5) {
+                    alert("Veuillez d'abord sélectionner une adresse pour récupérer le code postal.");
+                    return;
+                }
+
+                cpSpan.textContent = cp;
+                listDiv.innerHTML = '<p class="text-sm text-gray-500">Chargement des villes...</p>';
+                modal.classList.remove('hidden');
+
+                try {
+                    const response = await fetch(
+                        'https://geo.api.gouv.fr/communes?codePostal='
+                        + encodeURIComponent(cp)
+                        + '&fields=nom&format=json'
+                    );
+
+                    if (!response.ok) throw new Error('Erreur API');
+
+                    const communes = await response.json();
+
+                    if (!communes.length) {
+                        listDiv.innerHTML =
+                            '<p class="text-sm text-red-500">Aucune ville trouvée pour ce code postal.</p>';
+                        return;
+                    }
+
+                    listDiv.innerHTML = communes.map((commune, index) => {
+                        const id = 'city-choice-' + index;
+                        return `
+                            <label class="flex items-center gap-2 text-sm cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="city-choice"
+                                    id="${id}"
+                                    value="${commune.nom}"
+                                    class="text-[#ec5a13] focus:ring-[#ec5a13]"
+                                    ${index === 0 ? 'checked' : ''}
+                                >
+                                <span>${commune.nom}</span>
+                            </label>
+                        `;
+                    }).join('');
+                } catch (e) {
+                    console.error(e);
+                    listDiv.innerHTML =
+                        '<p class="text-sm text-red-500">Impossible de contacter le service des communes.</p>';
+                }
+            });
+
+            function closeCityModal() {
+                modal.classList.add('hidden');
+            }
+
+            cancelBtn.addEventListener('click', closeCityModal);
+
+            okBtn.addEventListener('click', () => {
+                const selected = document.querySelector('input[name="city-choice"]:checked');
+                if (!selected) {
+                    alert("Veuillez choisir une ville.");
+                    return;
+                }
+
+                const cityName = selected.value;
+
+                document.querySelector('#locality_display').value = cityName;
+                document.querySelector('#ville').value            = cityName;
+
+                closeCityModal();
             });
         }
 
         window.initAutocomplete = initAutocomplete;
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places&callback=initAutocomplete" async defer></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places&callback=initAutocomplete"
+        async defer>
+    </script>
 </x-guest-layout>
