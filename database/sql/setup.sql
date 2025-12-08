@@ -291,19 +291,19 @@ create table proposer (
 /* Table : recherche                                            */
 /*==============================================================*/
 create table recherche (
-   idrecherche          serial               not null,
-   idutilisateur        int4                 not null,
-   idville              int4                 null,
-   iddatefinrecherche   int4                 null,	
-   iddepartement        int4                 null,
-   idregion             int4                 null,
-   iddatedebutrecherche int4                 null,
-   paiementenligne      bool                 null,
-   capaciteminimumvoyageur int4              null,
-   prixminimum          decimal(10,2)        null,
-   prixmaximum          decimal(10,2)        null,
-   nombreminimumchambre int4                 null,
-   nombremaximumchambre int4                 null,
+   idrecherche             serial               not null,
+   idutilisateur           int4                 not null,
+   idville                 int4                 null,
+   iddatefinrecherche      int4                 null,	
+   iddepartement           int4                 null,
+   idregion                int4                 null,
+   iddatedebutrecherche    int4                 null,
+   paiementenligne         BOOLEAN              NOT NULL,
+   capaciteminimumvoyageur int4                 null,
+   prixminimum             decimal(10,2)        null,
+   prixmaximum             decimal(10,2)        null,
+   nombreminimumchambre    int4                 null,
+   nombremaximumchambre    int4                 null,
    constraint pk_recherche primary key (idrecherche)
 );
 
@@ -386,7 +386,6 @@ create table typevoyageur (
 /*==============================================================*/
 CREATE TABLE utilisateur (
    idutilisateur             SERIAL          NOT NULL,
-   idphoto                   INT4            NULL,
    idadresse                 INT4            NOT NULL,
    idcartebancaire           INT4            NULL,
    iddate                    INT4            NOT NULL,
@@ -407,6 +406,7 @@ CREATE TABLE utilisateur (
    two_factor_secret         TEXT            NULL,
    two_factor_recovery_codes TEXT            NULL,
    two_factor_confirmed_at   TIMESTAMP       NULL,
+   profile_photo_path        VARCHAR(2048)   NULL,
 
    CONSTRAINT pk_utilisateur PRIMARY KEY (idutilisateur)
 );
@@ -715,11 +715,6 @@ alter table utilisateur
       references date (iddate)
       on delete restrict on update restrict;
 
-alter table utilisateur
-   add constraint fk_utilisat_utiliser_photo foreign key (idphoto)
-      references photo (idphoto)
-      on delete restrict on update restrict;
-
 alter table ville
    add constraint fk_ville_situer_departem foreign key (iddepartement)
       references departement (iddepartement)
@@ -798,6 +793,8 @@ ALTER TABLE utilisateur
    ALTER COLUMN phone_verified SET DEFAULT false,
    ALTER COLUMN identity_verified SET DEFAULT false;
 
+ALTER TABLE recherche
+   ALTER COLUMN paiementenligne SET DEFAULT false;
 
 /*===========================================================================================*/
 /*===========================================================================================*/
@@ -912,7 +909,6 @@ CREATE INDEX idx_typehebergement_idcategorie ON typehebergement(idcategorie);
 CREATE INDEX idx_utilisateur_idadresse ON utilisateur(idadresse);
 CREATE INDEX idx_utilisateur_idcartebancaire ON utilisateur(idcartebancaire);
 CREATE INDEX idx_utilisateur_iddate ON utilisateur(iddate);
-CREATE INDEX idx_utilisateur_idphoto ON utilisateur(idphoto);
 
 /* ville */
 CREATE INDEX idx_ville_iddepartement ON ville(iddepartement);
