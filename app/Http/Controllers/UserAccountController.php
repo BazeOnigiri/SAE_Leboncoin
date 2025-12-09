@@ -18,7 +18,7 @@ use App\Models\Departement;
 
 class UserAccountController extends Controller
 {
-    // Liste des secteurs basée sur votre fichier inserts.sql
+    // Liste des secteurs basée sur inserts.sql
     private const SECTEURS = [
         'Agroalimentaire',
         'Banque / Assurance',
@@ -114,14 +114,7 @@ class UserAccountController extends Controller
         $user->telephoneutilisateur = $validated['telephone'];
         $user->email                = $validated['email'];
         
-        // Mise à jour du nom utilisateur seulement si présent (donc seulement pour Particulier)
-        if (isset($validated['nom'])) {
-            $Particulier->nomutilisateur = $validated['nom'];
-        }
-
-        if (isset($validated['prenom'])) {
-            $Particulier->prenomutilisateur = $validated['prenom'];
-        }
+        
         
         $user->save();
 
@@ -132,6 +125,14 @@ class UserAccountController extends Controller
             $particulier = $user->particulier;
             $particulier->civilite = $validated['civilite'];
             $particulier->iddate   = $dateModel->iddate;
+            // Mise à jour du nom utilisateur seulement si présent (donc seulement pour Particulier)
+            if (isset($validated['nom'])) {
+                $particulier->nomutilisateur = $validated['nom'];
+            }
+
+            if (isset($validated['prenom'])) {
+                $particulier->prenomutilisateur = $validated['prenom'];
+            }
             $particulier->save();
         } elseif ($user->professionnels) {
             $pro = $user->professionnels;

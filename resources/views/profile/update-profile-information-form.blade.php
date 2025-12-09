@@ -50,14 +50,14 @@
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="nom" value="{{ __('Nom') }}" />
-            <x-input id="nom" type="text" class="mt-1 block w-full" wire:model="state.nomutilisateur" required autocomplete="family-name" />
-            <x-input-error for="nomutilisateur" class="mt-2" />
+            <x-input id="nom" type="text" class="mt-1 block w-full" wire:model="state.particulier.nomutilisateur" required autocomplete="family-name" />
+            <x-input-error for="particulier.nomutilisateur" class="mt-2" />
         </div>
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="prenom" value="{{ __('Prénom') }}" />
-            <x-input id="prenom" type="text" class="mt-1 block w-full" wire:model="state.prenomutilisateur" required autocomplete="given-name" />
-            <x-input-error for="prenomutilisateur" class="mt-2" />
+            <x-input id="prenom" type="text" class="mt-1 block w-full" wire:model="state.particulier.prenomutilisateur" required autocomplete="given-name" />
+            <x-input-error for="particulier.prenomutilisateur" class="mt-2" />
         </div>
 
         <div class="col-span-6 sm:col-span-4">
