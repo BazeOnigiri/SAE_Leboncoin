@@ -12,11 +12,30 @@ use App\Models\Date as DateModel;
 use App\Models\Ville;
 use App\Models\Adresse;
 use App\Models\Particulier;
+use App\Models\Professionnel;
 use App\Models\Region;
 use App\Models\Departement;
 
 class UserAccountController extends Controller
 {
+    // Liste des secteurs basée sur votre fichier inserts.sql
+    private const SECTEURS = [
+        'Agroalimentaire',
+        'Banque / Assurance',
+        'BTP / Matériaux de construction',
+        'Chimie / Parachimie',
+        'Commerce / Négoce / Distribution',
+        'Édition / Communication / Multimédia',
+        'Énergie / Environnement',
+        'Industrie pharmaceutique',
+        'Informatique / Télécoms',
+        'Machines et équipements / Automobile',
+        'Services aux entreprises',
+        'Textile / Habillement / Chaussure',
+        'Tourisme - Restauration',
+        'Transports / Logistique'
+    ];
+
     public function edit()
     {
         return view('user-account.edit', ['user' => Auth::user()]);
@@ -46,63 +65,83 @@ class UserAccountController extends Controller
     public function settings()
     {
         $user = Auth::user();
-        $user->load(['particulier.dateNaissance', 'adresse.ville']);
+        $user->load(['particulier.dateNaissance', 'professionnels', 'adresse.ville']);
 
-        return view('user-account.settings', compact('user'));
+        return view('user-account.settings', [
+            'user' => $user,
+            'secteurs' => self::SECTEURS // On passe la liste à la vue
+        ]);
     }
 
     public function updateSettings(Request $request)
     {
         $user = Auth::user();
 
-        $validated = $request->validate([
-            'civilite' => ['required', 'in:Monsieur,Madame,Non spécifié'],
-
-            'nom'      => ['required', 'string', 'max:50'],
-            'prenom'   => ['required', 'string', 'max:50'],
-
+        // 1. Définition des règles de validation
+        // Règles communes
+        $rules = [
+            'telephone' => ['required', 'regex:/^0[1-9][0-9]{8}$/'],
             'email' => [
-                'required',
-                'string',
-                'email',
-                'max:320',
+                'required', 'string', 'email', 'max:320',
                 Rule::unique('utilisateur', 'email')->ignore($user->idutilisateur, 'idutilisateur'),
             ],
-
-            'date_naissance' => [
-                'required',
-                'date',
-                'before_or_equal:' . now()->subYears(18)->toDateString(),
-            ],
-
-            'telephone' => [
-                'required',
-                'regex:/^0[1-9][0-9]{8}$/',
-            ],
-
             'numerorue'  => ['nullable', 'integer', 'min:1', 'max:99999'],
             'nomrue'     => ['required', 'string', 'max:39'],
             'codepostal' => ['required', 'string', 'size:5', 'regex:/^[0-9]{5}$/'],
             'nomville'   => ['required', 'string', 'max:40'],
-        ]);
+        ];
 
-        $user->nomutilisateur       = $validated['nom'];
-        $user->prenomutilisateur    = $validated['prenom'];
+        // Règles spécifiques
+        if ($user->particulier) {
+            $rules['civilite']       = ['required', 'in:Monsieur,Madame,Non spécifié'];
+            $rules['nom']            = ['required', 'string', 'max:50'];
+            $rules['prenom']         = ['required', 'string', 'max:50'];
+            $rules['date_naissance'] = ['required', 'date', 'before_or_equal:' . now()->subYears(18)->toDateString()];
+        } elseif ($user->professionnels) {
+            // "Nom du contact" retiré du formulaire -> retiré de la validation
+            $rules['nomsociete']      = ['required', 'string', 'max:30'];
+            $rules['numsiret']        = [
+                'required', 'numeric', 'digits:14',
+                Rule::unique('professionnel', 'numsiret')->ignore($user->idutilisateur, 'idutilisateur')
+            ];
+            // Validation du secteur par rapport à notre liste
+            $rules['secteuractivite'] = ['required', 'string', Rule::in(self::SECTEURS)];
+        }
+
+        $validated = $request->validate($rules);
+
+        // 2. Mise à jour de l'Utilisateur (Table commune)
         $user->telephoneutilisateur = $validated['telephone'];
         $user->email                = $validated['email'];
+        
+        // Mise à jour du nom utilisateur seulement si présent (donc seulement pour Particulier)
+        if (isset($validated['nom'])) {
+            $user->nomutilisateur = $validated['nom'];
+        }
+
+        if (isset($validated['prenom'])) {
+            $user->prenomutilisateur = $validated['prenom'];
+        }
+        
         $user->save();
 
-        $dateModel = DateModel::firstOrCreate(['date' => $validated['date_naissance']]);
+        // 3. Mise à jour des tables spécifiques
+        if ($user->particulier) {
+            $dateModel = DateModel::firstOrCreate(['date' => $validated['date_naissance']]);
 
-        $particulier = $user->particulier;
-        if (!$particulier) {
-            $particulier = new Particulier();
-            $particulier->idutilisateur = $user->idutilisateur;
+            $particulier = $user->particulier;
+            $particulier->civilite = $validated['civilite'];
+            $particulier->iddate   = $dateModel->iddate;
+            $particulier->save();
+        } elseif ($user->professionnels) {
+            $pro = $user->professionnels;
+            $pro->nomsociete      = $validated['nomsociete'];
+            $pro->numsiret        = $validated['numsiret'];
+            $pro->secteuractivite = $validated['secteuractivite'];
+            $pro->save();
         }
-        $particulier->civilite = $validated['civilite'];
-        $particulier->iddate   = $dateModel->iddate;
-        $particulier->save();
 
+        // 4. Mise à jour Adresse et Ville (inchangé)
         $nomVilleSaisi = strtoupper($validated['nomville']);
         $codePostal    = $validated['codepostal'];
 
@@ -112,90 +151,56 @@ class UserAccountController extends Controller
 
         if (!$ville) {
             $communeData = null;
-
             try {
                 $http = Http::timeout(5);
-
-                if (app()->environment('local')) {
-                    $http = $http->withoutVerifying();
-                }
-
+                if (app()->environment('local')) $http = $http->withoutVerifying();
+                
                 $response = $http->get('https://geo.api.gouv.fr/communes', [
                     'codePostal' => $codePostal,
-                    'fields'     => 'nom,code,codesPostaux,codeDepartement,codeRegion,departement,region',
+                    'fields'     => 'nom,code,codesPostaux,codeDepartement,codeRegion',
                     'format'     => 'json',
                 ]);
 
                 if ($response->successful()) {
                     $communes = $response->json();
-
                     foreach ($communes as $commune) {
                         if (strtoupper($commune['nom']) === $nomVilleSaisi) {
                             $communeData = $commune;
                             break;
                         }
                     }
-
-                    if (!$communeData && !empty($communes)) {
-                        $communeData = $communes[0];
-                    }
+                    if (!$communeData && !empty($communes)) $communeData = $communes[0];
                 }
-            } catch (\Throwable $e) {
-                $communeData = null;
-            }
+            } catch (\Throwable $e) { $communeData = null; }
 
-            if (!$communeData) {
-                $region = Region::firstOrCreate(
-                    ['nomregion' => 'INCONNUE'],
-                    []
-                );
-
-                $depNumero = substr($codePostal, 0, 2);
-                if (in_array($depNumero, ['97', '98'])) {
-                    $depNumero = substr($codePostal, 0, 3);
-                }
-
-                $departement = Departement::firstOrCreate(
-                    ['numerodepartement' => $depNumero],
-                    [
-                        'idregion'       => $region->idregion,
-                        'nomdepartement' => 'DEPARTEMENT ' . $depNumero,
-                    ]
-                );
-
-                $taxe = random_int(50, 300) / 100;
-
-                $ville = new Ville();
-                $ville->iddepartement = $departement->iddepartement;
-                $ville->codepostal    = $codePostal;
-                $ville->nomville      = $nomVilleSaisi;
-                $ville->taxedesejour  = $taxe;
-                $ville->save();
-            } else {
-                $nomCommuneApi      = strtoupper($communeData['nom']);
+            if ($communeData) {
+                $codeRegionApi = $communeData['codeRegion'] ?? null;
                 $codeDepartementApi = $communeData['codeDepartement'] ?? null;
-                $codeRegionApi      = $communeData['codeRegion'] ?? null;
+                $nomCommuneApi = strtoupper($communeData['nom']);
 
-                $region = Region::firstOrCreate(
-                    ['nomregion' => 'REGION ' . $codeRegionApi],
-                    []
-                );
-
+                $region = Region::firstOrCreate(['nomregion' => 'REGION ' . $codeRegionApi]);
                 $departement = Departement::firstOrCreate(
                     ['numerodepartement' => $codeDepartementApi],
-                    [
-                        'idregion'       => $region->idregion,
-                        'nomdepartement' => 'DEPARTEMENT ' . $codeDepartementApi,
-                    ]
+                    ['idregion' => $region->idregion, 'nomdepartement' => 'DEPARTEMENT ' . $codeDepartementApi]
                 );
-
-                $taxe = random_int(50, 300) / 100;
-
                 $ville = new Ville();
                 $ville->iddepartement = $departement->iddepartement;
-                $ville->codepostal    = $codePostal;
-                $ville->nomville      = $nomCommuneApi;
-                $ville->taxedesejour  = $taxe;
+                $ville->codepostal = $codePostal;
+                $ville->nomville = $nomCommuneApi;
+                $ville->taxedesejour = random_int(50, 300) / 100;
+                $ville->save();
+            } else {
+                $region = Region::firstOrCreate(['nomregion' => 'INCONNUE']);
+                $depNumero = substr($codePostal, 0, 2);
+                $departement = Departement::firstOrCreate(
+                    ['numerodepartement' => $depNumero],
+                    ['idregion' => $region->idregion, 'nomdepartement' => 'DEPARTEMENT ' . $depNumero]
+                );
+                $ville = new Ville();
+                $ville->iddepartement = $departement->iddepartement;
+                $ville->codepostal = $codePostal;
+                $ville->nomville = $nomVilleSaisi;
+                $ville->taxedesejour = 0;
                 $ville->save();
             }
         }
