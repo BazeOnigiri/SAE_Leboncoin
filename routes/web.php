@@ -50,3 +50,5 @@ Route::middleware([
     Route::get('/check-reservation/{id}', function ($id) {
         return redirect()->route('annonce.view', ['id' => $id]);
     })->middleware('auth')->name('check.reservation');
+
+    Route::get('/reservation/creer/{id}', [ReservationController::class, 'create'])->name('reservation.create');

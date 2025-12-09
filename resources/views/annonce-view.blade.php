@@ -101,36 +101,28 @@
                     <h2 class="text-xl font-black mb-6 text-slate-800">Critères</h2>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
                         <div class="flex items-start gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" />
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" /></svg>
                             <div class="flex flex-col">
                                 <span class="text-xs text-gray-500 mb-0.5">Classement</span>
                                 <span class="font-bold text-sm text-neutral-900">{{ $annonce->nombreetoilesleboncoin ? $annonce->nombreetoilesleboncoin . ' étoiles' : 'Non classé' }}</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>
                             <div class="flex flex-col">
                                 <span class="text-xs text-gray-500 mb-0.5">Capacité</span>
                                 <span class="font-bold text-sm text-neutral-900">{{ $annonce->capacite ?? '?' }} personnes</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" /></svg>
                             <div class="flex flex-col">
                                 <span class="text-xs text-gray-500 mb-0.5">Type</span>
                                 <span class="font-bold text-sm text-neutral-900">{{ $annonce->typehebergement->nomtypehebergement ?? 'Non spécifié' }}</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-neutral-800 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
                             <div class="flex flex-col">
                                 <span class="text-xs text-gray-500 mb-0.5">Chambres</span>
                                 <span class="font-bold text-sm text-neutral-900">{{ $annonce->nbchambres ?? 0 }} chambres</span>
@@ -212,8 +204,7 @@
             <div class="lg:col-span-1">
                 <div class="sticky top-24"> 
                     <div class="bg-white border border-gray-200 rounded-2xl shadow-xl p-6">
-                        
-                        {{-- Prix dans la carte --}}
+
                         @php
                             $price = number_format($annonce->prixnuitee, 2, '.', '');
                             $price = preg_replace('/\.00$/', '', $price);
@@ -227,25 +218,47 @@
                             <div class="flex-1">
                                 <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Arrivée</label>
                                 <div class="relative">
-                                    <input type="date" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
+                                    <input type="date" 
+                                            min="{{ date('Y-m-d') }}"
+                                            id="dateArrivee"
+                                            onchange="updateDepartMin()"
+                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
                                 </div>
                             </div>
                             <div class="flex-1">
                                 <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Départ</label>
                                 <div class="relative">
-                                    <input type="date" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
+                                    <input type="date" 
+                                            min="{{ date('Y-m-d') }}"
+                                            id="dateDepart"
+                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
                                 </div>
                             </div>
                         </div>
+
+                        <script>
+                            function updateDepartMin() {
+                                const dateArrivee = document.getElementById('dateArrivee');
+                                const dateDepart = document.getElementById('dateDepart');
+                                
+                                if (dateArrivee.value) {
+                                    dateDepart.min = dateArrivee.value;
+                                    if (dateDepart.value && dateDepart.value < dateArrivee.value) {
+                                        dateDepart.value = dateArrivee.value;
+                                    }
+                                }
+                            }
+                        </script>
                         
                         <div class="bg-[#FEF9C3] text-[#854D0E] text-xs font-bold px-3 py-1.5 rounded-lg mb-6 w-fit inline-block">
                             Disponibilités non confirmées
                         </div>
 
                         @auth
-                            <button class="w-full bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold text-lg py-3 rounded-xl transition shadow-sm mb-6">
+                            <a href="{{ route('reservation.create', ['id' => $annonce->idannonce]) }}" 
+                                class="block text-center w-full bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold text-lg py-3 rounded-xl transition shadow-sm mb-6">
                                 Réserver
-                            </button>
+                            </a>
                         @else
                             <a href="{{ route('check.reservation', ['id' => $annonce->idannonce]) }}" 
                                 class="block text-center w-full bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold text-lg py-3 rounded-xl transition shadow-sm mb-6">

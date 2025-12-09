@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use App\Models\Annonce;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
@@ -27,5 +28,10 @@ class ReservationController extends Controller
         });
         
         return view('user-account.reservations', compact('reservationsAVenir', 'reservationsPassees'));
+    }
+    public function create($id)
+    {
+        $annonce = Annonce::findOrFail($id); 
+        return view('reservation-create', compact('annonce'));
     }
 }
