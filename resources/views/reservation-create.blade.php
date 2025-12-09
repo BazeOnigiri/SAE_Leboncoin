@@ -24,20 +24,42 @@
 
                         <section>
                             <h2 class="text-xl font-bold text-slate-900 mb-4">Vos dates de séjour</h2>
-                            <p class="text-slate-600 mb-4">2 nuits à {{ $annonce->adresse->ville->nomville ?? 'Ville' }}</p>
+
+                            @php
+                                $dateArrivee = request('arrivee');
+                                $dateDepart = request('depart');
+                                $nbNuits = 0;
+
+                                if($dateArrivee && $dateDepart) {
+                                    $start = \Carbon\Carbon::parse($dateArrivee);
+                                    $end = \Carbon\Carbon::parse($dateDepart);
+                                    $nbNuits = $start->diffInDays($end);
+                                }
+                            @endphp
+                            
+                            <p class="text-slate-600 mb-4">
+                                @if($nbNuits > 0)
+                                    <span class="font-bold text-slate-800">{{ $nbNuits }} nuits</span> 
+                                @else
+                                    Durée à définir
+                                @endif
+                                à {{ $annonce->adresse->ville->nomville ?? 'Ville' }}
+                            </p>
                             
                             <div class="grid grid-cols-2 gap-8 border-b border-gray-200 pb-8">
                                 <div>
                                     <span class="block text-sm font-bold text-slate-700">Arrivée</span>
                                     <span class="text-lg text-slate-900">
-                                        {{ request('date_debut') ? \Carbon\Carbon::parse(request('date_debut'))->format('d/m/Y') : date('d/m/Y') }}
+                                        {{ $dateArrivee ? \Carbon\Carbon::parse($dateArrivee)->format('d/m/Y') : '-' }}
                                     </span>
+                                    <input type="hidden" name="date_debut" value="{{ $dateArrivee }}">
                                 </div>
                                 <div>
                                     <span class="block text-sm font-bold text-slate-700">Départ</span>
                                     <span class="text-lg text-slate-900">
-                                        {{ request('date_fin') ? \Carbon\Carbon::parse(request('date_fin'))->format('d/m/Y') : date('d/m/Y', strtotime('+2 days')) }}
+                                        {{ $dateDepart ? \Carbon\Carbon::parse($dateDepart)->format('d/m/Y') : '-' }}
                                     </span>
+                                    <input type="hidden" name="date_fin" value="{{ $dateDepart }}">
                                 </div>
                             </div>
                         </section>
@@ -176,7 +198,6 @@
                     <div class="lg:col-span-1">
                         <div class="sticky top-24 space-y-6">
                             
-                            {{-- Carte de l'annonce --}}
                             <div class="flex gap-4 items-start">
                                 <img src="{{ $annonce->photos->first()->lienphoto ?? 'https://via.placeholder.com/100' }}" alt="Logement" class="w-24 h-24 object-cover rounded-lg border border-gray-200">
                                 <div>
@@ -197,21 +218,29 @@
 
                             <hr class="border-gray-200">
 
-                            {{-- Calculs (Simulés ici car nous n'avons pas la logique métier complète) --}}
                             @php
-                                $nights = 2; // Exemple statique basé sur le screenshot
                                 $pricePerNight = $annonce->prixnuitee;
-                                $totalRent = $pricePerNight * $nights;
-                                $serviceFee = $totalRent * 0.14; // Estimation 14%
-                                $touristTax = 4.00; // Fixe selon screenshot
+                                
+                                // Ensure $nbNuits is used here, defaulting to 1 if 0 to avoid multiplication by zero in display
+                                $nightsToCalculate = ($nbNuits > 0) ? $nbNuits : 1;
+
+                                $totalRent = $pricePerNight * $nightsToCalculate;
+                                $serviceFee = $totalRent * 0.14; 
+                                $touristTax = 4.00 * $nightsToCalculate; 
                                 $total = $totalRent + $serviceFee + $touristTax;
-                                $payNow = $serviceFee + ($totalRent * 0.35); // Acompte
+                                $payNow = $serviceFee + ($totalRent * 0.35); 
                                 $payLater = $total - $payNow;
                             @endphp
 
                             <div>
                                 <h3 class="font-bold text-lg text-slate-900 mb-4">Récapitulatif du paiement</h3>
                                 
+                                @if($nbNuits == 0)
+                                    <div class="bg-red-100 text-red-700 px-3 py-2 rounded text-sm mb-4">
+                                        Veuillez sélectionner vos dates sur l'annonce.
+                                    </div>
+                                @endif
+
                                 <div class="space-y-3 text-sm text-slate-600">
                                     <div class="flex justify-between">
                                         <span>Montant de la location <span class="cursor-help" title="Détails">ⓘ</span></span>

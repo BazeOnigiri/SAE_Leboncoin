@@ -71,7 +71,18 @@
                         dots{{ $annonce->idannonce }}[0].classList.add("w-3", "h-3", "bg-white");
                     }
                 </script>
-
+                <script>
+                    function updateReservationLink() {
+                        // Récupérer les valeurs
+                        const arrivee = document.getElementById('dateArriveeInput').value;
+                        const depart = document.getElementById('dateDepartInput').value;
+                        const btn = document.getElementById('btnReserver');
+                        let baseUrl = "{{ route('reservation.create', ['id' => $annonce->idannonce]) }}";
+                        if (arrivee && depart) {
+                            btn.href = baseUrl + "?arrivee=" + arrivee + "&depart=" + depart;
+                        }
+                    }
+                </script>
                 <div>
                     <h1 class="text-3xl font-bold mb-3 text-slate-900">{{ $annonce->titreannonce }}</h1>
                     <div class="text-sm mb-3 text-slate-600 flex flex-wrap items-center gap-2">
@@ -218,20 +229,15 @@
                             <div class="flex-1">
                                 <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Arrivée</label>
                                 <div class="relative">
-                                    <input type="date" 
-                                            min="{{ date('Y-m-d') }}"
-                                            id="dateArrivee"
-                                            onchange="updateDepartMin()"
-                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
+                                    <input type="date" id="dateArriveeInput" min="{{ date('Y-m-d') }}" onchange="updateReservationLink()"
+                                        class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                                 </div>
                             </div>
                             <div class="flex-1">
                                 <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Départ</label>
                                 <div class="relative">
-                                    <input type="date" 
-                                            min="{{ date('Y-m-d') }}"
-                                            id="dateDepart"
-                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none">
+                                    <input type="date" id="dateDepartInput" min="{{ date('Y-m-d') }}" onchange="updateReservationLink()"
+                                        class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                                 </div>
                             </div>
                         </div>
@@ -255,7 +261,7 @@
                         </div>
 
                         @auth
-                            <a href="{{ route('reservation.create', ['id' => $annonce->idannonce]) }}" 
+                            <a id="btnReserver" href="{{ route('reservation.create', ['id' => $annonce->idannonce]) }}" 
                                 class="block text-center w-full bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold text-lg py-3 rounded-xl transition shadow-sm mb-6">
                                 Réserver
                             </a>
@@ -265,6 +271,7 @@
                                 Réserver
                             </a>
                         @endauth
+                        
 
                         <hr class="border-gray-100 mb-6">
 
