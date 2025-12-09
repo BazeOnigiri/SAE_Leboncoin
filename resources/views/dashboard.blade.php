@@ -18,9 +18,9 @@
                                 <div class="relative flex-shrink-0">
                                     <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
                                         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && Auth::user()->profile_photo_url)
-                                            <img class="h-full w-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::Particulier()->prenomutilisateur }}" />
+                                            <img class="h-full w-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->particulier->prenomutilisateur }}" />
                                         @else
-                                            {{ substr(Auth::Particulier()->prenomutilisateur, 0, 1) }}
+                                            {{ substr(Auth::user()->particulier->prenomutilisateur, 0, 1) }}
                                         @endif
                                     </div>
                                     
@@ -34,7 +34,7 @@
                                 <div class="flex flex-col">
                                     <a href="{{ route('user.edit') }}" class="group">
                                         <h2 class="text-2xl font-bold text-gray-900 group-hover:underline mb-1">
-                                            {{ Auth::Particulier()->prenomutilisateur }} {{ Auth::Particulier()->nomutilisateur }}
+                                            {{ Auth::user()->particulier->prenomutilisateur }} {{ Auth::user()->particulier->nomutilisateur }}
                                         </h2>
                                     </a>
                                     <div class="flex items-center text-sm text-gray-600">
