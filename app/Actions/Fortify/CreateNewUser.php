@@ -201,8 +201,6 @@ use Laravel\Fortify\Contracts\CreatesNewUsers;
             $user = new User();
             $user->idadresse            = $adresse->idadresse;
             $user->iddate               = $creationDate->iddate; 
-            $user->nomutilisateur       = $input['nom'] ?? ($input['nomsociete'] ?? '');
-            $user->prenomutilisateur    = $input['prenom'] ?? '';
             $user->pseudonyme           = $input['pseudo'];
             $user->email                = $input['email'];
             $user->telephoneutilisateur = $input['telephone'];
@@ -217,6 +215,8 @@ use Laravel\Fortify\Contracts\CreatesNewUsers;
 
                 $particulier = new Particulier();
                 $particulier->idutilisateur = $user->idutilisateur;
+                $particulier->nomutilisateur = $input['nom'];
+                $particulier->prenomutilisateur = $input['prenom']; 
                 $particulier->civilite      = $input['civilite'];
                 $particulier->iddate        = $birthDate->iddate;
                 $particulier->save();
