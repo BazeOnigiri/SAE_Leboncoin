@@ -29,20 +29,20 @@ php artisan migrate
 ```
 
 Ou mettre à jour la DB :
-
 ```
+
 php artisan migrate:fresh
-```
 
+```
 Dans les deux cas il faut ajouter les inserts ensuite :
-
 ```
+
 php artisan db:seed
-```
 
+```
 Faire clique droit sur la DB --> Refresh dans PgAdmin4 pour voir les changements.
 
-```
+
 Pour que le navigateur puisse charger les images :
 ```
 
