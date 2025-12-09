@@ -140,6 +140,27 @@
                 @enderror
             @endif
 
+            <h3 class="text-lg font-semibold mt-6 mb-2">Tarifs</h3>
+            <div>
+                <label for="prixnuitee" class="block text-sm font-medium text-gray-700">Prix par nuitée (€)</label>
+                <input type="number" name="prixnuitee" id="prixnuitee" min="0" step="0.01" required value="{{ old('prixnuitee') }}"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                @error('prixnuitee')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="pourcentageacompte" class="block text-sm font-medium text-gray-700">Pourcentage d'acompte (%)</label>
+                <input type="number" name="pourcentageacompte" id="pourcentageacompte" min="0" max="100" step="1" required value="{{ old('pourcentageacompte') }}"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                <p class="text-xs text-gray-500 mt-1">L'acompte sera calculé sur le prix de la nuitée lors de la réservation</p>
+                @error('pourcentageacompte')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <h3 class="text-lg font-semibold mt-6 mb-2">Règles</h3>
             <div>
                 <label for="possibilitefumeur" class="block text-sm font-medium text-gray-700">Fumeur autorisé</label>
                 <select name="possibilitefumeur" id="possibilitefumeur" required

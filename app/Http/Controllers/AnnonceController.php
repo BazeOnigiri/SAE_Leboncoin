@@ -86,6 +86,8 @@ class AnnonceController extends Controller
             'heuredepart' => ['required', 'date_format:H:i'],
             'heurearrivee' => ['required', 'date_format:H:i'],
             'possibilitefumeur' => ['required', 'in:0,1'],
+            'prixnuitee' => ['required', 'numeric', 'min:0'],
+            'pourcentageacompte' => ['required', 'integer', 'min:0', 'max:100'],
             'commodites' => ['nullable', 'array'],
             'commodites.*' => ['integer', 'exists:commodite,idcommodite'],
         ]);
@@ -117,7 +119,8 @@ class AnnonceController extends Controller
                     'idheurearrivee' => $heureArrivee->idheure,
                     'titreannonce' => $validated['titre'],
                     'descriptionannonce' => $validated['description'],
-                    'prixnuitee' => 10,
+                    'prixnuitee' => $validated['prixnuitee'],
+                    'pourcentageacompte' => $validated['pourcentageacompte'],
                     'possibilitefumeur' => (bool) $validated['possibilitefumeur'],
                     'nbchambres' => $validated['nbchambres'],
                 ]);
@@ -140,7 +143,22 @@ class AnnonceController extends Controller
                 if (!empty($validated['commodites'])) {
                     $annonce->commodites()->sync($validated['commodites']);
                 }
+
+                $similarAnnonces = Annonce::where('idannonce', '!=', $annonce->idannonce)
+                    ->where('idtypehebergement', $annonce->idtypehebergement)
+                    ->where('capacite', '>=', $annonce->capacite - 2)
+                    ->where('capacite', '<=', $annonce->capacite + 2)
+                    ->whereBetween('prixnuitee', [
+                        $annonce->prixnuitee * 0.7,
+                        $annonce->prixnuitee * 1.3
+                    ])
+                    ->limit(10)
+                    ->pluck('idannonce');
                 
+                if ($similarAnnonces->isNotEmpty()) {
+                    $annonce->annonces()->attach($similarAnnonces);
+                }
+
                 return $annonce;
             });
             
