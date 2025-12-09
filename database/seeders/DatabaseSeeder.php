@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(InsertSeeder::class);
         $user = User::create([
-            'nomutilisateur' => 'TestNom',
-            'prenomutilisateur' => 'TestPrenom',
             'pseudonyme' => 'TestPseudo',
             'password' => bcrypt('passwordT67!'),
             'email' => 'test@example.com',
@@ -30,7 +28,9 @@ class DatabaseSeeder extends Seeder
         
         Particulier::create([
             'iddate' => 1,
-            'idutilisateur' => $user->idutilisateur, 
+            'idutilisateur' => $user->idutilisateur,
+            'nomutilisateur' => 'TestNom',
+            'prenomutilisateur' => 'TestPrenom', 
             'civilite' => 'Monsieur',
         ]);
     }
