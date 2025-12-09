@@ -61,7 +61,7 @@ Vider le cache
 
 php artisan geo:clear
 
-````
+```
 
 ## User from debit seed
 email: ```test@example.com```
@@ -75,7 +75,7 @@ need a view with app layout
 success exemple :
 ```php
 return back()->with('success', 'Votre CNI est déjà vérifiée.');
-````
+```
 
 error exemple :
 
