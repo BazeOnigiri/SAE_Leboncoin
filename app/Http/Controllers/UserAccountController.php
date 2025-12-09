@@ -116,11 +116,11 @@ class UserAccountController extends Controller
         
         // Mise à jour du nom utilisateur seulement si présent (donc seulement pour Particulier)
         if (isset($validated['nom'])) {
-            $user->nomutilisateur = $validated['nom'];
+            $Particulier->nomutilisateur = $validated['nom'];
         }
 
         if (isset($validated['prenom'])) {
-            $user->prenomutilisateur = $validated['prenom'];
+            $Particulier->prenomutilisateur = $validated['prenom'];
         }
         
         $user->save();
