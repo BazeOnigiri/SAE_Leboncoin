@@ -87,6 +87,7 @@
                         <input
                             type="date"
                             name="date_naissance"
+                            required
                             max="{{ now()->subYears(18)->toDateString() }}"
                             value="{{ old('date_naissance', optional(optional($user->particulier)->dateNaissance)->date) }}"
                             class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
@@ -104,6 +105,7 @@
                             inputmode="numeric"
                             placeholder="Ex : 0612345678"
                             value="{{ old('telephone', $user->telephoneutilisateur) }}"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
                             class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                         >
                         @error('telephone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -175,14 +177,26 @@
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Ville</label>
-                            <input
-                                id="locality_display"
-                                type="text"
-                                maxlength="40"
-                                value="{{ old('nomville', $user->adresse->ville->nomville ?? '') }}"
-                                class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
-                                readonly
-                            >
+                            <div class="flex gap-2">
+                                <input
+                                    id="locality_display"
+                                    type="text"
+                                    maxlength="40"
+                                    value="{{ old('nomville', $user->adresse->ville->nomville ?? '') }}"
+                                    class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 bg-gray-50"
+                                    readonly
+                                >
+                                <button
+                                    type="button"
+                                    id="open-city-chooser-settings"
+                                    class="shrink-0 px-3 py-2 text-xs font-bold rounded-[10px] border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                >
+                                    Choisir
+                                </button>
+                            </div>
+                            <p class="mt-1 text-[11px] text-gray-500">
+                                Si le code postal correspond à plusieurs villes, cliquez sur <strong>Choisir</strong>.
+                            </p>
                             @error('nomville') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -240,68 +254,170 @@
         </div>
     </div>
 
+    {{-- MODAL CHOIX DE VILLE --}}
+    <div
+        id="city-chooser-modal-settings"
+        class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden"
+    >
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Choisir une ville</h3>
+            <p class="text-sm text-gray-600 mb-4">
+                Plusieurs villes existent pour le code postal
+                <span id="modal-cp-settings" class="font-semibold"></span>. Sélectionnez celle qui vous concerne.
+            </p>
+
+            <div id="city-radio-list-settings" class="space-y-2 max-h-60 overflow-y-auto mb-4">
+                {{-- radios générés en JS --}}
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button
+                    type="button"
+                    id="city-chooser-cancel-settings"
+                    class="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100"
+                >
+                    Annuler
+                </button>
+                <button
+                    type="button"
+                    id="city-chooser-ok-settings"
+                    class="px-4 py-2 text-sm rounded-lg bg-[#ec5a13] text-white font-bold hover:bg-[#d64d0e]"
+                >
+                    Valider
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function initAutocomplete() {
-            const input = document.getElementById('autocomplete');
-            if (!input) return;
+function initAutocomplete() {
 
-            const autocomplete = new google.maps.places.Autocomplete(input, {
-                types: ['address'],
-                componentRestrictions: { country: 'fr' }
-            });
+    const input = document.querySelector('#autocomplete');
+    if (!input) return;
 
-            autocomplete.addListener('place_changed', function () {
-                const place = autocomplete.getPlace();
-                if (!place.address_components) return;
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+        types: ['address'],
+        componentRestrictions: { country: 'fr' }
+    });
 
-                let streetNumber = '';
-                let route = '';
-                let city = '';
-                let postalCode = '';
+    autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (!place.address_components) return;
 
-                place.address_components.forEach(function (component) {
-                    const types = component.types;
+        let streetNumber = '';
+        let route = '';
+        let city = '';
+        let postalCode = '';
 
-                    if (types.includes('street_number')) {
-                        streetNumber = component.long_name;
-                    }
-                    if (types.includes('route')) {
-                        route = component.long_name;
-                    }
-                    if (types.includes('locality')) {
-                        city = component.long_name;
-                    }
-                    if (types.includes('postal_code')) {
-                        postalCode = component.long_name;
-                    }
-                });
+        place.address_components.forEach(component => {
+            const types = component.types;
 
-                // champs visibles
-                const streetNumberDisplay = document.getElementById('street_number_display');
-                const routeDisplay        = document.getElementById('route_display');
-                const postalDisplay       = document.getElementById('postal_code_display');
-                const cityDisplay         = document.getElementById('locality_display');
+            if (types.includes('street_number')) streetNumber = component.long_name;
+            if (types.includes('route'))          route       = component.long_name;
+            if (types.includes('locality'))       city        = component.long_name;
+            if (types.includes('postal_code'))    postalCode  = component.long_name;
+        });
 
-                if (streetNumberDisplay) streetNumberDisplay.value = streetNumber || '';
-                if (routeDisplay)        routeDisplay.value        = route || '';
-                if (postalDisplay)       postalDisplay.value       = postalCode || '';
-                if (cityDisplay)         cityDisplay.value         = city || '';
+        // Champs visibles
+        document.querySelector('#street_number_display').value = streetNumber || '';
+        document.querySelector('#route_display').value         = route || '';
+        document.querySelector('#postal_code_display').value   = postalCode || '';
+        document.querySelector('#locality_display').value      = city || '';
 
-                // champs cachés envoyés au backend
-                const numHidden   = document.getElementById('numerorue');
-                const routeHidden = document.getElementById('nomrue');
-                const cpHidden    = document.getElementById('codepostal');
-                const villeHidden = document.getElementById('nomville');
+        // Champs hidden envoyés au backend
+        document.querySelector('#numerorue').value  = streetNumber || 1;
+        document.querySelector('#nomrue').value     = route;
+        document.querySelector('#codepostal').value = postalCode;
+        document.querySelector('#nomville').value   = city;
+    });
 
-                if (numHidden)   numHidden.value   = streetNumber || 1;
-                if (routeHidden) routeHidden.value = route || '';
-                if (cpHidden)    cpHidden.value    = postalCode || '';
-                if (villeHidden) villeHidden.value = city || '';
-            });
+    // ------- CHOIX DE LA VILLE (API GOUV) ---------
+
+    const openBtn   = document.querySelector('#open-city-chooser-settings');
+    const modal     = document.querySelector('#city-chooser-modal-settings');
+    const okBtn     = document.querySelector('#city-chooser-ok-settings');
+    const cancelBtn = document.querySelector('#city-chooser-cancel-settings');
+    const listDiv   = document.querySelector('#city-radio-list-settings');
+    const cpSpan    = document.querySelector('#modal-cp-settings');
+
+    if (!openBtn) return;
+
+    openBtn.addEventListener('click', async () => {
+
+        const cp = document.querySelector('#codepostal').value;
+
+        if (!cp || cp.length !== 5) {
+            alert("Veuillez d'abord sélectionner une adresse pour récupérer le code postal.");
+            return;
         }
 
-        window.initAutocomplete = initAutocomplete;
-    </script>
+        cpSpan.textContent = cp;
+
+        listDiv.innerHTML = '<p class="text-sm text-gray-500">Chargement des villes...</p>';
+        modal.classList.remove('hidden');
+
+        try {
+            const response = await fetch(
+                'https://geo.api.gouv.fr/communes?codePostal=' +
+                encodeURIComponent(cp) + '&fields=nom&format=json'
+            );
+
+            if (!response.ok) throw new Error('Erreur API');
+
+            const communes = await response.json();
+
+            if (!communes.length) {
+                listDiv.innerHTML = '<p class="text-sm text-red-500">Aucune ville trouvée pour ce code postal.</p>';
+                return;
+            }
+
+            listDiv.innerHTML = communes.map((commune, i) => {
+                return `
+                    <label class="flex items-center gap-2 text-sm cursor-pointer">
+                        <input type="radio"
+                            name="city-settings-choice"
+                            value="${commune.nom}"
+                            class="text-orange-600 focus:ring-orange-600"
+                            ${i === 0 ? 'checked' : ''}
+                        >
+                        <span>${commune.nom}</span>
+                    </label>
+                `;
+            }).join('');
+
+        } catch (e) {
+            console.error(e);
+            listDiv.innerHTML = '<p class="text-sm text-red-500">Erreur lors de la récupération des villes.</p>';
+        }
+    });
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+
+    cancelBtn.addEventListener('click', closeModal);
+
+    okBtn.addEventListener('click', () => {
+        const selected = document.querySelector('input[name="city-settings-choice"]:checked');
+
+        if (!selected) {
+            alert("Veuillez sélectionner une ville.");
+            return;
+        }
+
+        const cityName = selected.value;
+
+        // Mise à jour des champs
+        document.querySelector('#locality_display').value = cityName;
+        document.querySelector('#nomville').value         = cityName;
+
+        closeModal();
+    });
+}
+
+window.initAutocomplete = initAutocomplete;
+</script>
+
 
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&libraries=places&callback=initAutocomplete"

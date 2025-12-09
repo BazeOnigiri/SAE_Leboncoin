@@ -176,4 +176,8 @@ class User extends Authenticatable
         $telephoneOk = $this->telephoneEstVerifie();
         return $bonneNote && $assezAvis && $identiteOk && $telephoneOk;
     }
+    public function dateInscription()
+    {
+        return $this->belongsTo(\App\Models\Date::class, 'iddate', 'iddate');
+    }
 }

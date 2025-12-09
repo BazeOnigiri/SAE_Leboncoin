@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Http;
+
 use App\Models\Annonce;
 use App\Models\Date as DateModel;
 use App\Models\Ville;
 use App\Models\Adresse;
 use App\Models\Particulier;
-use Illuminate\Validation\Rule; // Import nécessaire pour la validation unique
+use App\Models\Region;
+use App\Models\Departement;
 
 class UserAccountController extends Controller
 {
@@ -22,7 +26,7 @@ class UserAccountController extends Controller
     {
         $user = Auth::user();
         $annonces = Annonce::where('idutilisateur', $user->idutilisateur)
-            ->with(['photos', 'typeHebergement', 'adresse.ville']) 
+            ->with(['photos', 'typeHebergement', 'adresse.ville'])
             ->orderBy('idannonce', 'desc')
             ->get();
 
@@ -38,11 +42,12 @@ class UserAccountController extends Controller
     {
         return view('user-account.security');
     }
-    
+
     public function settings()
     {
         $user = Auth::user();
         $user->load(['particulier.dateNaissance', 'adresse.ville']);
+
         return view('user-account.settings', compact('user'));
     }
 
@@ -52,15 +57,16 @@ class UserAccountController extends Controller
 
         $validated = $request->validate([
             'civilite' => ['required', 'in:Monsieur,Madame,Non spécifié'],
+
             'nom'      => ['required', 'string', 'max:50'],
             'prenom'   => ['required', 'string', 'max:50'],
-            
+
             'email' => [
-                'required', 
-                'string', 
-                'email', 
-                'max:320', 
-                Rule::unique('utilisateur', 'email')->ignore($user->idutilisateur, 'idutilisateur')
+                'required',
+                'string',
+                'email',
+                'max:320',
+                Rule::unique('utilisateur', 'email')->ignore($user->idutilisateur, 'idutilisateur'),
             ],
 
             'date_naissance' => [
@@ -71,7 +77,7 @@ class UserAccountController extends Controller
 
             'telephone' => [
                 'required',
-                'regex:/^0[1-9][0-9]{8}$/', 
+                'regex:/^0[1-9][0-9]{8}$/',
             ],
 
             'numerorue'  => ['nullable', 'integer', 'min:1', 'max:99999'],
@@ -80,10 +86,10 @@ class UserAccountController extends Controller
             'nomville'   => ['required', 'string', 'max:40'],
         ]);
 
-        $user->nomutilisateur        = $validated['nom'];
-        $user->prenomutilisateur     = $validated['prenom'];
-        $user->telephoneutilisateur  = $validated['telephone'] ?? null;
-        $user->email                 = $validated['email']; 
+        $user->nomutilisateur       = $validated['nom'];
+        $user->prenomutilisateur    = $validated['prenom'];
+        $user->telephoneutilisateur = $validated['telephone'];
+        $user->email                = $validated['email'];
         $user->save();
 
         $dateModel = DateModel::firstOrCreate(['date' => $validated['date_naissance']]);
@@ -97,34 +103,108 @@ class UserAccountController extends Controller
         $particulier->iddate   = $dateModel->iddate;
         $particulier->save();
 
-        $nomVille   = strtoupper($validated['nomville']);
-        $codePostal = $validated['codepostal'];
+        $nomVilleSaisi = strtoupper($validated['nomville']);
+        $codePostal    = $validated['codepostal'];
 
-        $ville = Ville::where('nomville', $nomVille)->first();
+        $ville = Ville::where('nomville', $nomVilleSaisi)
+            ->where('codepostal', $codePostal)
+            ->first();
 
         if (!$ville) {
-            $ville = new Ville();
-            $ville->nomville      = $nomVille;
-            $ville->codepostal    = $codePostal;
-            $ville->iddepartement = 1;   
-            $ville->taxedesejour  = 0;
-            $ville->save();
-        } else {
-            if ($ville->codepostal !== $codePostal) {
-                $ville->codepostal = $codePostal;
+            $communeData = null;
+
+            try {
+                $http = Http::timeout(5);
+
+                if (app()->environment('local')) {
+                    $http = $http->withoutVerifying();
+                }
+
+                $response = $http->get('https://geo.api.gouv.fr/communes', [
+                    'codePostal' => $codePostal,
+                    'fields'     => 'nom,code,codesPostaux,codeDepartement,codeRegion,departement,region',
+                    'format'     => 'json',
+                ]);
+
+                if ($response->successful()) {
+                    $communes = $response->json();
+
+                    foreach ($communes as $commune) {
+                        if (strtoupper($commune['nom']) === $nomVilleSaisi) {
+                            $communeData = $commune;
+                            break;
+                        }
+                    }
+
+                    if (!$communeData && !empty($communes)) {
+                        $communeData = $communes[0];
+                    }
+                }
+            } catch (\Throwable $e) {
+                $communeData = null;
+            }
+
+            if (!$communeData) {
+                $region = Region::firstOrCreate(
+                    ['nomregion' => 'INCONNUE'],
+                    []
+                );
+
+                $depNumero = substr($codePostal, 0, 2);
+                if (in_array($depNumero, ['97', '98'])) {
+                    $depNumero = substr($codePostal, 0, 3);
+                }
+
+                $departement = Departement::firstOrCreate(
+                    ['numerodepartement' => $depNumero],
+                    [
+                        'idregion'       => $region->idregion,
+                        'nomdepartement' => 'DEPARTEMENT ' . $depNumero,
+                    ]
+                );
+
+                $taxe = random_int(50, 300) / 100;
+
+                $ville = new Ville();
+                $ville->iddepartement = $departement->iddepartement;
+                $ville->codepostal    = $codePostal;
+                $ville->nomville      = $nomVilleSaisi;
+                $ville->taxedesejour  = $taxe;
+                $ville->save();
+            } else {
+                $nomCommuneApi      = strtoupper($communeData['nom']);
+                $codeDepartementApi = $communeData['codeDepartement'] ?? null;
+                $codeRegionApi      = $communeData['codeRegion'] ?? null;
+
+                $region = Region::firstOrCreate(
+                    ['nomregion' => 'REGION ' . $codeRegionApi],
+                    []
+                );
+
+                $departement = Departement::firstOrCreate(
+                    ['numerodepartement' => $codeDepartementApi],
+                    [
+                        'idregion'       => $region->idregion,
+                        'nomdepartement' => 'DEPARTEMENT ' . $codeDepartementApi,
+                    ]
+                );
+
+                $taxe = random_int(50, 300) / 100;
+
+                $ville = new Ville();
+                $ville->iddepartement = $departement->iddepartement;
+                $ville->codepostal    = $codePostal;
+                $ville->nomville      = $nomCommuneApi;
+                $ville->taxedesejour  = $taxe;
                 $ville->save();
             }
         }
 
-        $adresse = $user->adresse;
-        if (!$adresse) {
-            $adresse = new Adresse();
-        }
-
-        $adresse->numerorue = $validated['numerorue'] ?? null;
-        $adresse->nomrue    = $validated['nomrue'];
-        $adresse->idville   = $ville->idville;
-        $adresse->save();
+        $adresse = Adresse::firstOrCreate([
+            'numerorue' => $validated['numerorue'],
+            'nomrue'    => $validated['nomrue'],
+            'idville'   => $ville->idville,
+        ]);
 
         if ($user->idadresse !== $adresse->idadresse) {
             $user->idadresse = $adresse->idadresse;
