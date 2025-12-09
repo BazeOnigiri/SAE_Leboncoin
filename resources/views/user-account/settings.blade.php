@@ -46,12 +46,12 @@
                         <div class="grid grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Nom</label>
-                                <input type="text" name="nom" maxlength="50" value="{{ old('nom', $user->nomutilisateur) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                                <input type="text" name="nom" maxlength="50" value="{{ old('nom', $user->particulier->nomutilisateur) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
                                 @error('nom') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Prénom</label>
-                                <input type="text" name="prenom" maxlength="50" value="{{ old('prenom', $user->prenomutilisateur) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                                <input type="text" name="prenom" maxlength="50" value="{{ old('prenom', default: $user->particulier->prenomutilisateur) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
                                 @error('prenom') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
                         </div>
