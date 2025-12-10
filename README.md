@@ -29,20 +29,20 @@ php artisan migrate
 ```
 
 Ou mettre à jour la DB :
-
 ```
+
 php artisan migrate:fresh
-```
 
+```
 Dans les deux cas il faut ajouter les inserts ensuite :
-
 ```
+
 php artisan db:seed
-```
 
+```
 Faire clique droit sur la DB --> Refresh dans PgAdmin4 pour voir les changements.
 
-```
+
 Pour que le navigateur puisse charger les images :
 ```
 
@@ -61,7 +61,7 @@ Vider le cache
 
 php artisan geo:clear
 
-````
+```
 
 ## User from debit seed
 email: ```test@example.com```
@@ -75,7 +75,7 @@ need a view with app layout
 success exemple :
 ```php
 return back()->with('success', 'Votre CNI est déjà vérifiée.');
-````
+```
 
 error exemple :
 

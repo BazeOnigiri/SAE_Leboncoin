@@ -250,9 +250,11 @@ create table message (
 /* Table : particulier                                          */
 /*==============================================================*/
 create table particulier (
-   idutilisateur        int4                 not null,
-   civilite				   varchar(15)			   not null,
-   iddate               int4                 not null, 
+   idutilisateur           int4                 not null,
+   nomutilisateur          VARCHAR(50)          NOT NULL,
+   prenomutilisateur       VARCHAR(50)          NOT NULL,
+   civilite				      varchar(15)			   not null,
+   iddate                  int4                 not null,
    constraint pk_particulier primary key (idutilisateur)
 );
 
@@ -390,8 +392,6 @@ CREATE TABLE utilisateur (
    idcartebancaire           INT4            NULL,
    iddate                    INT4            NOT NULL,
 
-   nomutilisateur            VARCHAR(50)     NOT NULL,
-   prenomutilisateur         VARCHAR(50)     NOT NULL,
    pseudonyme                VARCHAR(50)     NOT NULL,
    email                     VARCHAR(320)    NOT NULL UNIQUE,
    email_verified_at         TIMESTAMP       NULL,
