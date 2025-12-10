@@ -122,28 +122,66 @@
                             </div>
                         </section>
 
+
+
+
+
+
+
+
+
+//fonctionne pas
+
+
+
+
                         <section class="border-b border-gray-200 pb-8">
-                            <h2 class="text-xl font-bold text-slate-900 mb-6">Vos informations</h2>
-                            <p class="text-xs text-gray-500 mb-4">* Champs obligatoires</p>
+                                <h2 class="text-xl font-bold text-slate-900 mb-6">Vos informations</h2>
+                                <p class="text-xs text-gray-500 mb-4">* Champs obligatoires</p>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Prénom *</label>
+                                        <input type="text" 
+                                                name="prenomutilisateur" 
+                                                value="{{ old('prenom', Auth::user()->prenom ?? '') }}" 
+                                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-orange-500 focus:ring-orange-500 h-12"
+                                                required>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Nom *</label>
+                                        <input type="text" 
+                                                name="nomutilisateur" 
+                                                value="{{ old('nom', Auth::user()->nom ?? '') }}" 
+                                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-orange-500 focus:ring-orange-500 h-12"
+                                                required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Numéro de téléphone</label>
+                                    <input type="text" 
+                                            name="telephoneutilisateur" 
+                                            value="{{ old('telephone', Auth::user()->telephone ?? '') }}" 
+                                            class="w-full border-gray-300 rounded-lg shadow-sm focus:border-orange-500 focus:ring-orange-500 h-12" 
+                                            placeholder="0652251273">
+                                </div>
+                                <p class="text-xs text-gray-500">Votre numéro de téléphone sera partagé à l'hôte une fois votre demande de réservation acceptée</p>
+                            </section>
+
+
+
+
+
+
+
+
+
+
+
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Prénom *</label>
-                                    <input type="text" name="prenom" value="{{ Auth::user()->prenom ?? '' }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-orange-500 focus:ring-orange-500 h-12">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 mb-1">Nom *</label>
-                                    <input type="text" name="nom" value="{{ Auth::user()->nom ?? '' }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-orange-500 focus:ring-orange-500 h-12">
-                                </div>
-                            </div>
-
-                            <div class="mb-2">
-                                <label class="block text-sm font-medium text-slate-700 mb-1">Numéro de téléphone</label>
-                                <input type="text" name="telephone" value="{{ Auth::user()->telephone ?? '' }}" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-orange-500 focus:ring-orange-500 h-12" placeholder="0652251273">
-                            </div>
-                            <p class="text-xs text-gray-500">Votre numéro de téléphone sera partagé à l'hôte une fois votre demande de réservation acceptée</p>
-                        </section>
-
                         <section class="pb-8">
                             <h2 class="text-xl font-bold text-slate-900 mb-2">Envoyer un message à {{ $annonce->utilisateur->pseudonyme ?? 'l\'hôte' }}</h2>
                             
@@ -213,15 +251,20 @@
                                 <div class="w-10 h-10 rounded-full bg-[#EA580C] text-white flex items-center justify-center text-sm font-bold">
                                     {{ strtoupper(substr($annonce->utilisateur->pseudonyme ?? 'U', 0, 1)) }}
                                 </div>
-                                <span class="font-bold text-slate-900">{{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur' }}</span>
+
+
+
+
+                                <a class="underline font-bold" href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
+                                    {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
+                                </a>
                             </div>
 
                             <hr class="border-gray-200">
 
                             @php
                                 $pricePerNight = $annonce->prixnuitee;
-                                
-                                // Ensure $nbNuits is used here, defaulting to 1 if 0 to avoid multiplication by zero in display
+
                                 $nightsToCalculate = ($nbNuits > 0) ? $nbNuits : 1;
 
                                 $totalRent = $pricePerNight * $nightsToCalculate;

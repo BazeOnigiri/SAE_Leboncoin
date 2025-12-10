@@ -73,13 +73,55 @@
                 </script>
                 <script>
                     function updateReservationLink() {
-                        // Récupérer les valeurs
-                        const arrivee = document.getElementById('dateArriveeInput').value;
-                        const depart = document.getElementById('dateDepartInput').value;
+                        const arriveeInput = document.getElementById('dateArriveeInput');
+                        const departInput = document.getElementById('dateDepartInput');
                         const btn = document.getElementById('btnReserver');
-                        let baseUrl = "{{ route('reservation.create', ['id' => $annonce->idannonce]) }}";
-                        if (arrivee && depart) {
-                            btn.href = baseUrl + "?arrivee=" + arrivee + "&depart=" + depart;
+                        const warning = document.getElementById('dateWarning');
+
+                        if (arriveeInput.value) {
+                            departInput.min = arriveeInput.value;
+                            if (departInput.value && departInput.value < arriveeInput.value) {
+                                departInput.value = arriveeInput.value;
+                            }
+                        }
+
+                        if (arriveeInput.value && departInput.value) {
+
+                            let baseUrl = "";
+                            @auth
+                                baseUrl = "{{ route('reservation.create', ['id' => $annonce->idannonce]) }}";
+                            @else
+                                baseUrl = "{{ route('check.reservation', ['id' => $annonce->idannonce]) }}";
+                            @endauth
+
+                            btn.href = baseUrl + "?arrivee=" + arriveeInput.value + "&depart=" + departInput.value;
+
+                            btn.classList.remove('bg-gray-300', 'cursor-not-allowed', 'pointer-events-none', 'shadow-none');
+                            btn.classList.add('bg-[#EA580C]', 'hover:bg-[#C2410C]', 'shadow-sm', 'cursor-pointer');
+
+                            warning.style.display = 'none';
+                        
+                        } else {
+
+                            btn.removeAttribute('href');
+
+                            btn.classList.add('bg-gray-300', 'cursor-not-allowed', 'pointer-events-none', 'shadow-none');
+                            btn.classList.remove('bg-[#EA580C]', 'hover:bg-[#C2410C]', 'shadow-sm', 'cursor-pointer');
+
+                            warning.style.display = 'block';
+                        }
+                    }
+                </script>
+                <script>
+                    function updateDepartMin() {
+                        const dateArrivee = document.getElementById('dateArrivee');
+                        const dateDepart = document.getElementById('dateDepart');
+                        
+                        if (dateArrivee.value) {
+                            dateDepart.min = dateArrivee.value;
+                            if (dateDepart.value && dateDepart.value < dateArrivee.value) {
+                                dateDepart.value = dateArrivee.value;
+                            }
                         }
                     }
                 </script>
@@ -224,54 +266,61 @@
                             <span class="text-2xl font-bold text-slate-900">{{ $price }} €</span> <span class="text-slate-500">par nuit</span>
                         </div>
 
+
+
+
+
                         <p class="text-sm font-bold text-slate-800 mb-2">Sélectionnez vos dates de séjour :</p>
-                        <div class="flex items-center gap-2 mb-4">
-                            <div class="flex-1">
-                                <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Arrivée</label>
-                                <div class="relative">
-                                    <input type="date" id="dateArriveeInput" min="{{ date('Y-m-d') }}" onchange="updateReservationLink()"
+
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="flex-1">
+                                    <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Arrivée</label>
+                                    <div class="relative">
+                                        <input type="date" 
+                                        min="{{ date('Y-m-d') }}" 
+                                        onchange="updateReservationLink()"
                                         class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                                        id="dateArriveeInput" 
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Départ</label>
+                                    <div class="relative">
+                                        <input type="date" 
+                                        min="{{ date('Y-m-d') }}" 
+                                        onchange="updateReservationLink()"
+                                        class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                                        id="dateDepartInput" 
+                                    </div>
                                 </div>
                             </div>
-                            <div class="flex-1">
-                                <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Départ</label>
-                                <div class="relative">
-                                    <input type="date" id="dateDepartInput" min="{{ date('Y-m-d') }}" onchange="updateReservationLink()"
-                                        class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
-                                </div>
+
+                            <p id="dateWarning" class="text-xs text-red-500 font-medium mb-4 text-center">
+                                * Veuillez sélectionner vos dates pour continuer
+                            </p>
+
+                            <div class="bg-[#FEF9C3] text-[#854D0E] text-xs font-bold px-3 py-1.5 rounded-lg mb-6 w-fit inline-block">
+                                Disponibilités non confirmées
                             </div>
-                        </div>
 
-                        <script>
-                            function updateDepartMin() {
-                                const dateArrivee = document.getElementById('dateArrivee');
-                                const dateDepart = document.getElementById('dateDepart');
-                                
-                                if (dateArrivee.value) {
-                                    dateDepart.min = dateArrivee.value;
-                                    if (dateDepart.value && dateDepart.value < dateArrivee.value) {
-                                        dateDepart.value = dateArrivee.value;
-                                    }
-                                }
-                            }
-                        </script>
-                        
-                        <div class="bg-[#FEF9C3] text-[#854D0E] text-xs font-bold px-3 py-1.5 rounded-lg mb-6 w-fit inline-block">
-                            Disponibilités non confirmées
-                        </div>
+                            @auth
+                                <a id="btnReserver" 
+                                    href="#" 
+                                    class="block text-center w-full bg-gray-300 text-white font-bold text-lg py-3 rounded-xl shadow-none cursor-not-allowed pointer-events-none transition mb-6">
+                                    Réserver
+                                </a>
+                            @else
+                                <a id="btnReserver" 
+                                    href="#" 
+                                    class="block text-center w-full bg-gray-300 text-white font-bold text-lg py-3 rounded-xl shadow-none cursor-not-allowed pointer-events-none transition mb-6">
+                                    Réserver
+                                </a>
+                            @endauth
 
-                        @auth
-                            <a id="btnReserver" href="{{ route('reservation.create', ['id' => $annonce->idannonce]) }}" 
-                                class="block text-center w-full bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold text-lg py-3 rounded-xl transition shadow-sm mb-6">
-                                Réserver
-                            </a>
-                        @else
-                            <a href="{{ route('check.reservation', ['id' => $annonce->idannonce]) }}" 
-                                class="block text-center w-full bg-[#EA580C] hover:bg-[#C2410C] text-white font-bold text-lg py-3 rounded-xl transition shadow-sm mb-6">
-                                Réserver
-                            </a>
-                        @endauth
-                        
+
+
+
+
 
                         <hr class="border-gray-100 mb-6">
 
