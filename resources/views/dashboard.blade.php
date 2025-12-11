@@ -19,7 +19,7 @@
                                     <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
                                         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && Auth::user()->profile_photo_url)
                                             <img class="h-full w-full object-cover" src="{{ Auth::user()->profile_photo_url }}" 
-                                                 alt="{{ Auth::user()->pseudonyme }}" />
+                                                alt="{{ Auth::user()->pseudonyme }}" />
                                         @else
                                             {{ substr(Auth::user()->pseudonyme, 0, 1) }}
                                         @endif
@@ -35,11 +35,10 @@
                                 <div class="flex flex-col">
                                     <a href="{{ route('user.edit') }}" class="group">
                                         <h2 class="text-2xl font-bold text-gray-900 group-hover:underline mb-1">
-                                            {{-- MODIFICATION ICI : Gestion conditionnelle Particulier / Pro --}}
                                             @if(Auth::user()->particulier)
                                                 {{ Auth::user()->particulier->prenomutilisateur }} {{ Auth::user()->particulier->nomutilisateur }}
                                             @elseif(Auth::user()->professionnels)
-                                                {{ Auth::user()->professionnels->nomsociete }} ({{ Auth::user()->nomutilisateur }})
+                                                {{ Auth::user()->professionnels->nomsociete }}
                                             @else
                                                 {{ Auth::user()->pseudonyme }}
                                             @endif
@@ -51,9 +50,9 @@
                                         </span>
                                         <span class="ml-1">({{ Auth::user()->avis_recus_count ?? 0 }} avis)</span>
                                     </div>
-                                    <a class="text-gray-900 font-bold hover:underline mt-1" href="{{ route('user.edit') }}">Modifier</a>
                                 </div>
                             </div>
+                            <a class="text-gray-900 font-bold hover:underline" href="{{ route('user.edit') }}">Modifier</a>
                         </div>
                     </div>
                 </div>
