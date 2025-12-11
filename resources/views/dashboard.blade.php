@@ -18,9 +18,10 @@
                                 <div class="relative flex-shrink-0">
                                     <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center text-3xl font-bold text-gray-400">
                                         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && Auth::user()->profile_photo_url)
-                                            <img class="h-full w-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->particulier->prenomutilisateur }}" />
+                                            <img class="h-full w-full object-cover" src="{{ Auth::user()->profile_photo_url }}" 
+                                                 alt="{{ Auth::user()->pseudonyme }}" />
                                         @else
-                                            {{ substr(Auth::user()->particulier->prenomutilisateur, 0, 1) }}
+                                            {{ substr(Auth::user()->pseudonyme, 0, 1) }}
                                         @endif
                                     </div>
                                     
@@ -34,12 +35,21 @@
                                 <div class="flex flex-col">
                                     <a href="{{ route('user.edit') }}" class="group">
                                         <h2 class="text-2xl font-bold text-gray-900 group-hover:underline mb-1">
-                                            {{ Auth::user()->particulier->prenomutilisateur }} {{ Auth::user()->particulier->nomutilisateur }}
+                                            {{-- MODIFICATION ICI : Gestion conditionnelle Particulier / Pro --}}
+                                            @if(Auth::user()->particulier)
+                                                {{ Auth::user()->particulier->prenomutilisateur }} {{ Auth::user()->particulier->nomutilisateur }}
+                                            @elseif(Auth::user()->professionnels)
+                                                {{ Auth::user()->professionnels->nomsociete }} ({{ Auth::user()->nomutilisateur }})
+                                            @else
+                                                {{ Auth::user()->pseudonyme }}
+                                            @endif
                                         </h2>
                                     </a>
                                     <div class="flex items-center text-sm text-gray-600">
-                                        <span class="font-bold text-gray-900">5/5</span>
-                                        <span class="ml-1">(1 avis)</span>
+                                        <span class="font-bold text-gray-900">
+                                            {{ number_format(Auth::user()->avis_recus_avg_nombreetoiles ?? 0, 1) }}/5
+                                        </span>
+                                        <span class="ml-1">({{ Auth::user()->avis_recus_count ?? 0 }} avis)</span>
                                     </div>
                                     <a class="text-gray-900 font-bold hover:underline mt-1" href="{{ route('user.edit') }}">Modifier</a>
                                 </div>
@@ -51,7 +61,7 @@
                 <div class="md:w-96 bg-white border border-gray-200 rounded-xl shadow-sm p-6 pl-12 relative overflow-hidden flex flex-col justify-center">
                     <div class="absolute -left-20 top-0 h-full flex items-center"><svg width="200" height="200" viewBox="0 0 385 418" fill="none"><circle cx="192.629" cy="225.167" r="136" fill="#ea580c" fill-opacity="0.1"></circle></svg></div>
                     <h2 class="text-lg font-bold text-gray-900 z-10">Porte-monnaie</h2>
-                    <div class="mt-2 z-10"><span class="text-3xl font-bold text-gray-900">{{ auth()->user()->solde }} €</span></div>
+                    <div class="mt-2 z-10"><span class="text-3xl font-bold text-gray-900">{{ number_format(auth()->user()->solde, 2) }} €</span></div>
                     <span class="text-sm text-gray-500 z-10">Solde disponible</span>
                 </div>
             </div>
@@ -108,17 +118,16 @@
                 </a>
 
                 <a href="{{ route('cni.index') }}" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex items-center justify-between">
-                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4">
                         <div class="w-10 h-10 flex-shrink-0 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                             </svg>
                         </div>
                         <h2 class="text-lg font-bold text-gray-900">CNI</h2>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
                 </a>
-
             </div>
 
             <div class="mt-12 flex justify-end md:justify-start">
