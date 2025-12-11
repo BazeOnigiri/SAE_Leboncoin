@@ -5,17 +5,14 @@ use App\Http\Controllers\ConnexionController;
 use App\Http\Controllers\CNIController;
 use App\Http\Controllers\UserAccountController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ReservationController;
 
 
 Route::get('/', [AnnonceController::class, 'index'])->name('home');
 Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
 
-use App\Http\Controllers\ReservationController;
 
-Route::get('/mes-reservations', [ReservationController::class, 'mesReservations'])
-    ->middleware('auth')
-    ->name('user.mesReservations'); 
 
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')
@@ -46,6 +43,7 @@ Route::middleware([
         Route::get('/compte/connexion-securite', [UserAccountController::class, 'security'])->name('user.security');
         Route::get('/compte/parametres', [UserAccountController::class, 'settings'])->name('user.settings');
         Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
+        Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
     });
     Route::get('/check-reservation/{id}', function ($id) {
         return redirect()->route('annonce.view', ['id' => $id]);
