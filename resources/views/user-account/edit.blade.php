@@ -8,7 +8,7 @@
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                 @if (Laravel\Fortify\Features::canUpdateProfileInformation())
-                    @livewire('profile.update-profile-information-form')
+                    @livewire('update-profile-information')
                 @endif
             </div>
             <div class="mt-6 text-center">

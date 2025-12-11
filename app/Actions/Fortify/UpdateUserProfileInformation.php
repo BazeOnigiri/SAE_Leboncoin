@@ -16,23 +16,34 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
-        Validator::make($input, [
-            'nomutilisateur' => ['required', 'string', 'max:50'],
-            'prenomutilisateur' => ['required', 'string', 'max:50'],
+        $rules = [
             'pseudonyme' => ['required', 'string', 'min:2', 'max:50'],
-            // L'email a été retiré de la validation car il n'est pas modifiable ici
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
-        ])->validateWithBag('updateProfileInformation');
+        ];
+
+        // Conditional validation for Particulier fields
+        if ($user->particulier) {
+            $rules['particulier.nomutilisateur'] = ['required', 'string', 'max:50'];
+            $rules['particulier.prenomutilisateur'] = ['required', 'string', 'max:50'];
+        }
+
+        Validator::make($input, $rules)->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
             $user->updateProfilePhoto($input['photo']);
         }
 
-        // On met à jour uniquement les champs autorisés (sans l'email)
+        // Update User fields
         $user->forceFill([
-            'nomutilisateur' => $input['nomutilisateur'],
-            'prenomutilisateur' => $input['prenomutilisateur'],
             'pseudonyme' => $input['pseudonyme'],
         ])->save();
+
+        // Update Particulier fields if applicable
+        if ($user->particulier && isset($input['particulier'])) {
+            $user->particulier->update([
+                'nomutilisateur' => $input['particulier']['nomutilisateur'],
+                'prenomutilisateur' => $input['particulier']['prenomutilisateur'],
+            ]);
+        }
     }
 }
