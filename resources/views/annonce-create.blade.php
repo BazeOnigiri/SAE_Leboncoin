@@ -118,18 +118,20 @@
                 <h3 class="text-lg font-semibold mt-6 mb-2">Équipements</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach ($categories as $categorie)
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <p class="font-semibold text-gray-800 mb-2">{{ $categorie->nomcategorie }}</p>
-                            <div class="space-y-2">
-                                @foreach ($categorie->commodites as $commodite)
-                                    <label class="flex items-center space-x-2">
-                                        <input type="checkbox" name="commodites[]" value="{{ $commodite->idcommodite }}" class="rounded text-orange-600"
-                                            {{ in_array($commodite->idcommodite, old('commodites', [])) ? 'checked' : '' }}>
-                                        <span class="text-sm text-gray-700">{{ $commodite->nomcommodite }}</span>
-                                    </label>
-                                @endforeach
+                        @if ($categorie->commodites->isNotEmpty())
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <p class="font-semibold text-gray-800 mb-2">{{ $categorie->nomcategorie }}</p>
+                                <div class="space-y-2">
+                                    @foreach ($categorie->commodites as $commodite)
+                                        <label class="flex items-center space-x-2">
+                                            <input type="checkbox" name="commodites[]" value="{{ $commodite->idcommodite }}" class="rounded text-orange-600"
+                                                {{ in_array($commodite->idcommodite, old('commodites', [])) ? 'checked' : '' }}>
+                                            <span class="text-sm text-gray-700">{{ $commodite->nomcommodite }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     @endforeach
                 </div>
                 @error('commodites')
@@ -160,6 +162,15 @@
                 @enderror
             </div>
 
+            <div>
+                <label for="minimumnuitee" class="block text-sm font-medium text-gray-700">Nombre minimum de nuitées</label>
+                <input type="number" name="minimumnuitee" id="minimumnuitee" min="1" step="1" required value="{{ old('minimumnuitee') }}"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                @error('minimumnuitee')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            
             <h3 class="text-lg font-semibold mt-6 mb-2">Règles</h3>
             <div>
                 <label for="possibilitefumeur" class="block text-sm font-medium text-gray-700">Fumeur autorisé</label>
@@ -174,74 +185,6 @@
                 @enderror
             </div>
 
-            {{-- <h3 class="text-lg font-semibold mt-6 mb-2">Localisation</h3>
-            <div>
-                <label for="adresse" class="block text-sm font-medium text-gray-700">Quel est l'adresse de votre bien ?</label>
-                <input type="text" name="adresse" id="adresse" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('adresse')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <h3 class="text-lg font-semibold mt-6 mb-2">Caractéristiques</h3>
-
-            <h3 class="text-lg font-semibold mt-6 mb-2">Tarifs & conditions</h3>
-            <div>
-                <label for="montantacompte" class="block text-sm font-medium text-gray-700">Montant de l'acompte (€)</label>
-                <input type="number" name="montantacompte" id="montantacompte" min="0" step="0.01" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('montantacompte')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="pourcentageacompte" class="block text-sm font-medium text-gray-700">Pourcentage d'acompte (%)</label>
-                <input type="number" name="pourcentageacompte" id="pourcentageacompte" min="0" max="100" step="1" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('pourcentageacompte')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="prixnuitee" class="block text-sm font-medium text-gray-700">Prix par nuitée (€)</label>
-                <input type="number" name="prixnuitee" id="prixnuitee" min="0" step="0.01" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('prixnuitee')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="minimumnuitee" class="block text-sm font-medium text-gray-700">Nombre minimum de nuitées</label>
-                <input type="number" name="minimumnuitee" id="minimumnuitee" min="1" step="1" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('minimumnuitee')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <h3 class="text-lg font-semibold mt-6 mb-2">Règles</h3>
-            <div>
-                <label for="nombreanimeauxmax" class="block text-sm font-medium text-gray-700">Nombre maximum d'animaux</label>
-                <input type="number" name="nombreanimeauxmax" id="nombreanimeauxmax" min="0" step="1" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('nombreanimeauxmax')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="nombrebebesmax" class="block text-sm font-medium text-gray-700">Nombre maximum de bébés</label>
-                <input type="number" name="nombrebebesmax" id="nombrebebesmax" min="0" step="1" required
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
-                @error('nombrebebesmax')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-             --}}
 
             <div>
                 <button type="submit"
