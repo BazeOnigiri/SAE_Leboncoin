@@ -30,7 +30,7 @@
 
                 <div class="mt-2" x-show="photoPreview" style="display: none;">
                     <span class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
-                          x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
+                        x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
                     </span>
                 </div>
 
@@ -48,6 +48,7 @@
             </div>
         @endif
 
+        @if (!$this->user->professionnels)
         <div class="col-span-6 sm:col-span-4">
             <x-label for="nom" value="{{ __('Nom') }}" />
             <x-input id="nom" type="text" class="mt-1 block w-full" wire:model="state.particulier.nomutilisateur" required autocomplete="family-name" />
@@ -59,6 +60,7 @@
             <x-input id="prenom" type="text" class="mt-1 block w-full" wire:model="state.particulier.prenomutilisateur" required autocomplete="given-name" />
             <x-input-error for="particulier.prenomutilisateur" class="mt-2" />
         </div>
+        @endif
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="pseudonyme" value="{{ __('Pseudonyme') }}" />
