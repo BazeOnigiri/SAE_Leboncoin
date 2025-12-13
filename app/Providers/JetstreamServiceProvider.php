@@ -6,6 +6,7 @@ use App\Actions\Jetstream\DeleteUser;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Facades\Gate;
 
 class JetstreamServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,10 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::deleteUsersUsing(DeleteUser::class);
 
         Vite::prefetch(concurrency: 3);
+
+        Gate::before(function ($user, $ability) {
+        return $user->hasRole(RoleEnum::SUPER_ADMIN->value) ? true : null;
+    });
     }
 
     /**

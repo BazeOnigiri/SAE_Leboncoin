@@ -44,6 +44,12 @@
                                             @endif
                                         </h2>
                                     </a>
+                                    @forelse(auth()->user()->roles as $role)
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-orange-200 bg-orange-50 text-orange-700 text-xs font-semibold shadow-sm w-fit">
+                                            {{ $role->name }}
+                                        </span>
+                                    @empty
+                                    @endforelse
                                     <div class="flex items-center text-sm text-gray-600">
                                         <span class="font-bold text-gray-900">
                                             {{ number_format(Auth::user()->avis_recus_avg_nombreetoiles ?? 0, 1) }}/5
