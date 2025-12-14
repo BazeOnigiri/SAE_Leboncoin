@@ -221,10 +221,12 @@
                         <div>
                             <label class="block font-bold text-sm text-gray-700 mb-1">Secteur d'activité *</label>
                             <select name="secteuractivite" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 bg-white">
-                                <option value="Vacances" {{ old('secteuractivite') == 'Vacances' ? 'selected' : '' }}>Vacances</option>
-                                <option value="Immobilier" {{ old('secteuractivite') == 'Immobilier' ? 'selected' : '' }}>Immobilier</option>
-                                <option value="Services" {{ old('secteuractivite') == 'Services' ? 'selected' : '' }}>Services</option>
-                                <option value="Autre" {{ old('secteuractivite') == 'Autre' ? 'selected' : '' }}>Autre</option>
+                                <option value="">Sélectionnez un secteur</option>
+                                @foreach(\App\Actions\Fortify\CreateNewUser::SECTEURS as $secteur)
+                                <option value="{{ $secteur }}" {{ old('secteuractivite') == $secteur ? 'selected' : '' }}>
+                                    {{ $secteur }}
+                                </option>
+                                @endforeach
                             </select>
                             @error('secteuractivite') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>

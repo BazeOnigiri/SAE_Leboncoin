@@ -24,7 +24,7 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Liste des secteurs d’activité (même logique que UserAccountController)
      */
-    private const SECTEURS = [
+    public const SECTEURS = [
         'Agroalimentaire',
         'Banque / Assurance',
         'BTP / Matériaux de construction',
