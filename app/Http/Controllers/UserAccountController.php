@@ -114,8 +114,6 @@ class UserAccountController extends Controller
         $user->telephoneutilisateur = $validated['telephone'];
         $user->email                = $validated['email'];
         
-        
-        
         $user->save();
 
         // 3. Mise à jour des tables spécifiques
@@ -146,10 +144,12 @@ class UserAccountController extends Controller
         $nomVilleSaisi = strtoupper($validated['nomville']);
         $codePostal    = $validated['codepostal'];
 
+        // On cherche d'abord si la ville existe déjà pour éviter l'appel API inutile
         $ville = Ville::where('nomville', $nomVilleSaisi)
             ->where('codepostal', $codePostal)
             ->first();
 
+        // Si la ville n'existe pas, on prépare sa création
         if (!$ville) {
             $communeData = null;
             try {
@@ -172,46 +172,50 @@ class UserAccountController extends Controller
                     }
                     if (!$communeData && !empty($communes)) $communeData = $communes[0];
                 }
-            } catch (\Throwable $e) { $communeData = null; }
-
-            if ($communeData) {
-                $codeRegionApi = $communeData['codeRegion'] ?? null;
-                $codeDepartementApi = $communeData['codeDepartement'] ?? null;
-                $nomCommuneApi = strtoupper($communeData['nom']);
-
-                $region = Region::firstOrCreate(['nomregion' => 'REGION ' . $codeRegionApi]);
-                $departement = Departement::firstOrCreate(
-                    ['numerodepartement' => $codeDepartementApi],
-                    ['idregion' => $region->idregion, 'nomdepartement' => 'DEPARTEMENT ' . $codeDepartementApi]
-                );
-                $ville = new Ville();
-                $ville->iddepartement = $departement->iddepartement;
-                $ville->codepostal = $codePostal;
-                $ville->nomville = $nomCommuneApi;
-                $ville->taxedesejour = random_int(50, 300) / 100;
-                $ville->save();
-            } else {
-                $region = Region::firstOrCreate(['nomregion' => 'INCONNUE']);
-                $depNumero = substr($codePostal, 0, 2);
-                $departement = Departement::firstOrCreate(
-                    ['numerodepartement' => $depNumero],
-                    ['idregion' => $region->idregion, 'nomdepartement' => 'DEPARTEMENT ' . $depNumero]
-                );
-                $ville = new Ville();
-                $ville->iddepartement = $departement->iddepartement;
-                $ville->codepostal = $codePostal;
-                $ville->nomville = $nomVilleSaisi;
-                $ville->taxedesejour = 0;
-                $ville->save();
+            } catch (\Throwable $e) { 
+                $communeData = null; 
             }
+
+            // Définition des variables pour la création
+            $codeRegionApi      = $communeData['codeRegion'] ?? 'INCONNU';
+            $codeDepartementApi = $communeData['codeDepartement'] ?? substr($codePostal, 0, 2);
+            $nomCommuneApi      = $communeData ? strtoupper($communeData['nom']) : $nomVilleSaisi;
+
+            // Gestion DOM-TOM
+            if (!$communeData && in_array(substr($codePostal, 0, 2), ['97', '98'])) {
+                $codeDepartementApi = substr($codePostal, 0, 3);
+            }
+
+            // Création parents (Region/Dept)
+            $region = Region::firstOrCreate(['nomregion' => 'REGION ' . $codeRegionApi]);
+            
+            $departement = Departement::firstOrCreate(
+                ['numerodepartement' => $codeDepartementApi],
+                ['idregion' => $region->idregion, 'nomdepartement' => 'DEPARTEMENT ' . $codeDepartementApi]
+            );
+
+            // Utilisation de firstOrCreate pour éviter l'erreur "Unique violation"
+            // si la ville a été créée par quelqu'un d'autre entre temps
+            $ville = Ville::firstOrCreate(
+                [
+                    'codepostal' => $codePostal,
+                    'nomville'   => $nomCommuneApi
+                ],
+                [
+                    'iddepartement' => $departement->iddepartement,
+                    'taxedesejour'  => random_int(50, 300) / 100
+                ]
+            );
         }
 
+        // Création ou récupération de l'adresse
         $adresse = Adresse::firstOrCreate([
             'numerorue' => $validated['numerorue'],
             'nomrue'    => $validated['nomrue'],
             'idville'   => $ville->idville,
         ]);
 
+        // Mise à jour de la liaison User -> Adresse
         if ($user->idadresse !== $adresse->idadresse) {
             $user->idadresse = $adresse->idadresse;
             $user->save();
