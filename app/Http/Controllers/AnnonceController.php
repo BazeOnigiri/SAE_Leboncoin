@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use App\Models\Adresse;
 use App\Models\Photo;
 use App\Models\Date as DateModel;
 use App\Models\Heure;
 use App\Models\Ville;
 use App\Models\Categorie;
+use App\Models\Region;
+use App\Models\Departement;
 use Illuminate\Http\RedirectResponse;
 
 class AnnonceController extends Controller
@@ -99,6 +102,74 @@ class AnnonceController extends Controller
 
         try {
             $annonce = DB::transaction(function () use ($validated, $request) {
+                // Create or find Ville
+                $nomVilleSaisi = strtoupper($validated['ville']);
+                $codePostal    = $validated['codepostal'];
+
+                // Recherche de la ville existante
+                $ville = Ville::where('nomville', $nomVilleSaisi)
+                    ->where('codepostal', $codePostal)
+                    ->first();
+
+                // Si la ville n'existe pas, on interroge l'API Gouv pour la créer
+                if (!$ville) {
+                    $communeData = null;
+                    try {
+                        $http = Http::timeout(5);
+                        if (app()->environment('local')) $http = $http->withoutVerifying();
+                        
+                        $response = $http->get('https://geo.api.gouv.fr/communes', [
+                            'codePostal' => $codePostal,
+                            'fields'     => 'nom,code,codesPostaux,codeDepartement,codeRegion',
+                            'format'     => 'json',
+                        ]);
+
+                        if ($response->successful()) {
+                            $communes = $response->json();
+                            foreach ($communes as $commune) {
+                                if (strtoupper($commune['nom']) === $nomVilleSaisi) {
+                                    $communeData = $commune;
+                                    break;
+                                }
+                            }
+                            if (!$communeData && !empty($communes)) $communeData = $communes[0];
+                        }
+                    } catch (\Throwable $e) { $communeData = null; }
+
+                    // Variables pour la création
+                    $codeRegionApi      = $communeData['codeRegion'] ?? 'INCONNU';
+                    $codeDepartementApi = $communeData['codeDepartement'] ?? substr($codePostal, 0, 2);
+                    $nomCommuneApi      = $communeData ? strtoupper($communeData['nom']) : $nomVilleSaisi;
+
+                    // Gestion DOM-TOM
+                    if (!$communeData && in_array(substr($codePostal, 0, 2), ['97', '98'])) {
+                        $codeDepartementApi = substr($codePostal, 0, 3);
+                    }
+
+                    $region = Region::firstOrCreate(['nomregion' => 'REGION ' . $codeRegionApi]);
+                    
+                    $departement = Departement::firstOrCreate(
+                        ['numerodepartement' => $codeDepartementApi],
+                        ['idregion' => $region->idregion, 'nomdepartement' => 'DEPARTEMENT ' . $codeDepartementApi]
+                    );
+
+                    $ville = Ville::firstOrCreate(
+                        [
+                            'codepostal' => $codePostal,
+                            'nomville'   => $nomCommuneApi
+                        ],
+                        [
+                            'iddepartement' => $departement->iddepartement,
+                            'taxedesejour'  => random_int(50, 300) / 100
+                        ]
+                    );
+                }
+
+                $adresse = Adresse::firstOrCreate([
+                    'numerorue' => $validated['numerorue'],
+                    'nomrue'    => $validated['nomrue'],
+                    'idville'   => $ville->idville,
+                ]);
 
                 $date = DateModel::firstOrCreate(
                     ['date' => now()->toDateString()]
@@ -115,20 +186,20 @@ class AnnonceController extends Controller
                 );
 
                 $annonce = Annonce::create([
-                    'idadresse' => '1',
-                    'iddate' => $date->iddate,
-                    'idutilisateur' => Auth::id(),
-                    'capacite' => $validated['capacite'],
-                    'idheuredepart' => $heureDepart->idheure,
-                    'idtypehebergement' => $validated['typebien'],
-                    'idheurearrivee' => $heureArrivee->idheure,
-                    'titreannonce' => $validated['titre'],
+                    'idadresse'          => $adresse->idadresse, 
+                    'iddate'             => $date->iddate,
+                    'idutilisateur'      => Auth::id(),
+                    'capacite'           => $validated['capacite'],
+                    'idheuredepart'      => $heureDepart->idheure,
+                    'idtypehebergement'  => $validated['typebien'],
+                    'idheurearrivee'     => $heureArrivee->idheure,
+                    'titreannonce'       => $validated['titre'],
                     'descriptionannonce' => $validated['description'],
-                    'prixnuitee' => $validated['prixnuitee'],
-                    'minimumnuitee' => $validated['minimumnuitee'],
+                    'prixnuitee'         => $validated['prixnuitee'],
+                    'minimumnuitee'      => $validated['minimumnuitee'],
                     'pourcentageacompte' => $validated['pourcentageacompte'],
-                    'possibilitefumeur' => (bool) $validated['possibilitefumeur'],
-                    'nbchambres' => $validated['nbchambres'],
+                    'possibilitefumeur'  => (bool) $validated['possibilitefumeur'],
+                    'nbchambres'         => $validated['nbchambres'],
                 ]);
 
                 // Save photos if present
@@ -138,9 +209,9 @@ class AnnonceController extends Controller
                         $path = $file->store('annonces', 'public');
                         $url = Storage::url($path);
                         Photo::create([
-                            'idannonce' => $annonce->idannonce,
+                            'idannonce'  => $annonce->idannonce,
                             'idincident' => null,
-                            'lienphoto' => $url,
+                            'lienphoto'  => $url,
                         ]);
                     }
                 }
@@ -171,7 +242,7 @@ class AnnonceController extends Controller
             return back()->with('success', 'Annonce publiée avec succès.');
         } catch (\Exception $e) {
             report($e);
-            return back()->withInput()->withErrors(['error' => 'Une erreur est survenue lors de la création de l\'annonce.' . $e->getMessage()]);
+            return back()->withInput()->withErrors(['error' => 'Erreur : ' . $e->getMessage()]);
         }
     }
 }
