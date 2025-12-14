@@ -170,8 +170,18 @@
 
                     <div x-show="role === 'particulier'" class="space-y-5">
                         <div class="flex gap-6">
-                            <label class="inline-flex items-center cursor-pointer"><input type="radio" name="civilite" value="Monsieur" class="form-radio text-gray-900 focus:ring-gray-900" checked><span class="ml-2 text-gray-700">Monsieur</span></label>
-                            <label class="inline-flex items-center cursor-pointer"><input type="radio" name="civilite" value="Madame" class="form-radio text-gray-900 focus:ring-gray-900"><span class="ml-2 text-gray-700">Madame</span></label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="civilite" value="Monsieur" class="form-radio text-gray-900 focus:ring-gray-900" checked>
+                                <span class="ml-2 text-gray-700">Monsieur</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="civilite" value="Madame" class="form-radio text-gray-900 focus:ring-gray-900">
+                                <span class="ml-2 text-gray-700">Madame</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="civilite" value="Non spécifié" class="form-radio text-gray-900 focus:ring-gray-900">
+                                <span class="ml-2 text-gray-700">Non spécifié</span>
+                            </label>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div><label class="block font-bold text-sm text-gray-700 mb-1">Nom *</label><input type="text" name="nom" value="{{ old('nom') }}" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0"></div>
