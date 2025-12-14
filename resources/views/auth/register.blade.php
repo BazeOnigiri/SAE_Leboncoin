@@ -84,6 +84,7 @@
                         this.citiesByCp = await response.json();
                         
                         if (this.citiesByCp.length > 0) {
+                            // On vérifie si la ville actuelle est dans la liste
                             const foundCity = this.citiesByCp.find(city => city.nom.toUpperCase() === currentCity.toUpperCase());
 
                             if (currentCity && foundCity) {
@@ -276,16 +277,23 @@
                             <div><label class="block font-bold text-sm text-gray-700 mb-1">Pseudonyme *</label><input type="text" name="pseudo" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0" required></div>
                             <div><label class="block font-bold text-sm text-gray-700 mb-1">Téléphone *</label><input type="tel" name="telephone" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0" required></div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="{ show: false }">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="{ showPass: false, showConfirm: false }">
                             <div>
                                 <label class="block font-bold text-sm text-gray-700 mb-1">Mot de passe *</label>
-                                <div class="relative"><input id="password" name="password" :type="show ? 'text' : 'password'" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10" required></div>
+                                <div class="relative">
+                                    <input id="password" name="password" :type="showPass ? 'text' : 'password'" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10" required>
+                                    <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"tabindex="-1">
+                                        <i class="fa-solid" :class="showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div>
                                 <label class="block font-bold text-sm text-gray-700 mb-1">Confirmer *</label>
                                 <div class="relative">
-                                    <input id="password_confirmation" name="password_confirmation" :type="show ? 'text' : 'password'" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10" required>
-                                    <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"><i class="fa-solid" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i></button>
+                                    <input id="password_confirmation" name="password_confirmation" :type="showConfirm ? 'text' : 'password'" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10" required>
+                                    <button type="button" @click="showConfirm = !showConfirm" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"tabindex="-1">
+                                        <i class="fa-solid" :class="showConfirm ? 'fa-eye-slash' : 'fa-eye'"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
