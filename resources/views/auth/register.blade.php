@@ -44,16 +44,14 @@
                         });
                 },
 
-                // Fonction : Sélectionner une adresse depuis la liste
+                // Fonction : Sélectionner une adresse
                 selectAddress(feature) {
-                    // Remplissage visuel
                     document.querySelector('#autocomplete').value = feature.properties.label;
                     document.querySelector('#street_number_display').value = feature.properties.housenumber || '';
                     document.querySelector('#route_display').value = feature.properties.street || feature.properties.name; 
                     document.querySelector('#postal_code_display').value = feature.properties.postcode;
                     document.querySelector('#locality_display').value = feature.properties.city;
 
-                    // Remplissage backend (Champs cachés)
                     document.querySelector('#numerorue').value = feature.properties.housenumber || 1;
                     document.querySelector('#nomrue').value = feature.properties.street || feature.properties.name;
                     document.querySelector('#codepostal').value = feature.properties.postcode;
@@ -70,7 +68,7 @@
                     const currentCity = document.querySelector('#ville').value; 
 
                     if (!cp || cp.length !== 5) {
-                        alert(`Veuillez d'abord sélectionner une adresse pour avoir un Code Postal.`);
+                        alert(`Veuillez d'abord sélectionner une adresse.`);
                         return;
                     }
 
@@ -84,17 +82,10 @@
                         this.citiesByCp = await response.json();
                         
                         if (this.citiesByCp.length > 0) {
-                            // On vérifie si la ville actuelle est dans la liste
                             const foundCity = this.citiesByCp.find(city => city.nom.toUpperCase() === currentCity.toUpperCase());
-
-                            if (currentCity && foundCity) {
-                                this.selectedCityRadio = foundCity.nom;
-                            } else {
-                                this.selectedCityRadio = this.citiesByCp[0].nom;
-                            }
+                            this.selectedCityRadio = (currentCity && foundCity) ? foundCity.nom : this.citiesByCp[0].nom;
                         }
                     } catch (e) {
-                        console.error(e);
                         alert('Impossible de charger les villes.');
                         this.showCityModal = false;
                     }
@@ -185,23 +176,41 @@
                             </label>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block font-bold text-sm text-gray-700 mb-1">Nom *</label><input type="text" name="nom" value="{{ old('nom') }}" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0"></div>
-                            <div><label class="block font-bold text-sm text-gray-700 mb-1">Prénom *</label><input type="text" name="prenom" value="{{ old('prenom') }}" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0"></div>
+                            <div>
+                                <label class="block font-bold text-sm text-gray-700 mb-1">Nom *</label>
+                                <input type="text" name="nom" value="{{ old('nom') }}" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0">
+                                @error('nom') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <label class="block font-bold text-sm text-gray-700 mb-1">Prénom *</label>
+                                <input type="text" name="prenom" value="{{ old('prenom') }}" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0">
+                                @error('prenom') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
                         </div>
-                        <div><label class="block font-bold text-sm text-gray-700 mb-1">Date de naissance *</label><input type="date" name="date_naissance" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 bg-white" max="{{ now()->subYears(18)->toDateString() }}" value="{{ old('date_naissance') }}"></div>
+                        <div>
+                            <label class="block font-bold text-sm text-gray-700 mb-1">Date de naissance *</label>
+                            <input type="date" name="date_naissance" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 bg-white" max="{{ now()->subYears(18)->toDateString() }}" value="{{ old('date_naissance') }}">
+                            @error('date_naissance') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
                     </div>
 
                     <div x-show="role === 'professionnel'" class="space-y-5">
                         <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
                             <label class="block font-bold text-sm text-blue-800 mb-1">Numéro SIRET *</label>
                             <input type="text" name="numsiret" maxlength="14" placeholder="14 chiffres" value="{{ old('numsiret') }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 14)" class="w-full border-blue-200 rounded-[10px] py-3 px-4 focus:border-blue-500 focus:ring-0">
+                            @error('numsiret') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
-                        <div><label class="block font-bold text-sm text-gray-700 mb-1">Nom de la société *</label><input type="text" name="nomsociete" value="{{ old('nomsociete') }}" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 uppercase"></div>
+                        <div>
+                            <label class="block font-bold text-sm text-gray-700 mb-1">Nom de la société *</label>
+                            <input type="text" name="nomsociete" value="{{ old('nomsociete') }}" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 uppercase">
+                            @error('nomsociete') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
                         <div>
                             <label class="block font-bold text-sm text-gray-700 mb-1">Secteur d'activité *</label>
                             <select name="secteuractivite" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 bg-white">
                                 <option value="Vacances">Vacances</option><option value="Immobilier">Immobilier</option><option value="Services">Services</option><option value="Autre">Autre</option>
                             </select>
+                            @error('secteuractivite') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
@@ -255,18 +264,9 @@
                                 <label class="block font-bold text-xs text-gray-500 mb-1">Ville</label>
                                 <div class="flex gap-2">
                                     <input type="text" id="locality_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled>
-                                    
-                                    <button
-                                        type="button"
-                                        @click="openCityChooser()"
-                                        class="shrink-0 px-3 py-2 text-xs font-bold rounded-[10px] border border-gray-300 text-gray-700 hover:bg-gray-100">
-                                        Choisir
-                                    </button>
+                                    <button type="button" @click="openCityChooser()" class="shrink-0 px-3 py-2 text-xs font-bold rounded-[10px] border border-gray-300 text-gray-700 hover:bg-gray-100">Choisir</button>
                                 </div>
                                 <input type="hidden" name="ville" id="ville">
-                                <p class="mt-1 text-[11px] text-gray-500">
-                                    Si le code postal correspond à plusieurs villes, cliquez sur <strong>Choisir</strong>.
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -274,29 +274,53 @@
                     <div class="border-t pt-5">
                         <h4 class="font-bold text-gray-900 mb-4 text-lg">Identifiants</h4>
                         <div class="grid grid-cols-2 gap-4 mb-4">
-                            <div><label class="block font-bold text-sm text-gray-700 mb-1">Pseudonyme *</label><input type="text" name="pseudo" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0" required></div>
-                            <div><label class="block font-bold text-sm text-gray-700 mb-1">Téléphone *</label><input type="tel" name="telephone" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0" required></div>
+                            <div>
+                                <label class="block font-bold text-sm text-gray-700 mb-1">Pseudonyme *</label>
+                                <input type="text" name="pseudo" value="{{ old('pseudo') }}" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0" required>
+                                @error('pseudo') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <label class="block font-bold text-sm text-gray-700 mb-1">Téléphone *</label>
+                                {{-- Ajout de la protection pour forcer les chiffres --}}
+                                <input type="tel" name="telephone" value="{{ old('telephone') }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0" required>
+                                @error('telephone') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
                         </div>
+                        
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4" x-data="{ showPass: false, showConfirm: false }">
                             <div>
                                 <label class="block font-bold text-sm text-gray-700 mb-1">Mot de passe *</label>
                                 <div class="relative">
                                     <input id="password" name="password" :type="showPass ? 'text' : 'password'" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10" required>
-                                    <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"tabindex="-1">
+                                    <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" tabindex="-1">
                                         <i class="fa-solid" :class="showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
                                     </button>
                                 </div>
+                                @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label class="block font-bold text-sm text-gray-700 mb-1">Confirmer *</label>
                                 <div class="relative">
                                     <input id="password_confirmation" name="password_confirmation" :type="showConfirm ? 'text' : 'password'" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 text-gray-900 pr-10" required>
-                                    <button type="button" @click="showConfirm = !showConfirm" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer"tabindex="-1">
+                                    <button type="button" @click="showConfirm = !showConfirm" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 cursor-pointer" tabindex="-1">
                                         <i class="fa-solid" :class="showConfirm ? 'fa-eye-slash' : 'fa-eye'"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="mt-2 text-xs text-gray-500">
+                            Le mot de passe doit contenir au moins 12 caractères avec une majuscule, un caractère spécial et un chiffre.
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="flex items-start gap-2 cursor-pointer">
+                            <input type="checkbox" name="terms" required class="mt-1 rounded border-gray-300 text-[#ec5a13] focus:ring-[#ec5a13]">
+                            <span class="text-sm text-gray-600">
+                                J'accepte les <a href="#" class="underline hover:text-[#ec5a13]">Conditions Générales d'Utilisation</a> et la <a href="#" class="underline hover:text-[#ec5a13]">Politique de Confidentialité</a>.
+                            </span>
+                        </label>
                     </div>
 
                     <div class="pt-4">
