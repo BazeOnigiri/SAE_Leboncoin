@@ -12,7 +12,7 @@
                     <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->pseudonyme }}" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Bonjour, {{ auth()->user()->particulier->prenomutilisateur }}</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">Bonjour, {{ auth()->user()->pseudonyme }}</h1>
                     <a href="{{ route('user.profile', ['id' => auth()->user()->idutilisateur]) }}" class="text-orange-600 hover:underline text-sm font-semibold">Voir mon profil public</a>
                 </div>
             </div>
