@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Models\Annonce;
@@ -29,9 +29,11 @@ class ReservationController extends Controller
         
         return view('user-account.reservations', compact('reservationsAVenir', 'reservationsPassees'));
     }
-    public function create($id)
+    public function create(Request $request, $id)
     {
-        $annonce = Annonce::findOrFail($id); 
-        return view('reservation-create', compact('annonce'));
+        $annonce = Annonce::findOrFail($id);
+        $arrivee = $request->query('arrivee');
+        $depart = $request->query('depart');
+        return view('reservation-create', compact('annonce', 'arrivee', 'depart'));
     }
 }

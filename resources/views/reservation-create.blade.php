@@ -23,46 +23,61 @@
                     <div class="lg:col-span-2 space-y-10">
 
                         <section>
-                            <h2 class="text-xl font-bold text-slate-900 mb-4">Vos dates de séjour</h2>
+    <h2 class="text-xl font-bold text-slate-900 mb-4">Vos dates de séjour</h2>
 
-                            @php
-                                $dateArrivee = request('arrivee');
-                                $dateDepart = request('depart');
-                                $nbNuits = 0;
+    @php
+    use Carbon\Carbon;
 
-                                if($dateArrivee && $dateDepart) {
-                                    $start = \Carbon\Carbon::parse($dateArrivee);
-                                    $end = \Carbon\Carbon::parse($dateDepart);
-                                    $nbNuits = $start->diffInDays($end);
-                                }
-                            @endphp
-                            
-                            <p class="text-slate-600 mb-4">
-                                @if($nbNuits > 0)
-                                    <span class="font-bold text-slate-800">{{ $nbNuits }} nuits</span> 
-                                @else
-                                    Durée à définir
-                                @endif
-                                à {{ $annonce->adresse->ville->nomville ?? 'Ville' }}
-                            </p>
-                            
-                            <div class="grid grid-cols-2 gap-8 border-b border-gray-200 pb-8">
-                                <div>
-                                    <span class="block text-sm font-bold text-slate-700">Arrivée</span>
-                                    <span class="text-lg text-slate-900">
-                                        {{ $dateArrivee ? \Carbon\Carbon::parse($dateArrivee)->format('d/m/Y') : '-' }}
-                                    </span>
-                                    <input type="hidden" name="date_debut" value="{{ $dateArrivee }}">
-                                </div>
-                                <div>
-                                    <span class="block text-sm font-bold text-slate-700">Départ</span>
-                                    <span class="text-lg text-slate-900">
-                                        {{ $dateDepart ? \Carbon\Carbon::parse($dateDepart)->format('d/m/Y') : '-' }}
-                                    </span>
-                                    <input type="hidden" name="date_fin" value="{{ $dateDepart }}">
-                                </div>
-                            </div>
-                        </section>
+    $dateArrivee = old('date_debut', $arrivee ?? null);
+    $dateDepart = old('date_fin', $depart ?? null);
+    
+    $nbNuits = 0;
+    $formattedArrivee = '-';
+    $formattedDepart = '-';
+
+    if($dateArrivee && $dateDepart) {
+        try {
+            $start = Carbon::parse($dateArrivee);
+            $end = Carbon::parse($dateDepart);
+            
+            if($end->gt($start)) {
+                $nbNuits = $start->diffInDays($end);
+                $formattedArrivee = $start->format('d/m/Y');
+                $formattedDepart = $end->format('d/m/Y');
+            }
+        } catch (\Exception $e) {
+            // Dates invalides, on laisse à 0
+        }
+    }
+@endphp
+
+<p class="text-slate-600 mb-4">
+    @if($nbNuits > 0)
+        <span class="font-bold text-slate-800">{{ $nbNuits }} nuits</span> 
+    @else
+        <span class="text-red-500 font-bold">Durée à définir</span>
+    @endif
+    à {{ $annonce->adresse->ville->nomville ?? 'Ville' }}
+</p>
+
+<div class="grid grid-cols-2 gap-8 border-b border-gray-200 pb-8">
+    <div>
+        <span class="block text-sm font-bold text-slate-700">Arrivée</span>
+        <span class="text-lg text-slate-900">{{ $formattedArrivee }}</span>
+        <input type="hidden" name="date_debut" value="{{ $dateArrivee }}">
+    </div>
+    <div>
+        <span class="block text-sm font-bold text-slate-700">Départ</span>
+        <span class="text-lg text-slate-900">{{ $formattedDepart }}</span>
+        <input type="hidden" name="date_fin" value="{{ $dateDepart }}">
+    </div>
+</div>
+    @if($nbNuits === 0)
+        <div class="mt-4 p-4 bg-red-50 text-red-700 rounded-lg text-sm">
+            Attention : Les dates semblent manquantes ou incorrectes. Veuillez retourner sur l'annonce pour sélectionner vos dates.
+        </div>
+    @endif
+</section>
 
                         <section class="border-b border-gray-200 pb-8">
                             <h2 class="text-xl font-bold text-slate-900 mb-6">Nombre de voyageurs</h2>
