@@ -19,10 +19,12 @@
                 role: @js(old('role', 'particulier')),
                 
                 // --- Variables Recherche Adresse ---
-                query: '',
+                query: @js(old('ville') ? (old('numerorue') ? old('numerorue') . ' ' : '') . old('nomrue') . ' ' . old('codepostal') . ' ' . old('ville') : ''),
+
                 suggestions: [],
                 showSuggestions: false,
-                addressSelected: false,
+                
+                addressSelected: @js(old('ville') ? true : false),
 
                 // --- Variables Choix Ville ---
                 showCityModal: false,
@@ -44,14 +46,16 @@
                         });
                 },
 
-                // Fonction : Sélectionner une adresse
+                // Fonction : Sélectionner une adresse depuis la liste
                 selectAddress(feature) {
+                    // Remplissage visuel
                     document.querySelector('#autocomplete').value = feature.properties.label;
                     document.querySelector('#street_number_display').value = feature.properties.housenumber || '';
                     document.querySelector('#route_display').value = feature.properties.street || feature.properties.name; 
                     document.querySelector('#postal_code_display').value = feature.properties.postcode;
                     document.querySelector('#locality_display').value = feature.properties.city;
 
+                    // Remplissage backend (Champs cachés)
                     document.querySelector('#numerorue').value = feature.properties.housenumber || 1;
                     document.querySelector('#nomrue').value = feature.properties.street || feature.properties.name;
                     document.querySelector('#codepostal').value = feature.properties.postcode;
@@ -82,10 +86,17 @@
                         this.citiesByCp = await response.json();
                         
                         if (this.citiesByCp.length > 0) {
+                            // On vérifie si la ville actuelle est dans la liste (insensible à la casse)
                             const foundCity = this.citiesByCp.find(city => city.nom.toUpperCase() === currentCity.toUpperCase());
-                            this.selectedCityRadio = (currentCity && foundCity) ? foundCity.nom : this.citiesByCp[0].nom;
+
+                            if (currentCity && foundCity) {
+                                this.selectedCityRadio = foundCity.nom;
+                            } else {
+                                this.selectedCityRadio = this.citiesByCp[0].nom;
+                            }
                         }
                     } catch (e) {
+                        console.error(e);
                         alert('Impossible de charger les villes.');
                         this.showCityModal = false;
                     }
@@ -160,18 +171,19 @@
                         <input type="email" class="w-full border-gray-300 rounded-[10px] py-3 px-4 bg-gray-100 text-gray-500 cursor-not-allowed" disabled value="{{ request('email') ?? old('email') }}">
                     </div>
 
+                    {{-- CHAMPS PARTICULIER --}}
                     <div x-show="role === 'particulier'" class="space-y-5">
                         <div class="flex gap-6">
                             <label class="inline-flex items-center cursor-pointer">
-                                <input type="radio" name="civilite" value="Monsieur" class="form-radio text-gray-900 focus:ring-gray-900" checked>
+                                <input type="radio" name="civilite" value="Monsieur" class="form-radio text-gray-900 focus:ring-gray-900" {{ old('civilite', 'Monsieur') == 'Monsieur' ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Monsieur</span>
                             </label>
                             <label class="inline-flex items-center cursor-pointer">
-                                <input type="radio" name="civilite" value="Madame" class="form-radio text-gray-900 focus:ring-gray-900">
+                                <input type="radio" name="civilite" value="Madame" class="form-radio text-gray-900 focus:ring-gray-900" {{ old('civilite') == 'Madame' ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Madame</span>
                             </label>
                             <label class="inline-flex items-center cursor-pointer">
-                                <input type="radio" name="civilite" value="Non spécifié" class="form-radio text-gray-900 focus:ring-gray-900">
+                                <input type="radio" name="civilite" value="Non spécifié" class="form-radio text-gray-900 focus:ring-gray-900" {{ old('civilite') == 'Non spécifié' ? 'checked' : '' }}>
                                 <span class="ml-2 text-gray-700">Non spécifié</span>
                             </label>
                         </div>
@@ -194,6 +206,7 @@
                         </div>
                     </div>
 
+                    {{-- CHAMPS PROFESSIONNEL --}}
                     <div x-show="role === 'professionnel'" class="space-y-5">
                         <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
                             <label class="block font-bold text-sm text-blue-800 mb-1">Numéro SIRET *</label>
@@ -208,7 +221,10 @@
                         <div>
                             <label class="block font-bold text-sm text-gray-700 mb-1">Secteur d'activité *</label>
                             <select name="secteuractivite" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0 bg-white">
-                                <option value="Vacances">Vacances</option><option value="Immobilier">Immobilier</option><option value="Services">Services</option><option value="Autre">Autre</option>
+                                <option value="Vacances" {{ old('secteuractivite') == 'Vacances' ? 'selected' : '' }}>Vacances</option>
+                                <option value="Immobilier" {{ old('secteuractivite') == 'Immobilier' ? 'selected' : '' }}>Immobilier</option>
+                                <option value="Services" {{ old('secteuractivite') == 'Services' ? 'selected' : '' }}>Services</option>
+                                <option value="Autre" {{ old('secteuractivite') == 'Autre' ? 'selected' : '' }}>Autre</option>
                             </select>
                             @error('secteuractivite') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
@@ -243,30 +259,33 @@
                         <div class="grid grid-cols-4 gap-4">
                             <div class="col-span-1">
                                 <label class="block font-bold text-xs text-gray-500 mb-1">N°</label>
-                                <input type="text" id="street_number_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled>
-                                <input type="hidden" name="numerorue" id="numerorue">
+                                <input type="text" id="street_number_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled value="{{ old('numerorue') }}">
+                                <input type="hidden" name="numerorue" id="numerorue" value="{{ old('numerorue') }}">
                             </div>
                             <div class="col-span-3">
                                 <label class="block font-bold text-xs text-gray-500 mb-1">Rue</label>
-                                <input type="text" id="route_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled>
-                                <input type="hidden" name="nomrue" id="nomrue">
+                                <input type="text" id="route_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled value="{{ old('nomrue') }}">
+                                <input type="hidden" name="nomrue" id="nomrue" value="{{ old('nomrue') }}">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-3 gap-4 mt-4">
                             <div class="col-span-1">
                                 <label class="block font-bold text-xs text-gray-500 mb-1">CP</label>
-                                <input type="text" id="postal_code_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled>
-                                <input type="hidden" name="codepostal" id="codepostal">
+                                <input type="text" id="postal_code_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled value="{{ old('codepostal') }}">
+                                <input type="hidden" name="codepostal" id="codepostal" value="{{ old('codepostal') }}">
                             </div>
                             
                             <div class="col-span-2">
                                 <label class="block font-bold text-xs text-gray-500 mb-1">Ville</label>
                                 <div class="flex gap-2">
-                                    <input type="text" id="locality_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled>
+                                    <input type="text" id="locality_display" class="w-full bg-gray-100 border-gray-200 rounded-[10px] py-2 px-3 text-gray-600" disabled value="{{ old('ville') }}">
                                     <button type="button" @click="openCityChooser()" class="shrink-0 px-3 py-2 text-xs font-bold rounded-[10px] border border-gray-300 text-gray-700 hover:bg-gray-100">Choisir</button>
                                 </div>
-                                <input type="hidden" name="ville" id="ville">
+                                <input type="hidden" name="ville" id="ville" value="{{ old('ville') }}">
+                                <p class="mt-1 text-[11px] text-gray-500">
+                                    Si le code postal correspond à plusieurs villes, cliquez sur <strong>Choisir</strong>.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -281,7 +300,6 @@
                             </div>
                             <div>
                                 <label class="block font-bold text-sm text-gray-700 mb-1">Téléphone *</label>
-                                {{-- Ajout de la protection pour forcer les chiffres --}}
                                 <input type="tel" name="telephone" value="{{ old('telephone') }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0" required>
                                 @error('telephone') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
