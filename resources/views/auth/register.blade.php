@@ -208,9 +208,9 @@
 
                     {{-- CHAMPS PROFESSIONNEL --}}
                     <div x-show="role === 'professionnel'" class="space-y-5">
-                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                            <label class="block font-bold text-sm text-blue-800 mb-1">Numéro SIRET *</label>
-                            <input type="text" name="numsiret" maxlength="14" placeholder="14 chiffres" value="{{ old('numsiret') }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 14)" class="w-full border-blue-200 rounded-[10px] py-3 px-4 focus:border-blue-500 focus:ring-0">
+                        <div>
+                            <label class="block font-bold text-sm text-gray-700 mb-1">Numéro SIRET *</label>
+                            <input type="text" name="numsiret" maxlength="14" placeholder="14 chiffres" value="{{ old('numsiret') }}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 14)" class="w-full border-gray-300 rounded-[10px] py-3 px-4 focus:border-[#ec5a13] focus:ring-0">
                             @error('numsiret') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
