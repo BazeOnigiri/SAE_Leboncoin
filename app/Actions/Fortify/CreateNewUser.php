@@ -39,6 +39,7 @@ class CreateNewUser implements CreatesNewUsers
         'Textile / Habillement / Chaussure',
         'Tourisme - Restauration',
         'Transports / Logistique',
+        'Autre secteur',
     ];
 
     /**
