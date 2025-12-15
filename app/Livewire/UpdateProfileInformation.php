@@ -8,6 +8,17 @@ use Laravel\Jetstream\Http\Livewire\UpdateProfileInformationForm as JetstreamUpd
 
 class UpdateProfileInformation extends JetstreamUpdateProfileInformationForm
 {
+    public function mount()
+    {
+        $user = Auth::user();
+
+        $this->state = $user->withoutRelations()->toArray();
+
+        if ($user->particulier) {
+            $this->state['particulier'] = $user->particulier->toArray();
+        }
+    }
+
     /**
      * Update the user's profile information.
      *
