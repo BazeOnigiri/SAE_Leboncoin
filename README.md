@@ -31,13 +31,7 @@ php artisan migrate
 Ou mettre à jour la DB :
 ```
 
-php artisan migrate:fresh
-
-```
-Dans les deux cas il faut ajouter les inserts ensuite :
-```
-
-php artisan db:seed
+php artisan migrate:fresh --seed
 
 ```
 Faire clique droit sur la DB --> Refresh dans PgAdmin4 pour voir les changements.
