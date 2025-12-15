@@ -33,7 +33,8 @@ class UserAccountController extends Controller
         'Services aux entreprises',
         'Textile / Habillement / Chaussure',
         'Tourisme - Restauration',
-        'Transports / Logistique'
+        'Transports / Logistique',
+        'Autre secteur',
     ];
 
     public function edit()
