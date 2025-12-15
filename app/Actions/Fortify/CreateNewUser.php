@@ -61,8 +61,8 @@ class CreateNewUser implements CreatesNewUsers
             'ville'          => ['required', 'string'],
 
             'civilite'       => ['exclude_unless:role,particulier', 'required', 'in:Monsieur,Madame,Non spécifié'],
-            'nom'            => ['exclude_unless:role,particulier', 'required', 'string', 'max:50'],
-            'prenom'         => ['exclude_unless:role,particulier', 'required', 'string', 'max:50'],
+            'nom'            => ['exclude_unless:role,particulier', 'required', 'string', 'max:50', 'regex:/^[a-zA-ZÀ-ÿ\s\-\']+$/'],
+            'prenom'         => ['exclude_unless:role,particulier', 'required', 'string', 'max:50', 'regex:/^[a-zA-ZÀ-ÿ\s\-\']+$/'],
             'date_naissance' => [
                 'exclude_unless:role,particulier',
                 'required',
@@ -82,6 +82,10 @@ class CreateNewUser implements CreatesNewUsers
                 'required',
                 Rule::in(self::SECTEURS)
             ],
+            [
+                'nom.regex' => 'Le nom ne doit contenir que des lettres.',
+                'prenom.regex' => 'Le prénom ne doit contenir que des lettres.',
+                ]
         ])->validate();
 
         return DB::transaction(function () use ($input) {
