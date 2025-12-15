@@ -418,7 +418,7 @@ create table ville (
    idville              serial               not null,
    iddepartement        int4                 not null,
    codepostal           char(5)				   not null,
-   nomville             varchar(40)          not null unique,
+   nomville             varchar(40)          not null,
    taxedesejour         decimal(10,2)        not null,
    constraint pk_ville primary key (idville)
 );
