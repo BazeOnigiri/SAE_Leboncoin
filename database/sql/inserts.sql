@@ -3054,8 +3054,8 @@ INSERT INTO reservation(idannonce,iddatedebutreservation,iddatefinreservation,id
 (25,44669,44673,23,'De Witte','Grégoire','0667232663'),
 (25,44689,44693,24,'Garcon','Rachel','0652211742'),
 (25,44709,44713,25,'Rademaker','Quentin','0772562261'),
-(28,46020,46024,25,'Rademaker','Quentin','0772562261'),
-(3,46035,46038,40,'Berger','Claire','0678877669');
+(3,46035,46038,40,'Berger','Claire','0678877669'),
+(10,46006,46010,51,'Test Reservation','En Cours','0784685034');
 
 /*==============================================================*/
 /* Table : cibler (38 lignes)                                   */
