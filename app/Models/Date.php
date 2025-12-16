@@ -11,6 +11,12 @@ class Date extends Model
     protected $primaryKey = 'iddate';
 
     public $timestamps = false;
+    
+    // Si la colonne contenant la date réelle s'appelle 'date' (recommandé)
+    protected $fillable = ['date']; 
+    
+    // Permet de désigner la colonne comme un objet Carbon pour les relations (facultatif mais propre)
+    protected $dates = ['date']; 
 
     public function annonces()
     {

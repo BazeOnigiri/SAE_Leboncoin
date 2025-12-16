@@ -75,6 +75,9 @@
                                         <button class="text-gray-700 hover:text-blue-600 flex items-center gap-1 transition group">
                                             Facture
                                         </button>
+                                        <a href="{{ route('incidents.create', $reservation) }}" class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition group">
+                                            Signaler un incident
+                                        </a>
                                         <button class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition ml-auto group">
                                             Annuler
                                         </button>

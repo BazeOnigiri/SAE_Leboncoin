@@ -6,6 +6,16 @@ use App\Http\Controllers\CNIController;
 use App\Http\Controllers\UserAccountController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\IncidentController;
+
+Route::middleware(['auth'])->group(function () {
+    // Si la clé de votre modèle Reservation est 'idreservation', la route doit être comme ceci :
+    Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])
+        ->name('incidents.create');
+
+    Route::post('/reservations/{reservation}/incident', [IncidentController::class, 'store'])
+        ->name('incidents.store');
+});
 
 
 Route::get('/', [AnnonceController::class, 'index'])->name('home');
