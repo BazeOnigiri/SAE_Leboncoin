@@ -15,16 +15,22 @@ class AnnonceList extends Component
     public $filterTypes = [];
     public $dateArrivee = '';
     public $dateDepart = '';
+    public $nbVoyageurs = 1;
+    public $nbChambres = 0;
+    public $selectedCommodites = [];
 
     #[On('locationSelected')] 
     public function updateLocation($nom) { $this->location = $nom; }
 
     #[On('filtersUpdated')]
-    public function updateFilters($types, $dateArrivee, $dateDepart) 
+    public function updateFilters($types, $dateArrivee, $dateDepart, $nbVoyageurs = 1, $nbChambres = 0, $commodites = []) 
     {
         $this->filterTypes = $types;
         $this->dateArrivee = $dateArrivee; 
-        $this->dateDepart = $dateDepart;   
+        $this->dateDepart = $dateDepart;
+        $this->nbVoyageurs = $nbVoyageurs;
+        $this->nbChambres = $nbChambres;
+        $this->selectedCommodites = $commodites;
     }
 
     public function render()
@@ -59,6 +65,17 @@ class AnnonceList extends Component
                 $debut,
                 $fin
             ]);
+        }
+        
+        if ($this->nbVoyageurs > 1) {
+            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_par_capacite(?::int))", [$this->nbVoyageurs]);
+        }
+        if ($this->nbChambres > 0) {
+            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_par_nb_chambres(?::int))", [$this->nbChambres]);
+        }
+        if (!empty($this->selectedCommodites)) {
+            $commoditesStr = '{' . implode(',', $this->selectedCommodites) . '}';
+            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_par_commodites(?::int[]))", [$commoditesStr]);
         }
 
         $annonces = $query->get();

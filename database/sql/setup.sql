@@ -1091,3 +1091,115 @@ BEGIN
       a.prixnuitee ASC;
 END;
 $$ LANGUAGE plpgsql;
+
+--voir annonces par capacité 
+DROP FUNCTION IF EXISTS get_annonces_par_capacite(INT);
+CREATE OR REPLACE FUNCTION get_annonces_par_capacite(
+   p_nb_voyageurs INT
+)
+RETURNS TABLE (
+   id_annonce INT,
+   titre VARCHAR,
+   ville VARCHAR,
+   capacite INT,
+   prix DECIMAL
+) 
+AS $$
+BEGIN
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      v.nomville,
+      a.capacite,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   WHERE 
+      p_nb_voyageurs IS NULL 
+      OR a.capacite >= p_nb_voyageurs
+   ORDER BY 
+      a.capacite ASC,
+      a.prixnuitee ASC;
+END;
+$$ LANGUAGE plpgsql;
+
+--voir annonces par nombre de chambres
+DROP FUNCTION IF EXISTS get_annonces_par_nb_chambres(INT);
+DROP FUNCTION IF EXISTS get_annonces_par_nb_chambres(INT, INT);
+CREATE OR REPLACE FUNCTION get_annonces_par_nb_chambres(
+   p_nb_chambres INT
+)
+RETURNS TABLE (
+   id_annonce INT,
+   titre VARCHAR,
+   ville VARCHAR,
+   nb_chambres INT,
+   prix DECIMAL
+) 
+AS $$
+BEGIN
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      v.nomville,
+      a.nbchambres,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   WHERE 
+      p_nb_chambres IS NULL 
+      OR a.nbChambres >= p_nb_chambres
+   ORDER BY 
+      a.nbChambres ASC,
+      a.prixnuitee ASC;
+END;
+$$ LANGUAGE plpgsql;
+
+--voir annonces par commodités (doit posséder TOUTES les commodités demandées)
+DROP FUNCTION IF EXISTS get_annonces_par_commodites(INT[]);
+CREATE OR REPLACE FUNCTION get_annonces_par_commodites(
+   p_commodites_ids INT[]
+)
+RETURNS TABLE (
+   id_annonce INT,
+   titre VARCHAR,
+   ville VARCHAR,
+   prix DECIMAL
+) 
+AS $$
+BEGIN
+   RETURN QUERY
+   SELECT 
+      a.idannonce,
+      a.titreannonce,
+      v.nomville,
+      a.prixnuitee
+   FROM 
+      annonce a
+   JOIN 
+      adresse adr ON a.idadresse = adr.idadresse
+   JOIN 
+      ville v ON adr.idville = v.idville
+   WHERE 
+      p_commodites_ids IS NULL 
+      OR cardinality(p_commodites_ids) = 0
+      OR (
+         SELECT COUNT(DISTINCT p.idcommodite)
+         FROM proposer p
+         WHERE p.idannonce = a.idannonce
+         AND p.idcommodite = ANY(p_commodites_ids)
+      ) = cardinality(p_commodites_ids)
+   ORDER BY 
+      a.prixnuitee ASC;
+END;
+$$ LANGUAGE plpgsql;

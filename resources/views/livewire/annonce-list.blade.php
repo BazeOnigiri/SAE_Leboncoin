@@ -1,6 +1,11 @@
 <div>
     @php
-        $hasSearch = !empty($location) || !empty($filterTypes) || (!empty($dateArrivee) && !empty($dateDepart));
+        $hasSearch = !empty($location) 
+            || !empty($filterTypes) 
+            || (!empty($dateArrivee) && !empty($dateDepart))
+            || ($nbVoyageurs > 1)
+            || ($nbChambres > 0)
+            || !empty($selectedCommodites);
     @endphp
 
     <h1 class="text-xl font-bold mb-6">Annonces Location vacances</h1>

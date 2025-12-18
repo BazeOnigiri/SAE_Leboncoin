@@ -14,6 +14,11 @@ class FilterSidebar extends Component
     public bool $showTypes = false; 
     public $dateArrivee = '';
     public $dateDepart = '';
+    public $nbVoyageurs = 1;
+    public $nbChambres = 0;
+    public array $categoriesCommodites = [];
+    public array $selectedCommodites = [];
+    public bool $showCommodites = false;
 
     public function mount()
     {
@@ -22,6 +27,23 @@ class FilterSidebar extends Component
                 ->orderBy('nomtypehebergement')
                 ->get()
                 ->toArray();
+        });
+
+        $this->categoriesCommodites = Cache::rememberForever('categories_commodites', function () {
+            return \App\Models\Categorie::with('commodites')
+                ->get()
+                ->map(function ($cat) {
+                    return [
+                        'id' => $cat->idcategorie,
+                        'nom' => $cat->nomcategorie,
+                        'commodites' => $cat->commodites->map(function ($com) {
+                            return [
+                                'id' => $com->idcommodite,
+                                'nom' => $com->nomcommodite
+                            ];
+                        })->toArray()
+                    ];
+                })->toArray();
         });
     }
 
@@ -35,7 +57,10 @@ class FilterSidebar extends Component
         $this->dispatch('filtersUpdated', 
             types: $this->selectedTypes,
             dateArrivee: $this->dateArrivee,
-            dateDepart: $this->dateDepart
+            dateDepart: $this->dateDepart,
+            nbVoyageurs: $this->nbVoyageurs,
+            nbChambres: $this->nbChambres,
+            commodites: $this->selectedCommodites
         );
         
         $this->dispatch('close-filter-panel'); 
