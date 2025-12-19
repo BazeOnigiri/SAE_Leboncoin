@@ -57,9 +57,20 @@ php artisan geo:clear
 
 ```
 
-## User from debit seed
-email: ```test@example.com```
-password: ```passwordT67!```
+## Comptes
+
+| Rôle | Email | Mot de passe |
+| --- | --- | --- |
+| Utilisateur test (sans rôle) | test@example.com | passwordT67! |
+| Super Admin | super_admin@example.com | password |
+| Service Petite Annonce | service_petite_annonce@example.com | password |
+| Directeur Service Petite Annonce | directeur_service_petite_annonce@example.com | password |
+| Service Immobilier | service_imobilier@example.com | password |
+| Directeur Service Immobilier | directeur_service_imobilier@example.com | password |
+| Service Inscription | service_inscription@example.com | password |
+| Directeur Service Inscription | directeur_service_inscription@example.com | password |
+| Service Location | service_location@example.com | password |
+| Directeur Service Location | directeur_service_location@example.com | password |
 
 # Doc
 ## Allerts

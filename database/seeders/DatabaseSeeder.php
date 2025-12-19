@@ -8,6 +8,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use App\RoleEnum;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -38,15 +39,24 @@ class DatabaseSeeder extends Seeder
             'civilite' => 'Monsieur',
         ]);
 
-        $servicePA = Role::firstWhere('name', RoleEnum::SERVICE_PETITE_ANNONCE->value);
+        foreach (RoleEnum::cases() as $roleEnum) {
+            $role = Role::firstWhere('name', $roleEnum->value);
 
-        User::create([
-            'pseudonyme' => 'Greg Petite Annonce',
-            'password' => bcrypt('passwordT67!'),
-            'email' => 'greg@example.com',
-            'solde' => 00.00,
-            'idadresse' => 1,
-            'iddate' => 1,
-        ])->assignRole($servicePA);
+            $base = Str::slug($roleEnum->value, '_');
+
+            $roleUser = User::firstOrCreate(
+                ['email' => $base . '@example.com'],
+                [
+                    'pseudonyme' => ucfirst($base),
+                    'password' => bcrypt('password'),
+                    'solde' => 0.00,
+                    'idadresse' => 1,
+                    'iddate' => 1,
+                ],
+            );
+
+            $roleUser->assignRole($role);
+        }
+        
     }
 }
