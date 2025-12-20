@@ -33,7 +33,6 @@ if (app()->environment('local')) {
 }
 
 Route::middleware(['auth'])->group(function () {
-    // Si la clé de votre modèle Reservation est 'idreservation', la route doit être comme ceci :
     Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])
         ->name('incidents.create');
 
@@ -79,6 +78,7 @@ Route::middleware([
         Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
         Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
         Route::get('/favorites', [UserAccountController::class, 'favorites'])->name('user.favorites');
+        Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
 
         Route::prefix('services-petites-annonces')
         ->as('services-petites-annonces.')

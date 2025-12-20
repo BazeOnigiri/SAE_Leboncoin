@@ -58,6 +58,11 @@ class UserAccountController extends Controller
         return view('user-account.favorites');
     }
 
+    public function searches()
+    {
+        return view('user-account.searches');
+    }
+
     public function spaces()
     {
         return view('user-account.spaces');
@@ -75,7 +80,7 @@ class UserAccountController extends Controller
 
         return view('user-account.settings', [
             'user' => $user,
-            'secteurs' => self::SECTEURS // On passe la liste à la vue
+            'secteurs' => self::SECTEURS 
         ]);
     }
 
@@ -83,8 +88,6 @@ class UserAccountController extends Controller
     {
         $user = Auth::user();
 
-        // 1. Définition des règles de validation
-        // Règles communes
         $rules = [
             'telephone' => ['required', 'regex:/^0[1-9][0-9]{8}$/'],
             'email' => [
@@ -97,39 +100,33 @@ class UserAccountController extends Controller
             'nomville'   => ['required', 'string', 'max:40'],
         ];
 
-        // Règles spécifiques
         if ($user->particulier) {
             $rules['civilite']       = ['required', 'in:Monsieur,Madame,Non spécifié'];
             $rules['nom']            = ['required', 'string', 'max:50'];
             $rules['prenom']         = ['required', 'string', 'max:50'];
             $rules['date_naissance'] = ['required', 'date', 'before_or_equal:' . now()->subYears(18)->toDateString()];
         } elseif ($user->professionnels) {
-            // "Nom du contact" retiré du formulaire -> retiré de la validation
             $rules['nomsociete']      = ['required', 'string', 'max:30'];
             $rules['numsiret']        = [
                 'required', 'numeric', 'digits:14',
                 Rule::unique('professionnel', 'numsiret')->ignore($user->idutilisateur, 'idutilisateur')
             ];
-            // Validation du secteur par rapport à notre liste
             $rules['secteuractivite'] = ['required', 'string', Rule::in(self::SECTEURS)];
         }
 
         $validated = $request->validate($rules);
 
-        // 2. Mise à jour de l'Utilisateur (Table commune)
         $user->telephoneutilisateur = $validated['telephone'];
         $user->email                = $validated['email'];
         
         $user->save();
 
-        // 3. Mise à jour des tables spécifiques
         if ($user->particulier) {
             $dateModel = DateModel::firstOrCreate(['date' => $validated['date_naissance']]);
 
             $particulier = $user->particulier;
             $particulier->civilite = $validated['civilite'];
             $particulier->iddate   = $dateModel->iddate;
-            // Mise à jour du nom utilisateur seulement si présent (donc seulement pour Particulier)
             if (isset($validated['nom'])) {
                 $particulier->nomutilisateur = $validated['nom'];
             }
@@ -146,16 +143,13 @@ class UserAccountController extends Controller
             $pro->save();
         }
 
-        // 4. Mise à jour Adresse et Ville (inchangé)
         $nomVilleSaisi = strtoupper($validated['nomville']);
         $codePostal    = $validated['codepostal'];
 
-        // On cherche d'abord si la ville existe déjà pour éviter l'appel API inutile
         $ville = Ville::where('nomville', $nomVilleSaisi)
             ->where('codepostal', $codePostal)
             ->first();
 
-        // Si la ville n'existe pas, on prépare sa création
         if (!$ville) {
             $communeData = null;
             try {
@@ -182,17 +176,14 @@ class UserAccountController extends Controller
                 $communeData = null; 
             }
 
-            // Définition des variables pour la création
             $codeRegionApi      = $communeData['codeRegion'] ?? 'INCONNU';
             $codeDepartementApi = $communeData['codeDepartement'] ?? substr($codePostal, 0, 2);
             $nomCommuneApi      = $communeData ? strtoupper($communeData['nom']) : $nomVilleSaisi;
 
-            // Gestion DOM-TOM
             if (!$communeData && in_array(substr($codePostal, 0, 2), ['97', '98'])) {
                 $codeDepartementApi = substr($codePostal, 0, 3);
             }
 
-            // Création parents (Region/Dept)
             $region = Region::firstOrCreate(['nomregion' => 'REGION ' . $codeRegionApi]);
             
             $departement = Departement::firstOrCreate(
@@ -200,8 +191,6 @@ class UserAccountController extends Controller
                 ['idregion' => $region->idregion, 'nomdepartement' => 'DEPARTEMENT ' . $codeDepartementApi]
             );
 
-            // Utilisation de firstOrCreate pour éviter l'erreur "Unique violation"
-            // si la ville a été créée par quelqu'un d'autre entre temps
             $ville = Ville::firstOrCreate(
                 [
                     'codepostal' => $codePostal,
@@ -214,14 +203,12 @@ class UserAccountController extends Controller
             );
         }
 
-        // Création ou récupération de l'adresse
         $adresse = Adresse::firstOrCreate([
             'numerorue' => $validated['numerorue'],
             'nomrue'    => $validated['nomrue'],
             'idville'   => $ville->idville,
         ]);
 
-        // Mise à jour de la liaison User -> Adresse
         if ($user->idadresse !== $adresse->idadresse) {
             $user->idadresse = $adresse->idadresse;
             $user->save();
