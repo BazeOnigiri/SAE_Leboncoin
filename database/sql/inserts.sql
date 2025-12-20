@@ -644,91 +644,112 @@ INSERT INTO utilisateur (   idadresse, idcartebancaire, iddate,
 /*============================================================================================================================================*/ 
 
 /*==============================================================*/
-/* Table : annonce (80 annonces)                                */
+/* Table : annonce (100 annonces)                               */
 /*==============================================================*/
 
-INSERT INTO annonce (idadresse, iddate, idheuredepart, idtypehebergement, idheurearrivee, idutilisateur, titreannonce, descriptionannonce, nombreetoilesleboncoin, montantacompte, pourcentageacompte, prixnuitee, minimumnuitee, nombreanimauxmax, nombrebebesmax, possibilitefumeur, capacite, nbchambres) VALUES
+INSERT INTO annonce (idadresse, iddate, idheuredepart, idtypehebergement, idheurearrivee, idutilisateur, titreannonce, descriptionannonce, nombreetoilesleboncoin, montantacompte, pourcentageacompte, prixnuitee, minimumnuitee, nombreanimauxmax, nombrebebesmax, possibilitefumeur, capacite, nbchambres, estverifie) VALUES
 
-(51,44155,7,6,48,48,'Appartement cosy en centre-ville','Charmant appartement récemment rénové, situé au cœur du centre-ville, proche de toutes les commodités.',2,52,NULL,90,4,4,4,true, 4, 2),
-(52,44613,46,4,31,24,'Maison familiale avec grand jardin','Maison familiale spacieuse avec grand jardin arboré, idéale pour les familles à la recherche de tranquillité.',4,NULL,50,156,3,3,4,false, 8, 4),
-(53,44439,43,6,33,48,'Studio idéal pour étudiant','Studio fonctionnel et meublé, parfait pour un étudiant ou un jeune actif.',5,51,NULL,55,1,2,3,true, 2, 1),
-(54,43337,29,3,24,48,'Loft moderne en plein centre','Loft moderne avec belle hauteur sous plafond, dans un quartier dynamique et recherché.',4,137,NULL,98,3,5,3,false, 4, 1),
-(55,45430,34,9,15,47,'Appartement lumineux avec balcon','Appartement lumineux avec balcon orienté sud, vue dégagée sans vis-à-vis.',3,59,NULL,153,2,1,3,false, 4, 2),
-(56,45839,47,2,29,24,'Charmante maison proche des écoles','Jolie maison entièrement rénovée, à proximité des écoles et commerces.',2,NULL,76,47,1,1,5,true, 6, 3),
-(57,45835,25,6,16,29,'Studio rénové et meublé','Studio calme en résidence sécurisée, à deux minutes du métro.',3,73,NULL,141,3,2,1,false, 2, 1),
-(58,44865,46,6,25,2,'Appartement spacieux vue dégagée','Appartement spacieux avec grande terrasse privative, idéal pour les repas en extérieur.',3,NULL,48,168,3,5,4,false, 6, 3),
-(59,43983,11,4,32,49,'Maison de village rénovée','Maison de village au charme ancien, restaurée avec goût.',2,NULL,88,100,3,2,4,true, 6, 3),
-(60,44077,46,1,44,23,'Loft industriel très lumineux','Appartement en dernier étage avec ascenseur, très lumineux et bien isolé.',4,142,NULL,104,3,2,0,true, 4, 1),
-(61,44813,10,2,19,25,'Appartement proche des transports','Maison avec piscine chauffée et terrain clos, parfaite pour les familles.',1,NULL,15,59,4,1,2,true, 8, 4),
-(62,44956,40,8,3,38,'Maison avec piscine privée','Studio pratique avec kitchenette équipée, proche université et transports.',5,NULL,59,134,2,0,4,false, 2, 1),
-(63,44083,43,9,43,24,'Studio calme dans résidence','Appartement moderne dans résidence récente, avec parking sécurisé.',2,76,NULL,111,1,3,0,true, 4, 2),
-(64,44644,47,2,12,24,'Appartement terrasse plein sud','Maison avec garage et sous-sol complet, dans un quartier résidentiel.',1,113,NULL,54,3,3,2,true, 6, 3),
-(65,45422,3,8,29,24,'Jolie maison à la campagne','Studio refait à neuf, idéal pour un premier logement.',2,137,NULL,71,2,2,4,false, 2, 1),
-(66,45776,30,2,30,27,'Duplex moderne centre-ville','Appartement climatisé avec grande pièce de vie et cuisine ouverte.',2,58,NULL,59,3,2,2,false, 5, 2),
-(67,43369,46,4,1,24,'Studio proche de la gare','Maison en campagne avec belle vue dégagée sur la nature.',3,NULL,69,158,4,3,3,false, 6, 3),
-(68,45851,40,2,41,46,'Appartement rénové récemment','Appartement proche de la gare, parfait pour un quotidien sans voiture.',4,NULL,71,76,3,2,3,true, 4, 2),
-(69,45290,10,8,44,6,'Maison plain-pied quartier calme','Maison plain-pied très bien entretenue, aucune rénovation à prévoir.',2,147,NULL,139,2,4,0,false, 6, 3),
-(70,45654,3,6,28,48,'Appartement en dernier étage','Studio entièrement meublé, prêt à habiter immédiatement.',5,NULL,64,71,1,3,4,true, 2, 1),
-(71,45701,32,4,8,38,'Studio fonctionnel bien situé','Appartement avec cuisine équipée et rangements, très pratique au quotidien.',2,103,NULL,166,2,3,2,true, 4, 2),
-(72,44925,9,5,37,50,'Maison en bord de mer','Maison spacieuse avec quatre chambres, idéale pour grande famille.',5,NULL,80,183,1,0,2,false, 10, 5),
-(73,43986,23,6,34,29,'Appartement avec parking privé','Studio lumineux dans un quartier calme et recherché.',2,NULL,76,165,2,2,2,false, 2, 1),
-(74,43825,6,1,13,24,'Charmant studio hyper centre','Appartement en résidence sécurisée avec ascenseur et local vélo.',4,NULL,16,115,1,1,3,false, 4, 2),
-(75,44649,47,3,27,24,'Appartement vue sur parc','Maison ancienne rénovée avec goût, pierres et poutres apparentes.',4,NULL,85,89,4,1,5,false, 6, 3),
-(76,45866,45,3,4,45,'Maison avec grandes pièces','Studio bien agencé avec salle de bain moderne.',1,70,NULL,165,5,3,3,false, 2, 1),
-(77,43724,9,2,42,31,'Studio idéal court séjour','Appartement avec vue sur parc, proche commerces et transports.',2,89,NULL,65,5,1,5,false, 4, 2),
-(78,45930,36,6,44,48,'Appartement proche commerces','Maison avec terrasse couverte et grand terrain, parfaite pour les repas en été.',5,80,NULL,173,4,3,2,true, 8, 4),
-(79,43398,23,7,37,10,'Maison récente très lumineuse','Studio calme et isolé, parfait pour télétravailler sereinement.',3,NULL,47,163,4,0,3,false, 2, 1),
-(80,45221,12,7,10,41,'Studio meublé prêt à vivre','Appartement rénové récemment, aucun travaux à prévoir.',3,115,NULL,86,2,4,2,true, 4, 2),
-(81,45114,32,6,14,46,'Appartement avec cuisine équipée','Maison moderne avec prestations haut de gamme, dans un environnement paisible.',3,95,NULL,53,3,5,2,false, 7, 4),
-(82,43201,7,4,10,25,'Maison avec terrasse couverte','Studio idéal pour investissement locatif, forte demande dans le secteur.',2,138,NULL,116,3,1,0,false, 2, 1),
-(83,44490,23,6,40,46,'Studio en résidence sécurisée','Appartement situé dans une résidence récente avec ascenseur et parking.',5,NULL,55,100,3,0,5,false, 4, 2),
-(84,43767,40,2,22,38,'Appartement à deux pas du métro','Maison avec dépendance aménageable, idéal projet familial ou professionnel.',2,NULL,93,153,5,1,3,true, 8, 4),
-(85,43687,24,2,19,34,'Maison en lotissement calme','Studio proche des plages, parfait pour un pied-à-terre.',2,NULL,11,91,4,3,2,false, 2, 1),
-(86,45545,43,9,11,24,'Studio petite surface optimisée','Appartement très lumineux avec fenêtres double vitrage et isolation neuve.',1,63,NULL,52,2,2,4,true, 4, 2),
-(87,43671,12,8,28,38,'Appartement idéal colocation','Maison à la campagne, environnement calme sans voisins proches.',1,117,NULL,70,2,3,2,true, 6, 3),
-(88,45700,18,8,26,45,'Belle maison avec garage','Studio au cœur du centre historique, proche de toutes commodités.',3,124,NULL,130,4,0,2,false, 2, 1),
-(89,44388,45,7,5,41,'Studio au cœur du village','Appartement avec balcon et vue montagne, idéal pour les amoureux de nature.',4,120,NULL,92,3,1,3,false, 4, 2),
-(90,45357,6,8,9,41,'Appartement entièrement refait','Maison à rénover, beau potentiel pour projet personnel ou investissement.',1,NULL,52,69,4,3,0,false, 6, 3),
-(91,44866,32,7,35,5,'Maison avec vue montagne','Studio en parfait état, vendu entièrement équipé.',2,52,NULL,90,3,2,2,true, 2, 1),
-(92,44340,24,5,19,34,'Studio pas cher bien placé','Appartement rénové avec goût, mélange de moderne et ancien.',1,NULL,98,57,5,4,4,false, 4, 2),
-(93,45187,40,8,5,7,'Appartement standing centre historique','Maison proche océan, grande pièce de vie et jardin clos.',3,55,NULL,134,1,5,2,false, 6, 3),
-(94,43372,4,1,36,42,'Maison avec dépendances','Studio dans résidence étudiante sécurisée, emplacement idéal.',1,70,NULL,84,4,0,1,true, 2, 1),
-(95,45155,10,9,6,24,'Studio au calme absolu','Appartement spacieux avec trois chambres, idéal pour colocation.',2,NULL,53,54,3,1,5,false, 6, 3),
-(96,44878,11,2,42,41,'Appartement pratique pour étudiant','Maison récente avec chauffage économique et matériaux modernes.',4,NULL,45,108,2,4,2,true, 7, 3),
-(97,43405,17,6,38,48,'Maison pleine de charme','Studio lumineux au dernier étage, très faible vis-à-vis.',2,NULL,13,51,4,0,5,true, 2, 1),
-(98,44052,12,6,16,46,'Studio dans quartier vivant','Appartement avec cuisine ouverte et salon spacieux.',3,NULL,15,150,2,0,0,true, 4, 2),
-(99,45759,38,2,9,24,'Appartement proche université','Maison dans quartier résidentiel calme, proche écoles et parc.',2,66,NULL,69,1,5,4,true, 6, 3),
-(100,45179,47,8,3,6,'Maison spacieuse et lumineuse','Studio entièrement refait, prêt à louer immédiatement.',3,NULL,73,155,3,0,2,false, 2, 1),
-(101,44798,22,2,43,33,'Studio récent à louer','Appartement avec deux balcons, idéal pour profiter du soleil toute la journée.',3,NULL,53,100,4,5,3,false, 4, 2),
-(102,44650,21,8,32,41,'Appartement avec grande terrasse','Maison en bordure de forêt, idéale pour amoureux de la nature.',3,50,NULL,173,5,1,5,false, 6, 3),
-(103,44917,1,7,25,37,'Maison à deux niveaux','Studio avec belle hauteur sous plafond, possibilité mezzanine.',3,NULL,42,97,4,1,2,true, 2, 1),
-(104,44855,41,6,13,20,'Studio dans résidence neuve','Appartement dans résidence de standing avec espaces verts.',1,100,NULL,166,5,0,4,false, 4, 2),
-(105,43679,45,3,41,21,'Appartement proche du tram','Maison spacieuse avec atelier, idéale pour les bricoleurs.',1,NULL,28,94,5,2,2,false, 6, 3),
-(106,43798,23,3,45,42,'Maison avec terrain arboré','Studio fonctionnel en plein centre-ville.',3,120,NULL,131,2,4,5,true, 2, 1),
-(107,45785,8,2,14,32,'Studio en location saisonnière','Appartement en excellent état, vendu avec place de parking.',2,67,NULL,166,1,3,5,true, 4, 2),
-(108,45645,46,6,46,24,'Appartement en parfait état','Maison ancienne rénovée, charme ancien préservé.',1,NULL,37,68,4,3,2,false, 6, 3),
-(109,43258,14,4,26,24,'Ancienne maison rénovée','Studio parfait pour étudiant, proche de toutes commodités.',4,124,NULL,82,3,1,3,true, 2, 1),
-(110,44705,30,7,23,26,'Studio parfait pour débuter','Appartement en dernier étage avec grande luminosité naturelle.',4,55,NULL,65,1,1,1,true, 4, 2),
-(111,45183,19,4,40,28,'Appartement situé en centre historique','Maison avec grande terrasse et vue imprenable.',3,NULL,88,98,2,4,3,true, 6, 3),
-(112,45656,21,2,41,27,'Maison calme à rénover','Studio dans quartier vivant, commerces à proximité immédiate.',2,115,NULL,143,3,5,1,false, 2, 1),
-(113,44044,18,4,11,24,'Studio prix attractif','Appartement lumineux avec double exposition et cuisine équipée.',4,147,NULL,171,5,3,0,false, 4, 2),
-(114,44545,22,8,24,20,'Appartement avec vue mer','Maison avec jardin paysagé, aucun vis-à-vis.',4,89,NULL,86,4,0,2,true, 6, 3),
-(115,45078,8,1,42,39,'Maison isolée en forêt','Studio calme idéal télétravail.',1,NULL,64,53,3,1,4,true, 2, 1),
-(116,45588,36,8,37,24,'Studio proche toutes commodités','Appartement rénové récemment, quartier recherché.',3,NULL,48,71,4,3,4,false, 4, 2),
-(117,45674,45,9,25,24,'Appartement idéal investissement','Maison plein pied avec garage et buanderie.',5,80,NULL,146,1,3,2,false, 6, 3),
-(118,43314,9,6,16,32,'Grande maison proche plages','Studio à deux pas du tramway.',2,80,NULL,174,2,4,4,false, 2, 1),
-(119,45868,13,8,2,24,'Studio lumineux orientation sud','Appartement avec belle pièce de vie ouverte.',2,NULL,39,182,2,2,1,true, 4, 2),
-(120,44783,38,4,39,1,'Appartement entièrement meublé','Maison à grand potentiel, idéal investisseurs.',3,64,NULL,104,2,2,1,false, 6, 3),
-(121,44186,46,6,40,1,'Maison à fort potentiel','Studio cosy décoré avec goût.',2,NULL,89,182,4,1,5,true, 2, 1),
-(122,45213,10,1,33,47,'Studio dans immeuble récent','Appartement dans résidence calme et sécurisée.',4,90,NULL,73,1,5,1,false, 4, 2),
-(123,44873,46,7,38,7,'Appartement face à la mer','Maison en bord de rivière, cadre exceptionnel.',4,NULL,91,178,4,0,5,false, 7, 4),
-(124,44654,24,4,1,1,'Maison familiale proche commerces','Studio spacieux rare sur le secteur.',4,NULL,7,116,3,2,0,true, 3, 2),
-(125,43523,7,5,33,38,'Studio bien agencé','Appartement très bien situé, parfait pour première acquisition.',2,78,NULL,56,4,2,2,false, 4, 2),
-(126,45859,35,6,37,45,'Appartement avec grand séjour','Maison familiale proche plages.',2,NULL,35,124,4,0,3,true, 6, 3),
-(127,43638,20,3,44,50,'Maison en zone résidentielle','Studio lumineux dans immeuble récent.',2,NULL,37,134,2,4,4,false, 2, 1),
-(128,43787,20,1,45,24,'Studio moderne rénové','Appartement moderne vendu meublé.',3,88,NULL,154,2,4,1,true, 4, 2),
-(129,44359,39,3,8,1,'Appartement calme et spacieux','Maison avec cheminée et grand séjour.',4,63,NULL,59,5,4,2,false, 6, 3),
-(130,45321,39,5,33,48,'Grande maison plein centre','Studio pratique avec nombreux rangements.',2,NULL,21,174,4,2,2,true, 2, 1);
+(51,44155,7,6,48,48,'Appartement cosy en centre-ville','Charmant appartement récemment rénové, situé au cœur du centre-ville, proche de toutes les commodités.',2,52,NULL,90,4,4,4,true, 4, 2, true),
+(52,44613,46,4,31,24,'Maison familiale avec grand jardin','Maison familiale spacieuse avec grand jardin arboré, idéale pour les familles à la recherche de tranquillité.',4,NULL,50,156,3,3,4,false, 8, 4, true),
+(53,44439,43,6,33,48,'Studio idéal pour étudiant','Studio fonctionnel et meublé, parfait pour un étudiant ou un jeune actif.',5,51,NULL,55,1,2,3,true, 2, 1, true),
+(54,43337,29,3,24,48,'Loft moderne en plein centre','Loft moderne avec belle hauteur sous plafond, dans un quartier dynamique et recherché.',4,137,NULL,98,3,5,3,false, 4, 1, true),
+(55,45430,34,9,15,47,'Appartement lumineux avec balcon','Appartement lumineux avec balcon orienté sud, vue dégagée sans vis-à-vis.',3,59,NULL,153,2,1,3,false, 4, 2, true),
+(56,45839,47,2,29,24,'Charmante maison proche des écoles','Jolie maison entièrement rénovée, à proximité des écoles et commerces.',2,NULL,76,47,1,1,5,true, 6, 3, true),
+(57,45835,25,6,16,29,'Studio rénové et meublé','Studio calme en résidence sécurisée, à deux minutes du métro.',3,73,NULL,141,3,2,1,false, 2, 1, true),
+(58,44865,46,6,25,2,'Appartement spacieux vue dégagée','Appartement spacieux avec grande terrasse privative, idéal pour les repas en extérieur.',3,NULL,48,168,3,5,4,false, 6, 3, true),
+(59,43983,11,4,32,49,'Maison de village rénovée','Maison de village au charme ancien, restaurée avec goût.',2,NULL,88,100,3,2,4,true, 6, 3, true),
+(60,44077,46,1,44,23,'Loft industriel très lumineux','Appartement en dernier étage avec ascenseur, très lumineux et bien isolé.',4,142,NULL,104,3,2,0,true, 4, 1, true),
+(61,44813,10,2,19,25,'Appartement proche des transports','Maison avec piscine chauffée et terrain clos, parfaite pour les familles.',1,NULL,15,59,4,1,2,true, 8, 4, true),
+(62,44956,40,8,3,38,'Maison avec piscine privée','Studio pratique avec kitchenette équipée, proche université et transports.',5,NULL,59,134,2,0,4,false, 2, 1, true),
+(63,44083,43,9,43,24,'Studio calme dans résidence','Appartement moderne dans résidence récente, avec parking sécurisé.',2,76,NULL,111,1,3,0,true, 4, 2, true),
+(64,44644,47,2,12,24,'Appartement terrasse plein sud','Maison avec garage et sous-sol complet, dans un quartier résidentiel.',1,113,NULL,54,3,3,2,true, 6, 3, true),
+(65,45422,3,8,29,24,'Jolie maison à la campagne','Studio refait à neuf, idéal pour un premier logement.',2,137,NULL,71,2,2,4,false, 2, 1, true),
+(66,45776,30,2,30,27,'Duplex moderne centre-ville','Appartement climatisé avec grande pièce de vie et cuisine ouverte.',2,58,NULL,59,3,2,2,false, 5, 2, true),
+(67,43369,46,4,1,24,'Studio proche de la gare','Maison en campagne avec belle vue dégagée sur la nature.',3,NULL,69,158,4,3,3,false, 6, 3, true),
+(68,45851,40,2,41,46,'Appartement rénové récemment','Appartement proche de la gare, parfait pour un quotidien sans voiture.',4,NULL,71,76,3,2,3,true, 4, 2, true),
+(69,45290,10,8,44,6,'Maison plain-pied quartier calme','Maison plain-pied très bien entretenue, aucune rénovation à prévoir.',2,147,NULL,139,2,4,0,false, 6, 3, true),
+(70,45654,3,6,28,48,'Appartement en dernier étage','Studio entièrement meublé, prêt à habiter immédiatement.',5,NULL,64,71,1,3,4,true, 2, 1, true),
+(71,45701,32,4,8,38,'Studio fonctionnel bien situé','Appartement avec cuisine équipée et rangements, très pratique au quotidien.',2,103,NULL,166,2,3,2,true, 4, 2, true),
+(72,44925,9,5,37,50,'Maison en bord de mer','Maison spacieuse avec quatre chambres, idéale pour grande famille.',5,NULL,80,183,1,0,2,false, 10, 5, true),
+(73,43986,23,6,34,29,'Appartement avec parking privé','Studio lumineux dans un quartier calme et recherché.',2,NULL,76,165,2,2,2,false, 2, 1, true),
+(74,43825,6,1,13,24,'Charmant studio hyper centre','Appartement en résidence sécurisée avec ascenseur et local vélo.',4,NULL,16,115,1,1,3,false, 4, 2, true),
+(75,44649,47,3,27,24,'Appartement vue sur parc','Maison ancienne rénovée avec goût, pierres et poutres apparentes.',4,NULL,85,89,4,1,5,false, 6, 3, true),
+(76,45866,45,3,4,45,'Maison avec grandes pièces','Studio bien agencé avec salle de bain moderne.',1,70,NULL,165,5,3,3,false, 2, 1, true),
+(77,43724,9,2,42,31,'Studio idéal court séjour','Appartement avec vue sur parc, proche commerces et transports.',2,89,NULL,65,5,1,5,false, 4, 2, true),
+(78,45930,36,6,44,48,'Appartement proche commerces','Maison avec terrasse couverte et grand terrain, parfaite pour les repas en été.',5,80,NULL,173,4,3,2,true, 8, 4, true),
+(79,43398,23,7,37,10,'Maison récente très lumineuse','Studio calme et isolé, parfait pour télétravailler sereinement.',3,NULL,47,163,4,0,3,false, 2, 1, true),
+(80,45221,12,7,10,41,'Studio meublé prêt à vivre','Appartement rénové récemment, aucun travaux à prévoir.',3,115,NULL,86,2,4,2,true, 4, 2, true),
+(81,45114,32,6,14,46,'Appartement avec cuisine équipée','Maison moderne avec prestations haut de gamme, dans un environnement paisible.',3,95,NULL,53,3,5,2,false, 7, 4, true),
+(82,43201,7,4,10,25,'Maison avec terrasse couverte','Studio idéal pour investissement locatif, forte demande dans le secteur.',2,138,NULL,116,3,1,0,false, 2, 1, true),
+(83,44490,23,6,40,46,'Studio en résidence sécurisée','Appartement situé dans une résidence récente avec ascenseur et parking.',5,NULL,55,100,3,0,5,false, 4, 2, true),
+(84,43767,40,2,22,38,'Appartement à deux pas du métro','Maison avec dépendance aménageable, idéal projet familial ou professionnel.',2,NULL,93,153,5,1,3,true, 8, 4, true),
+(85,43687,24,2,19,34,'Maison en lotissement calme','Studio proche des plages, parfait pour un pied-à-terre.',2,NULL,11,91,4,3,2,false, 2, 1, true),
+(86,45545,43,9,11,24,'Studio petite surface optimisée','Appartement très lumineux avec fenêtres double vitrage et isolation neuve.',1,63,NULL,52,2,2,4,true, 4, 2, true),
+(87,43671,12,8,28,38,'Appartement idéal colocation','Maison à la campagne, environnement calme sans voisins proches.',1,117,NULL,70,2,3,2,true, 6, 3, true),
+(88,45700,18,8,26,45,'Belle maison avec garage','Studio au cœur du centre historique, proche de toutes commodités.',3,124,NULL,130,4,0,2,false, 2, 1, true),
+(89,44388,45,7,5,41,'Studio au cœur du village','Appartement avec balcon et vue montagne, idéal pour les amoureux de nature.',4,120,NULL,92,3,1,3,false, 4, 2, true),
+(90,45357,6,8,9,41,'Appartement entièrement refait','Maison à rénover, beau potentiel pour projet personnel ou investissement.',1,NULL,52,69,4,3,0,false, 6, 3, true),
+(91,44866,32,7,35,5,'Maison avec vue montagne','Studio en parfait état, vendu entièrement équipé.',2,52,NULL,90,3,2,2,true, 2, 1, true),
+(92,44340,24,5,19,34,'Studio pas cher bien placé','Appartement rénové avec goût, mélange de moderne et ancien.',1,NULL,98,57,5,4,4,false, 4, 2, true),
+(93,45187,40,8,5,7,'Appartement standing centre historique','Maison proche océan, grande pièce de vie et jardin clos.',3,55,NULL,134,1,5,2,false, 6, 3, true),
+(94,43372,4,1,36,42,'Maison avec dépendances','Studio dans résidence étudiante sécurisée, emplacement idéal.',1,70,NULL,84,4,0,1,true, 2, 1, true),
+(95,45155,10,9,6,24,'Studio au calme absolu','Appartement spacieux avec trois chambres, idéal pour colocation.',2,NULL,53,54,3,1,5,false, 6, 3, true),
+(96,44878,11,2,42,41,'Appartement pratique pour étudiant','Maison récente avec chauffage économique et matériaux modernes.',4,NULL,45,108,2,4,2,true, 7, 3, true),
+(97,43405,17,6,38,48,'Maison pleine de charme','Studio lumineux au dernier étage, très faible vis-à-vis.',2,NULL,13,51,4,0,5,true, 2, 1, true),
+(98,44052,12,6,16,46,'Studio dans quartier vivant','Appartement avec cuisine ouverte et salon spacieux.',3,NULL,15,150,2,0,0,true, 4, 2, true),
+(99,45759,38,2,9,24,'Appartement proche université','Maison dans quartier résidentiel calme, proche écoles et parc.',2,66,NULL,69,1,5,4,true, 6, 3, true),
+(100,45179,47,8,3,6,'Maison spacieuse et lumineuse','Studio entièrement refait, prêt à louer immédiatement.',3,NULL,73,155,3,0,2,false, 2, 1, true),
+(101,44798,22,2,43,33,'Studio récent à louer','Appartement avec deux balcons, idéal pour profiter du soleil toute la journée.',3,NULL,53,100,4,5,3,false, 4, 2, true),
+(102,44650,21,8,32,41,'Appartement avec grande terrasse','Maison en bordure de forêt, idéale pour amoureux de la nature.',3,50,NULL,173,5,1,5,false, 6, 3, true),
+(103,44917,1,7,25,37,'Maison à deux niveaux','Studio avec belle hauteur sous plafond, possibilité mezzanine.',3,NULL,42,97,4,1,2,true, 2, 1, true),
+(104,44855,41,6,13,20,'Studio dans résidence neuve','Appartement dans résidence de standing avec espaces verts.',1,100,NULL,166,5,0,4,false, 4, 2, true),
+(105,43679,45,3,41,21,'Appartement proche du tram','Maison spacieuse avec atelier, idéale pour les bricoleurs.',1,NULL,28,94,5,2,2,false, 6, 3, true),
+(106,43798,23,3,45,42,'Maison avec terrain arboré','Studio fonctionnel en plein centre-ville.',3,120,NULL,131,2,4,5,true, 2, 1, true),
+(107,45785,8,2,14,32,'Studio en location saisonnière','Appartement en excellent état, vendu avec place de parking.',2,67,NULL,166,1,3,5,true, 4, 2, true),
+(108,45645,46,6,46,24,'Appartement en parfait état','Maison ancienne rénovée, charme ancien préservé.',1,NULL,37,68,4,3,2,false, 6, 3, true),
+(109,43258,14,4,26,24,'Ancienne maison rénovée','Studio parfait pour étudiant, proche de toutes commodités.',4,124,NULL,82,3,1,3,true, 2, 1, true),
+(110,44705,30,7,23,26,'Studio parfait pour débuter','Appartement en dernier étage avec grande luminosité naturelle.',4,55,NULL,65,1,1,1,true, 4, 2, true),
+(111,45183,19,4,40,28,'Appartement situé en centre historique','Maison avec grande terrasse et vue imprenable.',3,NULL,88,98,2,4,3,true, 6, 3, true),
+(112,45656,21,2,41,27,'Maison calme à rénover','Studio dans quartier vivant, commerces à proximité immédiate.',2,115,NULL,143,3,5,1,false, 2, 1, true),
+(113,44044,18,4,11,24,'Studio prix attractif','Appartement lumineux avec double exposition et cuisine équipée.',4,147,NULL,171,5,3,0,false, 4, 2, true),
+(114,44545,22,8,24,20,'Appartement avec vue mer','Maison avec jardin paysagé, aucun vis-à-vis.',4,89,NULL,86,4,0,2,true, 6, 3, true),
+(115,45078,8,1,42,39,'Maison isolée en forêt','Studio calme idéal télétravail.',1,NULL,64,53,3,1,4,true, 2, 1, true),
+(116,45588,36,8,37,24,'Studio proche toutes commodités','Appartement rénové récemment, quartier recherché.',3,NULL,48,71,4,3,4,false, 4, 2, true),
+(117,45674,45,9,25,24,'Appartement idéal investissement','Maison plein pied avec garage et buanderie.',5,80,NULL,146,1,3,2,false, 6, 3, true),
+(118,43314,9,6,16,32,'Grande maison proche plages','Studio à deux pas du tramway.',2,80,NULL,174,2,4,4,false, 2, 1, true),
+(119,45868,13,8,2,24,'Studio lumineux orientation sud','Appartement avec belle pièce de vie ouverte.',2,NULL,39,182,2,2,1,true, 4, 2, true),
+(120,44783,38,4,39,1,'Appartement entièrement meublé','Maison à grand potentiel, idéal investisseurs.',3,64,NULL,104,2,2,1,false, 6, 3, true),
+(121,44186,46,6,40,1,'Maison à fort potentiel','Studio cosy décoré avec goût.',2,NULL,89,182,4,1,5,true, 2, 1, true),
+(122,45213,10,1,33,47,'Studio dans immeuble récent','Appartement dans résidence calme et sécurisée.',4,90,NULL,73,1,5,1,false, 4, 2, true),
+(123,44873,46,7,38,7,'Appartement face à la mer','Maison en bord de rivière, cadre exceptionnel.',4,NULL,91,178,4,0,5,false, 7, 4, true),
+(124,44654,24,4,1,1,'Maison familiale proche commerces','Studio spacieux rare sur le secteur.',4,NULL,7,116,3,2,0,true, 3, 2, true),
+(125,43523,7,5,33,38,'Studio bien agencé','Appartement très bien situé, parfait pour première acquisition.',2,78,NULL,56,4,2,2,false, 4, 2, true),
+(126,45859,35,6,37,45,'Appartement avec grand séjour','Maison familiale proche plages.',2,NULL,35,124,4,0,3,true, 6, 3, true),
+(127,43638,20,3,44,50,'Maison en zone résidentielle','Studio lumineux dans immeuble récent.',2,NULL,37,134,2,4,4,false, 2, 1, true),
+(128,43787,20,1,45,24,'Studio moderne rénové','Appartement moderne vendu meublé.',3,88,NULL,154,2,4,1,true, 4, 2, true),
+(129,44359,39,3,8,1,'Appartement calme et spacieux','Maison avec cheminée et grand séjour.',4,63,NULL,59,5,4,2,false, 6, 3, true),
+(130,45321,39,5,33,48,'Grande maison plein centre','Studio pratique avec nombreux rangements.',2,NULL,21,174,4,2,2,true, 2, 1, true),
+(52,45012,18,3,12,12,'Studio compact avec terrasse','Petit studio avec terrasse exposée sud, idéal pour les jeunes actifs.',3,40,NULL,72,2,1,1,false, 2, 1, false),
+(61,45245,25,6,18,18,'Maison chaleureuse en périphérie','Maison avec poêle à bois et jardin paysager, au calme.',4,95,NULL,140,3,2,2,true, 6, 3, false),
+(73,44902,15,4,30,22,'Appartement rénové style industriel','Loft avec briques apparentes et grandes fenêtres.',5,110,NULL,165,2,2,2,false, 4, 2, false),
+(64,44770,12,2,19,14,'Studio pratique proche tram','Studio avec coin nuit séparé et cuisine équipée.',2,NULL,25,82,1,1,1,false, 2, 1, false),
+(90,44610,21,9,27,26,'Maison de plain-pied lumineuse','Grande baie vitrée donnant sur un jardin clos.',3,120,NULL,178,2,3,2,true, 6, 3, false),
+(85,44312,9,5,22,30,'Appartement balcon filant','Appartement traversant avec long balcon filant.',4,75,NULL,134,2,2,1,false, 4, 2, false),
+(78,45102,32,8,35,9,'Loft lumineux sous toit','Loft dernier étage avec poutres apparentes.',3,NULL,33,96,2,0,0,true, 3, 1, false),
+(69,44881,5,1,11,13,'Maison en hameau calme','Petite maison en pierre avec cheminée.',2,55,NULL,101,3,1,2,false, 4, 2, false),
+(57,44733,14,7,16,19,'Studio étudiant équipé','Studio meublé avec bureau et rangements.',1,NULL,12,58,1,0,1,false, 1, 1, false),
+(60,44628,19,4,25,21,'Appartement proche parc','Appartement avec vue dégagée sur un parc arboré.',4,88,NULL,145,3,2,2,true, 4, 2, false),
+(71,44592,8,6,20,16,'Maison à rénover partiellement','Maison offrant un fort potentiel après travaux.',1,NULL,18,69,4,2,0,false, 5, 2, false),
+(75,45277,33,5,37,11,'Studio calme en fond de cour','Studio sur cour intérieure, très silencieux.',2,47,NULL,87,2,1,1,false, 2, 1, false),
+(83,45390,27,3,33,8,'Appartement avec loggia','Appartement avec loggia fermée, idéal espace bureau.',3,NULL,29,112,2,1,2,true, 3, 2, false),
+(88,44944,16,2,21,15,'Maison familiale rénovée','Grande pièce de vie et cuisine ouverte récente.',4,105,NULL,171,3,2,3,true, 7, 3, false),
+(92,44511,22,4,29,17,'Studio fonctionnel centre-ville','Studio au pied des commerces et transports.',2,NULL,19,74,1,0,1,false, 2, 1, false),
+(95,44476,11,6,17,23,'Appartement dernier étage','Appartement avec ascenseur et cave.',3,63,NULL,121,2,1,1,false, 3, 1, false),
+(98,44699,24,8,32,28,'Maison avec véranda','Maison lumineuse grâce à une grande véranda.',2,72,NULL,136,2,2,2,true, 5, 3, false),
+(102,45209,13,4,26,35,'Appartement proche université','Idéal étudiants, à deux arrêts du campus.',1,NULL,15,62,1,0,1,true, 2, 1, false),
+(109,44724,6,9,14,40,'Studio moderne décoré','Studio récent décoré dans un style contemporain.',3,NULL,22,95,2,1,1,false, 2, 1, false),
+(114,44805,28,2,40,44,'Maison en lisière de forêt','Maison avec terrasse bois et sentiers à proximité.',4,118,NULL,189,3,2,3,true, 7, 4, false),
+(118,44970,17,6,23,4,'Appartement compact bien agencé','Plan optimisé, nombreux rangements intégrés.',2,NULL,27,88,1,0,1,false, 2, 1, false);
 
 /*==============================================================*/
 /* Table : cartebancaire (10 cartebancaires)                    */
@@ -963,7 +984,7 @@ INSERT INTO avis(idannonce, iddate, idutilisateur, texteavis, nombreetoiles) VAL
 (25,44693,24,'Très bel emplacement, au calme et avec une jolie vue.',5.0);
 
 /*==============================================================*/
-/* Table : photo (82 photos pour les annonces)                  */
+/* Table : photo (100 photos pour les annonces)                 */
 /*==============================================================*/
 
 INSERT INTO photo (idannonce, idincident, lienphoto) VALUES
@@ -1050,10 +1071,31 @@ INSERT INTO photo (idannonce, idincident, lienphoto) VALUES
 (77, null,  'https://img.leboncoin.fr/api/v1/lbcpb1/images/6f/21/6a/6f216aed4991e14b9971d7c8b9d96b06afdc6f7e.jpg?rule=ad-large'),
 (78, null,  'https://img.leboncoin.fr/api/v1/lbcpb1/images/d5/1d/e9/d51de93814031f6c76a0f1b3304e14fe96416da2.jpg?rule=ad-large'),
 (79, null,  'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'),
-(80, null,  'https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg');
+(80, null,  'https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg'),
+(81, null,  'https://placehold.co/1200x800?text=Annonce+81'),
+(82, null,  'https://placehold.co/1200x800?text=Annonce+82'),
+(83, null,  'https://placehold.co/1200x800?text=Annonce+83'),
+(84, null,  'https://placehold.co/1200x800?text=Annonce+84'),
+(85, null,  'https://placehold.co/1200x800?text=Annonce+85'),
+(86, null,  'https://placehold.co/1200x800?text=Annonce+86'),
+(87, null,  'https://placehold.co/1200x800?text=Annonce+87'),
+(88, null,  'https://placehold.co/1200x800?text=Annonce+88'),
+(89, null,  'https://placehold.co/1200x800?text=Annonce+89'),
+(90, null,  'https://placehold.co/1200x800?text=Annonce+90'),
+(91, null,  'https://placehold.co/1200x800?text=Annonce+91'),
+(92, null,  'https://placehold.co/1200x800?text=Annonce+92'),
+(93, null,  'https://placehold.co/1200x800?text=Annonce+93'),
+(94, null,  'https://placehold.co/1200x800?text=Annonce+94'),
+(95, null,  'https://placehold.co/1200x800?text=Annonce+95'),
+(96, null,  'https://placehold.co/1200x800?text=Annonce+96'),
+(97, null,  'https://placehold.co/1200x800?text=Annonce+97'),
+(98, null,  'https://placehold.co/1200x800?text=Annonce+98'),
+(99, null,  'https://placehold.co/1200x800?text=Annonce+99'),
+(100, null, 'https://placehold.co/1200x800?text=Annonce+100'),
+(101, null, 'https://placehold.co/1200x800?text=Annonce+101');
 
 /*==============================================================*/
-/* Table : ressembler (1891 lignes)                             */
+/* Table : ressembler (1931 lignes)                             */
 /*==============================================================*/
 
 INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (1,2);
@@ -2947,6 +2989,47 @@ INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (80,64);
 INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (80,75);
 INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (80,76);
 INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (80,77);
+-- Annonces "à verifier"
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (81,22);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (81,60);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (82,28);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (82,63);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (83,19);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (83,54);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (84,35);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (84,71);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (85,14);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (85,52);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (86,31);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (86,64);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (87,18);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (87,57);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (88,26);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (88,69);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (89,33);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (89,74);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (90,12);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (90,41);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (91,45);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (91,70);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (92,16);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (92,55);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (93,29);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (93,68);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (94,24);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (94,62);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (95,20);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (95,53);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (96,36);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (96,72);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (97,17);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (97,58);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (98,25);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (98,66);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (99,30);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (99,73);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (100,21);
+INSERT INTO ressembler(idannonce_a,idannonce_b) VALUES (100,65);
 
 /*==============================================================*/
 /* Table : reservation (103 reservations)                       */
@@ -6685,7 +6768,7 @@ INSERT INTO incident(idutilisateur, idreservation, iddate, motifincident, descri
 /*============================================================================================================================================*/
 
 /*==============================================================*/
-/* Table : photo (82 photos + 4 photos pour les incidents)      */
+/* Table : photo (100 photos + 4 photos pour les incidents)     */
 /*==============================================================*/
 
 INSERT INTO photo (idannonce, idincident, lienphoto) VALUES

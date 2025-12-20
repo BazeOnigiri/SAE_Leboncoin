@@ -7,6 +7,30 @@ use App\Http\Controllers\UserAccountController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\IncidentController;
+use Illuminate\Http\Request;
+use App\Models\User;
+
+if (app()->environment('local')) {
+    Route::post('/dev/login-as', function (Request $request) {
+        $email = $request->input('email');
+
+        abort_if(!$email, 400);
+
+        $user = User::where('email', $email)->first();
+        abort_if(!$user, 404);
+
+        if (!$user->hasVerifiedEmail()) {
+            $user->forceFill(['email_verified_at' => now()])->save();
+        }
+
+        Auth::logout();
+        Auth::guard('web')->login($user, true);
+        $request->session()->regenerate();
+        $request->session()->put('auth.password_confirmed_at', time());
+
+        return redirect()->intended('/');
+    })->name('dev.login-as');
+}
 
 Route::middleware(['auth'])->group(function () {
     // Si la clé de votre modèle Reservation est 'idreservation', la route doit être comme ceci :
@@ -54,6 +78,15 @@ Route::middleware([
         Route::get('/compte/parametres', [UserAccountController::class, 'settings'])->name('user.settings');
         Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
         Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
+
+        Route::prefix('services-petites-annonces')
+        ->as('services-petites-annonces.')
+        ->middleware('can:annonces.verif')
+        ->group(function () {
+            Route::get('/', [AnnonceController::class, 'annoncesAverifier'])->name('index');
+            Route::post('/{id}', [AnnonceController::class, 'verifierAnnonce'])->name('verifier');
+            Route::delete('/{id}', [AnnonceController::class, 'deleteAnnonce'])->name('delete');
+        });
     });
     Route::get('/check-reservation/{id}', function ($id) {
         return redirect()->route('annonce.view', ['id' => $id]);

@@ -44,7 +44,7 @@ class AnnonceList extends Component
             'prixnuitee', 'nombreetoilesleboncoin', 'capacite'
         )->with([
             'photos', 'typehebergement', 'adresse.ville.departement.region', 
-        ]);
+        ])->where('estverifie', true);
 
         if (!empty($this->location)) {
             $loc = $this->location;

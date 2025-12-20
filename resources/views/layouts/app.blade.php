@@ -148,6 +148,74 @@
     {{ $slot ?? '' }}
     @stack('modals')
 
+    @if(app()->environment('local'))
+        @php
+            $devAccounts = [
+                ['label' => 'Utilisateur test', 'email' => 'test@example.com'],
+                ['label' => 'Super Admin', 'email' => 'super_admin@example.com'],
+                ['label' => 'Service Petite Annonce', 'email' => 'service_petite_annonce@example.com'],
+                ['label' => 'Directeur Service Petite Annonce', 'email' => 'directeur_service_petite_annonce@example.com'],
+                ['label' => 'Service Immobilier', 'email' => 'service_immobilier@example.com'],
+                ['label' => 'Directeur Service Immobilier', 'email' => 'directeur_service_immobilier@example.com'],
+                ['label' => 'Service Inscription', 'email' => 'service_inscription@example.com'],
+                ['label' => 'Directeur Service Inscription', 'email' => 'directeur_service_inscription@example.com'],
+                ['label' => 'Service Location', 'email' => 'service_location@example.com'],
+                ['label' => 'Directeur Service Location', 'email' => 'directeur_service_location@example.com'],
+            ];
+        @endphp
+
+        <div class="fixed bottom-1/2 translate-y-1/2 left-6 z-50 text-xs">
+            <button id="dev-menu-toggle" type="button" class="px-3 py-2 rounded-lg shadow-md bg-orange-600 text-white font-semibold hover:bg-orange-700 transition">
+            Menu dev
+            </button>
+
+            <div id="dev-menu-panel" class="hidden mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl">
+            <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200">
+                <span class="text-sm font-semibold text-gray-800">Connexions rapides</span>
+                <button id="dev-menu-close" type="button" class="text-gray-500 hover:text-gray-700">X</button>
+            </div>
+            <div class="max-h-72 overflow-y-auto divide-y divide-gray-100">
+                @foreach($devAccounts as $account)
+                <button type="button" data-dev-login-email="{{ $account['email'] }}" class="w-full text-left px-3 py-2 hover:bg-orange-50 flex flex-col">
+                    <span class="text-sm font-semibold text-gray-900">{{ $account['label'] }}</span>
+                    <span class="text-[11px] text-gray-500">{{ $account['email'] }}</span>
+                </button>
+                @endforeach
+            </div>
+            <div class="px-3 py-2 text-[11px] text-gray-500 border-t border-gray-200">Dev only - se connecter en un clic.</div>
+            </div>
+
+            <form id="dev-login-form" method="POST" action="{{ route('dev.login-as') }}" class="hidden">
+            @csrf
+            <input id="dev-login-email" type="hidden" name="email" value="">
+            </form>
+        </div>
+
+        <script>
+            (() => {
+                const toggle = document.getElementById('dev-menu-toggle');
+                const panel = document.getElementById('dev-menu-panel');
+                const closeBtn = document.getElementById('dev-menu-close');
+                const emailInput = document.getElementById('dev-login-email');
+                const form = document.getElementById('dev-login-form');
+
+                const togglePanel = () => {
+                    panel.classList.toggle('hidden');
+                };
+
+                toggle?.addEventListener('click', togglePanel);
+                closeBtn?.addEventListener('click', togglePanel);
+
+                document.querySelectorAll('[data-dev-login-email]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        emailInput.value = btn.dataset.devLoginEmail || '';
+                        form.submit();
+                    });
+                });
+            })();
+        </script>
+    @endif
+
     @stack('scripts')
 
     @livewireScripts
