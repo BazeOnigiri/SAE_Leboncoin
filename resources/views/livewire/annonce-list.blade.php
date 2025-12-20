@@ -5,7 +5,9 @@
             || (!empty($dateArrivee) && !empty($dateDepart))
             || ($nbVoyageurs > 1)
             || ($nbChambres > 0)
-            || !empty($selectedCommodites);
+            || !empty($selectedCommodites)
+            || !empty($minPrice)
+            || !empty($maxPrice);
     @endphp
 
     <h1 class="text-xl font-bold mb-6">Annonces Location vacances</h1>

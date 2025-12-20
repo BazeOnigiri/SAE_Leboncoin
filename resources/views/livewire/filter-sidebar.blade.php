@@ -124,10 +124,15 @@
 
             <div class="flex items-center justify-between mt-6">
                 <div class="flex items-center gap-4">
+                    <button 
+                        wire:click="$set('nbChambres', 0)"
+                        class="border rounded-lg px-4 py-2 {{ $nbChambres == 0 ? 'bg-[#ea580c] text-white border-[#ea580c]' : 'border-gray-300 hover:border-slate-400' }}">
+                        Tout
+                    </button>
                     @foreach([1, 2, 3, 4, 5, 6] as $num)
                         <button 
                             wire:click="$set('nbChambres', {{ $num }})"
-                            class="border rounded-lg px-4 py-2 {{ $nbChambres == $num ? 'bg-slate-900 text-white border-slate-900' : 'border-gray-300 hover:border-slate-400' }}">
+                            class="border rounded-lg px-4 py-2 {{ $nbChambres == $num ? 'bg-[#ea580c] text-white border-[#ea580c]' : 'border-gray-300 hover:border-slate-400' }}">
                             {{ $num }}{{ $num == 6 ? '+' : '' }}
                         </button>
                     @endforeach
@@ -283,7 +288,7 @@
 
 
     <div class="p-4 border-t border-gray-200 flex items-center justify-between bg-white">
-        <button wire:click="$set('selectedTypes', []); $set('selectedEquipements', []); $set('selectedExterieur', []); $set('selectedServices', []); $set('minPrice', null); $set('maxPrice', null); $set('nbChambres', 0);" class="text-slate-900 font-medium px-4 py-2 hover:underline decoration-1 underline-offset-4">
+        <button wire:click="resetFilters" class="text-slate-900 font-medium px-4 py-2 hover:underline decoration-1 underline-offset-4">
             Tout Effacer
         </button>
 

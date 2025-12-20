@@ -76,6 +76,20 @@ class FilterSidebar extends Component
         $this->showTypes = !$this->showTypes;
     }
 
+    public function resetFilters()
+    {
+        $this->selectedTypes = [];
+        $this->selectedEquipements = [];
+        $this->selectedExterieur = [];
+        $this->selectedServices = [];
+        $this->minPrice = null;
+        $this->maxPrice = null;
+        $this->nbChambres = 0;
+        $this->nbVoyageurs = 1;
+        $this->dateArrivee = '';
+        $this->dateDepart = '';
+    }
+
     public function applyFilters()
     {
         $allCommodites = array_merge(
