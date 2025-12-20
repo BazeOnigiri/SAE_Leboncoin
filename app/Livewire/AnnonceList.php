@@ -10,20 +10,38 @@ use App\Models\Ville;
 use App\Models\Departement;
 use App\Models\Region;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Illuminate\Support\Facades\Cache;
 
 class AnnonceList extends Component
 {
     public $markers = [];
+
+    #[Url]
     public $location = ''; 
+
+    #[Url]
     public $filterTypes = [];
+
+    #[Url]
     public $dateArrivee = '';
+
+    #[Url]
     public $dateDepart = '';
+
+    #[Url]
     public $nbVoyageurs = 1;
+
+    #[Url]
     public $nbChambres = 0;
+
+    #[Url]
     public $minPrice = null;
+
+    #[Url]
     public $maxPrice = null;
+
+    #[Url]
     public $selectedCommodites = [];
 
     public function saveSearch()
