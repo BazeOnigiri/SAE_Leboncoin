@@ -79,6 +79,7 @@ Route::middleware([
         Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
         Route::get('/favorites', [UserAccountController::class, 'favorites'])->name('user.favorites');
         Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
+        Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
 
         Route::prefix('services-petites-annonces')
         ->as('services-petites-annonces.')

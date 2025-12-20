@@ -70,6 +70,14 @@ class UserAccountController extends Controller
         ]);
     }
 
+    public function destroySearch($id)
+    {
+        $search = Auth::user()->recherches()->findOrFail($id);
+        $search->delete();
+
+        return back()->with('success', 'Recherche supprimée avec succès.');
+    }
+
     public function spaces()
     {
         return view('user-account.spaces');
