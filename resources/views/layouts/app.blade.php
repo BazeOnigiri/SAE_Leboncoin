@@ -96,7 +96,7 @@
                     <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
 
-                <a href="#" class="relative hidden lg:flex flex-col items-center gap-1 group">
+                <a href="{{ route('user.favorites') }}" class="relative hidden lg:flex flex-col items-center gap-1 group">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                         <path stroke-linecap="round" stroke-linejoin="round"

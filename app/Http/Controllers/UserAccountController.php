@@ -53,6 +53,11 @@ class UserAccountController extends Controller
         return view('user-account.annonces', compact('annonces'));
     }
 
+    public function favorites()
+    {
+        return view('user-account.favorites');
+    }
+
     public function spaces()
     {
         return view('user-account.spaces');

@@ -78,6 +78,7 @@ Route::middleware([
         Route::get('/compte/parametres', [UserAccountController::class, 'settings'])->name('user.settings');
         Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
         Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
+        Route::get('/favorites', [UserAccountController::class, 'favorites'])->name('user.favorites');
 
         Route::prefix('services-petites-annonces')
         ->as('services-petites-annonces.')
