@@ -75,14 +75,14 @@
                                 <div class="flex items-start gap-4">
                                     <a href="{{ route('home', [
                                         'location' => $search->ville ? $search->ville->nomville : ($search->departement ? $search->departement->nomdepartement : ($search->region ? $search->region->nomregion : '')),
-                                        'minPrice' => $search->prixminimum,
-                                        'maxPrice' => $search->prixmaximum,
-                                        'nbVoyageurs' => $search->capaciteminimumvoyageur ?? 1,
-                                        'nbChambres' => $search->nombreminimumchambre ?? 0,
                                         'dateArrivee' => $search->dateDebut ? $search->dateDebut->date : '',
                                         'dateDepart' => $search->dateFin ? $search->dateFin->date : '',
+                                        'nbVoyageurs' => $search->capaciteminimumvoyageur ?? 1,
+                                        'nbChambres' => $search->nombreminimumchambre ?? 0,
+                                        'minPrice' => $search->prixminimum,
+                                        'maxPrice' => $search->prixmaximum,
                                         'filterTypes' => $search->typesHebergement->pluck('idtypehebergement')->toArray(),
-                                        'selectedCommodites' => $search->commodites->pluck('idcommodite')->toArray(),
+                                        'commodites' => $search->commodites->pluck('idcommodite')->toArray()
                                     ]) }}" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Voir</a>
                                     <form method="POST" action="{{ route('user.searches.delete', $search->idrecherche) }}" onsubmit="return confirm('Supprimer cette recherche ?');">
                                         @csrf

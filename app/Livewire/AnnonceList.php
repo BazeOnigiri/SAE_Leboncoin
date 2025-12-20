@@ -10,39 +10,34 @@ use App\Models\Ville;
 use App\Models\Departement;
 use App\Models\Region;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Url;
+use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Cache;
 
 class AnnonceList extends Component
 {
     public $markers = [];
-
-    #[Url]
     public $location = ''; 
-
-    #[Url]
     public $filterTypes = [];
-
-    #[Url]
     public $dateArrivee = '';
-
-    #[Url]
     public $dateDepart = '';
-
-    #[Url]
     public $nbVoyageurs = 1;
-
-    #[Url]
     public $nbChambres = 0;
-
-    #[Url]
     public $minPrice = null;
-
-    #[Url]
     public $maxPrice = null;
-
-    #[Url]
     public $selectedCommodites = [];
+
+    public function mount()
+    {
+        $this->location = request()->query('location', '');
+        $this->dateArrivee = request()->query('dateArrivee', '');
+        $this->dateDepart = request()->query('dateDepart', '');
+        $this->nbVoyageurs = (int)request()->query('nbVoyageurs', 1);
+        $this->nbChambres = (int)request()->query('nbChambres', 0);
+        $this->minPrice = request()->query('minPrice');
+        $this->maxPrice = request()->query('maxPrice');
+        $this->filterTypes = request()->query('filterTypes', []);
+        $this->selectedCommodites = request()->query('commodites', []);
+    }
 
     public function saveSearch()
     {

@@ -69,6 +69,19 @@ class FilterSidebar extends Component
                 $this->services = $commodites;
             }
         }
+
+        $this->dateArrivee = request()->query('dateArrivee', '');
+        $this->dateDepart = request()->query('dateDepart', '');
+        $this->nbVoyageurs = (int)request()->query('nbVoyageurs', 1);
+        $this->nbChambres = (int)request()->query('nbChambres', 0);
+        $this->minPrice = request()->query('minPrice');
+        $this->maxPrice = request()->query('maxPrice');
+        $this->selectedTypes = request()->query('filterTypes', []);
+        
+        $commoditesFromUrl = request()->query('commodites', []);
+        $this->selectedEquipements = array_intersect($commoditesFromUrl, array_column($this->equipements, 'id'));
+        $this->selectedExterieur = array_intersect($commoditesFromUrl, array_column($this->exterieurs, 'id'));
+        $this->selectedServices = array_intersect($commoditesFromUrl, array_column($this->services, 'id'));
     }
 
     public function toggleTypes()

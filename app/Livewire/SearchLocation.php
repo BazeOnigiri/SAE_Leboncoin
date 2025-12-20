@@ -8,6 +8,11 @@ class SearchLocation extends Component
 {
     public string $search = '';
 
+    public function mount()
+    {
+        $this->search = request()->query('location', '');
+    }
+
     public function setLocation($nom)
     {
         $this->search = $nom;
