@@ -60,7 +60,14 @@ class UserAccountController extends Controller
 
     public function searches()
     {
-        return view('user-account.searches');
+        $searches = Auth::user()->recherches()
+            ->with(['ville', 'departement', 'region', 'dateDebut', 'dateFin', 'typesHebergement', 'commodites'])
+            ->orderBy('idrecherche', 'desc')
+            ->get();
+
+        return view('user-account.searches', [
+            'searches' => $searches
+        ]);
     }
 
     public function spaces()

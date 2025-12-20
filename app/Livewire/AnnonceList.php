@@ -5,8 +5,13 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Annonce;
 use App\Models\Date;
+use App\Models\Recherche;
+use App\Models\Ville;
+use App\Models\Departement;
+use App\Models\Region;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
-use Illuminate\Support\Facades\Cache; 
+use Illuminate\Support\Facades\Cache;
 
 class AnnonceList extends Component
 {
@@ -20,6 +25,70 @@ class AnnonceList extends Component
     public $minPrice = null;
     public $maxPrice = null;
     public $selectedCommodites = [];
+
+    public function saveSearch()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('auth.check');
+        }
+
+        $idDateDebut = null;
+        if ($this->dateArrivee) {
+            $idDateDebut = Date::firstOrCreate(['date' => $this->dateArrivee])->iddate;
+        }
+
+        $idDateFin = null;
+        if ($this->dateDepart) {
+            $idDateFin = Date::firstOrCreate(['date' => $this->dateDepart])->iddate;
+        }
+
+        $idVille = null;
+        $idDepartement = null;
+        $idRegion = null;
+
+        if ($this->location) {
+            $ville = Ville::where('nomville', 'ilike', $this->location)->first();
+            if ($ville) {
+                $idVille = $ville->idville;
+                $idDepartement = $ville->iddepartement; 
+            } else {
+                $dept = Departement::where('nomdepartement', 'ilike', $this->location)->first();
+                if ($dept) {
+                    $idDepartement = $dept->iddepartement;
+                } else {
+                    $region = Region::where('nomregion', 'ilike', $this->location)->first();
+                    if ($region) {
+                        $idRegion = $region->idregion;
+                    }
+                }
+            }
+        }
+
+        $recherche = Recherche::create([
+            'idutilisateur' => Auth::id(),
+            'idville' => $idVille,
+            'iddepartement' => $idDepartement,
+            'idregion' => $idRegion,
+            'iddatedebutrecherche' => $idDateDebut,
+            'iddatefinrecherche' => $idDateFin,
+            'capaciteminimumvoyageur' => $this->nbVoyageurs > 1 ? $this->nbVoyageurs : null,
+            'nombreminimumchambre' => $this->nbChambres > 0 ? $this->nbChambres : null,
+            'prixminimum' => ($this->minPrice === '' || $this->minPrice === null) ? null : $this->minPrice,
+            'prixmaximum' => ($this->maxPrice === '' || $this->maxPrice === null) ? null : $this->maxPrice,
+            'paiementenligne' => false, 
+        ]);
+
+        if (!empty($this->filterTypes)) {
+            $recherche->typesHebergement()->attach($this->filterTypes);
+        }
+
+        if (!empty($this->selectedCommodites)) {
+            $recherche->commodites()->attach($this->selectedCommodites);
+        }
+
+        $this->dispatch('search-saved'); 
+        back()->with('success', 'Recherche sauvegardée avec succès !');
+    }
 
     #[On('locationSelected')] 
     public function updateLocation($nom) { $this->location = $nom; }

@@ -20,7 +20,6 @@
                 alertDiv.remove();
             }, 8000);
         </script>
-</div>
 @endif
 
 @if ($errors->has('error'))
