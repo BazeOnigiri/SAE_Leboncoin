@@ -16,9 +16,22 @@ class FilterSidebar extends Component
     public $dateDepart = '';
     public $nbVoyageurs = 1;
     public $nbChambres = 0;
-    public array $categoriesCommodites = [];
-    public array $selectedCommodites = [];
-    public bool $showCommodites = false;
+    public $minPrice = null;
+    public $maxPrice = null;
+    
+    // Categories
+    public array $equipements = [];
+    public array $exterieurs = [];
+    public array $services = [];
+
+    // Selections
+    public array $selectedEquipements = [];
+    public array $selectedExterieur = [];
+    public array $selectedServices = [];
+
+    public bool $showEquipements = false;
+    public bool $showExterieur = false;
+    public bool $showServices = false;
 
     public function mount()
     {
@@ -29,22 +42,33 @@ class FilterSidebar extends Component
                 ->toArray();
         });
 
-        $this->categoriesCommodites = Cache::rememberForever('categories_commodites', function () {
-            return \App\Models\Categorie::with('commodites')
-                ->get()
-                ->map(function ($cat) {
-                    return [
-                        'id' => $cat->idcategorie,
-                        'nom' => $cat->nomcategorie,
-                        'commodites' => $cat->commodites->map(function ($com) {
-                            return [
-                                'id' => $com->idcommodite,
-                                'nom' => $com->nomcommodite
-                            ];
-                        })->toArray()
-                    ];
-                })->toArray();
+        $categories = Cache::rememberForever('categories_commodites_full', function () {
+            return \App\Models\Categorie::with('commodites')->get();
         });
+
+        foreach ($categories as $cat) {
+            $commodites = $cat->commodites->map(function ($com) {
+                return [
+                    'idequipement' => $com->idcommodite, 
+                    'idexterieur' => $com->idcommodite,
+                    'idservice' => $com->idcommodite,
+                    'nomequipement' => $com->nomcommodite,
+                    'nomexterieur' => $com->nomcommodite,
+                    'nomservice' => $com->nomcommodite,
+                    'id' => $com->idcommodite,
+                    'nom' => $com->nomcommodite
+                ];
+            })->toArray();
+
+            // 1=Equipements, 2=Extérieur, 3=Services
+            if ($cat->nomcategorie === 'Équipements' || $cat->idcategorie == 1) {
+                $this->equipements = $commodites;
+            } elseif ($cat->nomcategorie === 'Extérieur' || $cat->idcategorie == 2) {
+                $this->exterieurs = $commodites;
+            } elseif ($cat->nomcategorie === 'Services & accessibilité' || $cat->idcategorie == 3) {
+                $this->services = $commodites;
+            }
+        }
     }
 
     public function toggleTypes()
@@ -54,13 +78,21 @@ class FilterSidebar extends Component
 
     public function applyFilters()
     {
+        $allCommodites = array_merge(
+            $this->selectedEquipements,
+            $this->selectedExterieur,
+            $this->selectedServices
+        );
+
         $this->dispatch('filtersUpdated', 
             types: $this->selectedTypes,
             dateArrivee: $this->dateArrivee,
             dateDepart: $this->dateDepart,
             nbVoyageurs: $this->nbVoyageurs,
             nbChambres: $this->nbChambres,
-            commodites: $this->selectedCommodites
+            minPrice: $this->minPrice,
+            maxPrice: $this->maxPrice,
+            commodites: $allCommodites
         );
         
         $this->dispatch('close-filter-panel'); 

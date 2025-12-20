@@ -17,19 +17,23 @@ class AnnonceList extends Component
     public $dateDepart = '';
     public $nbVoyageurs = 1;
     public $nbChambres = 0;
+    public $minPrice = null;
+    public $maxPrice = null;
     public $selectedCommodites = [];
 
     #[On('locationSelected')] 
     public function updateLocation($nom) { $this->location = $nom; }
 
     #[On('filtersUpdated')]
-    public function updateFilters($types, $dateArrivee, $dateDepart, $nbVoyageurs = 1, $nbChambres = 0, $commodites = []) 
+    public function updateFilters(array $types = [], string $dateArrivee = '', string $dateDepart = '', int $nbVoyageurs = 1, int $nbChambres = 0, $minPrice = null, $maxPrice = null, array $commodites = [])  
     {
         $this->filterTypes = $types;
         $this->dateArrivee = $dateArrivee; 
         $this->dateDepart = $dateDepart;
         $this->nbVoyageurs = $nbVoyageurs;
         $this->nbChambres = $nbChambres;
+        $this->minPrice = $minPrice;
+        $this->maxPrice = $maxPrice;
         $this->selectedCommodites = $commodites;
     }
 
@@ -68,14 +72,21 @@ class AnnonceList extends Component
         }
         
         if ($this->nbVoyageurs > 1) {
-            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_par_capacite(?::int))", [$this->nbVoyageurs]);
+            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_par_capacite(?))", [(int)$this->nbVoyageurs]);
         }
         if ($this->nbChambres > 0) {
-            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_par_nb_chambres(?::int))", [$this->nbChambres]);
+            $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_par_nb_chambres(?))", [(int)$this->nbChambres]);
         }
         if (!empty($this->selectedCommodites)) {
-            $commoditesStr = '{' . implode(',', $this->selectedCommodites) . '}';
+            $commoditesStr = '{' . implode(',', array_map('intval', $this->selectedCommodites)) . '}';
             $query->whereRaw("idannonce IN (SELECT id_annonce FROM get_annonces_par_commodites(?::int[]))", [$commoditesStr]);
+        }
+
+        if ($this->minPrice !== null && $this->minPrice !== '') {
+            $query->where('prixnuitee', '>=', (float)$this->minPrice);
+        }
+        if ($this->maxPrice !== null && $this->maxPrice !== '') {
+            $query->where('prixnuitee', '<=', (float)$this->maxPrice);
         }
 
         $annonces = $query->get();
