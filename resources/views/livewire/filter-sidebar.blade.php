@@ -100,14 +100,14 @@
                 <div class="flex-1">
                     <label class="text-slate-800 text-base mb-2 block">Minimum</label>
                     <div class="flex items-center border border-slate-400 rounded-lg overflow-hidden focus-within:ring-1 focus-within:ring-slate-900 focus-within:border-slate-900 h-12">
-                        <input type="number" wire:model.live="minPrice" class="w-full h-full px-4 outline-none text-slate-900 placeholder-transparent" placeholder="Min">
+                        <input type="number" min="0" wire:model.live="minPrice" class="w-full h-full px-4 outline-none text-slate-900 placeholder-transparent" placeholder="Min">
                         <div class="h-full px-4 border-l border-slate-300 bg-white flex items-center text-slate-900">€</div>
                     </div>
                 </div>
                 <div class="flex-1">
                     <label class="text-slate-800 text-base mb-2 block">Maximum</label>
                     <div class="flex items-center border border-slate-400 rounded-lg overflow-hidden focus-within:ring-1 focus-within:ring-slate-900 focus-within:border-slate-900 h-12">
-                        <input type="number" wire:model.live="maxPrice" class="w-full h-full px-4 outline-none text-slate-900 placeholder-transparent" placeholder="Max">
+                        <input type="number" min="0" wire:model.live="maxPrice" class="w-full h-full px-4 outline-none text-slate-900 placeholder-transparent" placeholder="Max">
                         <div class="h-full px-4 border-l border-slate-300 bg-white flex items-center text-slate-900">€</div>
                     </div>
                 </div>

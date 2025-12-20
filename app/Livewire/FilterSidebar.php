@@ -92,6 +92,20 @@ class FilterSidebar extends Component
 
     public function applyFilters()
     {
+        if ($this->dateArrivee && $this->dateDepart && $this->dateArrivee > $this->dateDepart) {
+            $temp = $this->dateArrivee;
+            $this->dateArrivee = $this->dateDepart;
+            $this->dateDepart = $temp;
+        }
+
+        if ($this->minPrice !== null && $this->maxPrice !== null && 
+            $this->minPrice !== '' && $this->maxPrice !== '' && 
+            (float)$this->minPrice > (float)$this->maxPrice) {
+            $temp = $this->minPrice;
+            $this->minPrice = $this->maxPrice;
+            $this->maxPrice = $temp;
+        }
+
         $allCommodites = array_merge(
             $this->selectedEquipements,
             $this->selectedExterieur,
