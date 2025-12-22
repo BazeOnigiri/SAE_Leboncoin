@@ -11,7 +11,7 @@
                     <div class="relative bg-white shadow rounded-lg p-4 hover:shadow-md transition group">
                         <div class="flex items-center justify-between gap-4 relative z-10">
                             <div class="space-y-1">
-                                <p class="text-xs text-gray-500">#{{ $user->idutilisateur }}</p>
+                                <a href="{{ route('user.profile', ['id' => $user->idutilisateur]) }}" class="text-xs text-gray-500">#{{ $user->idutilisateur }}</a>
                                 @if($user->particulier())
                                     <p class="text-sm font-medium text-gray-900">Particulier</p>
                                     <p class="text-lg font-semibold text-gray-900">{{ $user->particulier->prenomutilisateur }} {{ $user->particulier->nomutilisateur }}</p>
@@ -20,12 +20,23 @@
                                     <p class="text-sm font-medium text-gray-900">Professionnel</p>
                                 @endif
                                 <p class="text-sm text-gray-600">{{ $user->email }}</p>
-                                <div class="flex space-x-4">
-                                    <img src="data:image/jpeg;base64,{{base64_encode(\Illuminate\Support\Facades\Storage::disk('local')->get('/cni/' . $user->idutilisateur . '/recto/recto.jpg'))}}" alt="">
-                                    <img src="data:image/jpeg;base64,{{base64_encode(\Illuminate\Support\Facades\Storage::disk('local')->get('/cni/' . $user->idutilisateur . '/verso/verso.jpg'))}}" alt="">
-                                </div>
+                                @php
+                                    $rectoFiles = Storage::disk('local')->files("cni/{$user->idutilisateur}/recto");
+                                    $versoFiles = Storage::disk('local')->files("cni/{$user->idutilisateur}/verso");
+                                    $rectoPath = !empty($rectoFiles) ? $rectoFiles[0] : null;
+                                    $versoPath = !empty($versoFiles) ? $versoFiles[0] : null;
+                                @endphp
+
+                                @if($rectoPath && $versoPath)
+                                    <div class="flex space-x-4">
+                                        <img src="data:image/jpeg;base64,{{base64_encode(Storage::disk('local')->get($rectoPath))}}" 
+                                             alt="Recto" class="max-w-xs">
+                                        <img src="data:image/jpeg;base64,{{base64_encode(Storage::disk('local')->get($versoPath))}}" 
+                                             alt="Verso" class="max-w-xs">
+                                    </div>
+                                @endif
                                 <div class=" flex space-x-4">
-                                    <form action="" method="POST" data-stop-prop>
+                                    <form action="{{ route('services-petites-annonces.verify', ['id' => $user->idutilisateur]) }}" method="POST" data-stop-prop>
                                         @csrf
                                         <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Vérifier</button>
                                     </form>

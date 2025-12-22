@@ -5,32 +5,16 @@ use App\Http\Controllers\ConnexionController;
 use App\Http\Controllers\CNIController;
 use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\ServicePetiteAnnonceController;
+use App\Http\Controllers\DevController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\IncidentController;
-use Illuminate\Http\Request;
-use App\Models\User;
 
 if (app()->environment('local')) {
-    Route::post('/dev/login-as', function (Request $request) {
-        $email = $request->input('email');
-
-        abort_if(!$email, 400);
-
-        $user = User::where('email', $email)->first();
-        abort_if(!$user, 404);
-
-        if (!$user->hasVerifiedEmail()) {
-            $user->forceFill(['email_verified_at' => now()])->save();
-        }
-
-        Auth::logout();
-        Auth::guard('web')->login($user, true);
-        $request->session()->regenerate();
-        $request->session()->put('auth.password_confirmed_at', time());
-
-        return redirect()->intended('/');
-    })->name('dev.login-as');
+    Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
+    Route::post('/dev/create-user', [DevController::class, 'createUser'])->name('dev.create-user');
+    Route::post('/dev/create-annonce', [DevController::class, 'createAnnonce'])->name('dev.create-annonce');
+    Route::post('/dev/create-cni', [DevController::class, 'createCni'])->name('dev.create-cni');
 }
 
 Route::middleware(['auth'])->group(function () {
@@ -87,6 +71,8 @@ Route::middleware([
         ->middleware('can:annonces.verif')
         ->group(function () {
             Route::get('/', [ServicePetiteAnnonceController::class, 'index'])->name('index');
+            Route::post('/{id}', [ServicePetiteAnnonceController::class, 'verify'])->name('verify');
+            Route::delete('/{id}', [ServicePetiteAnnonceController::class, 'reject'])->name('reject');
         });
     });
 
