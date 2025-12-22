@@ -175,6 +175,10 @@
                 <button id="dev-menu-close" type="button" class="text-gray-500 hover:text-gray-700">X</button>
             </div>
             <div class="max-h-72 overflow-y-auto divide-y divide-gray-100">
+                <form action="/logout" method="POST">
+                    @csrf
+                    <input type="submit" class="w-full text-left px-3 py-2 hover:bg-orange-50 flex flex-col bg-white border-0" value="Se déconnecter">
+                </form>
                 @foreach($devAccounts as $account)
                 <button type="button" data-dev-login-email="{{ $account['email'] }}" class="w-full text-left px-3 py-2 hover:bg-orange-50 flex flex-col">
                     <span class="text-sm font-semibold text-gray-900">{{ $account['label'] }}</span>
