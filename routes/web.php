@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConnexionController;
 use App\Http\Controllers\CNIController;
 use App\Http\Controllers\UserAccountController;
+use App\Http\Controllers\ServicePetiteAnnonceController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\IncidentController;
@@ -81,15 +82,14 @@ Route::middleware([
         Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
         Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
 
-        Route::prefix('services-petites-annonces')
+        Route::prefix('/services-petites-annonces')
         ->as('services-petites-annonces.')
         ->middleware('can:annonces.verif')
         ->group(function () {
-            Route::get('/', [AnnonceController::class, 'annoncesAverifier'])->name('index');
-            Route::post('/{id}', [AnnonceController::class, 'verifierAnnonce'])->name('verifier');
-            Route::delete('/{id}', [AnnonceController::class, 'deleteAnnonce'])->name('delete');
+            Route::get('/', [ServicePetiteAnnonceController::class, 'index'])->name('index');
         });
     });
+
     Route::get('/check-reservation/{id}', function ($id) {
         return redirect()->route('annonce.view', ['id' => $id]);
     })->middleware('auth')->name('check.reservation');

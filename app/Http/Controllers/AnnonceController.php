@@ -66,58 +66,19 @@ class AnnonceController extends Controller
 
     public function create()
     {
-        if (!auth()->user()->isCNIValidate())
+        if (!auth()->user()->hasCniFiles())
         {
             return redirect()->route('cni.index')->with('info', 'Vous devez valider votre identité avant de pouvoir publier une annonce.');
         }
+        
         $typeHebergements = TypeHebergement::all();
         $categories = Categorie::with('commodites')->get();
         return view("annonce-create", compact('typeHebergements', 'categories'));
     }
 
-    public function annoncesAverifier()
-    {
-        $annonces = Annonce::where('estverifie', false)
-            ->with(['photos', 'typeHebergement', 'adresse.ville'])
-            ->orderBy('idannonce', 'asc')
-            ->get();
-
-        return view('services.petites-annonces', compact('annonces'));
-    }
-
-    public function verifierAnnonce($id): RedirectResponse
-    {
-        $annonce = Annonce::findOrFail($id);
-        $annonce->estverifie = true;
-        $annonce->save();
-
-        return redirect()->route('services-petites-annonces.index')
-            ->with('success', 'L\'annonce #' . $annonce->idannonce . ' a été validée avec succès.');
-    }
-
-    public function deleteAnnonce($id): RedirectResponse
-    {
-        $annonce = Annonce::with('photos')->findOrFail($id);
-
-        DB::transaction(function () use ($annonce) {
-            DB::table('favoriser')->where('idannonce', $annonce->idannonce)->delete();
-            DB::table('ressembler')->where('idannonce_a', $annonce->idannonce)->orWhere('idannonce_b', $annonce->idannonce)->delete();
-            DB::table('relier')->where('idannonce', $annonce->idannonce)->delete();
-            DB::table('proposer')->where('idannonce', $annonce->idannonce)->delete();
-            DB::table('reservation')->where('idannonce', $annonce->idannonce)->delete();
-            DB::table('avis')->where('idannonce', $annonce->idannonce)->delete();
-
-            $annonce->photos()->delete();
-            $annonce->delete();
-        });
-
-        return redirect()->route('services-petites-annonces.index')
-            ->with('success', 'L\'annonce #' . $annonce->idannonce . ' a été supprimée avec succès.');
-    }
-
     public function store(Request $request)
     {
-        if (!auth()->user()->isCNIValidate())
+        if (!auth()->user()->hasCniFiles())
         {
             return redirect()->route('cni.index')->with('info', 'Vous devez valider votre identité avant de pouvoir publier une annonce.');
         }

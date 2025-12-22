@@ -1,39 +1,42 @@
 @extends('layouts.app')
 @section('content')
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 class="text-2xl font-bold mb-6">Annonces à vérifier</h1>
+        <h1 class="text-2xl font-bold mb-6">Utilisateurs à vérifier</h1>
 
-        @if ($annonces->isEmpty())
-            <p class="text-gray-500">Toutes les annonces ont été vérifiées.</p>
+        @if ($users->isEmpty())
+            <p class="text-gray-500">Tous les utilisateurs ont été vérifiés.</p>
         @else
             <div class="space-y-4">
-                @foreach ($annonces as $annonce)
-                    <a href="{{ route('annonce.view', $annonce->idannonce) }}" class="mb-4 block">
+                @foreach ($users as $user)
                     <div class="relative bg-white shadow rounded-lg p-4 hover:shadow-md transition group">
                         <div class="flex items-center justify-between gap-4 relative z-10">
                             <div class="space-y-1">
-                                <div class="text-xs text-gray-500">#{{ $annonce->idannonce }}</div>
-                                <div class="text-lg font-semibold text-gray-900">{{ $annonce->titreannonce }}</div>
-                                <div class="text-sm text-gray-500">
-                                    {{ $annonce->typeHebergement->nomtypehebergement ?? 'Type inconnu' }}
-                                    •
-                                    {{ $annonce->adresse->ville->nomville ?? 'Lieu inconnu' }}
+                                <p class="text-xs text-gray-500">#{{ $user->idutilisateur }}</p>
+                                @if($user->particulier())
+                                    <p class="text-sm font-medium text-gray-900">Particulier</p>
+                                    <p class="text-lg font-semibold text-gray-900">{{ $user->particulier->prenomutilisateur }} {{ $user->particulier->nomutilisateur }}</p>
+                                    <p class="text-sm text-gray-600">Né(e) le {{ $user->particulier->dateNaissance ? \Carbon\Carbon::parse($user->particulier->dateNaissance->date)->format('d/m/Y') : 'Date inconnue' }}</p>
+                                    @elseif($user->professionnel())
+                                    <p class="text-sm font-medium text-gray-900">Professionnel</p>
+                                @endif
+                                <p class="text-sm text-gray-600">{{ $user->email }}</p>
+                                <div class="flex space-x-4">
+                                    <img src="data:image/jpeg;base64,{{base64_encode(\Illuminate\Support\Facades\Storage::disk('local')->get('/cni/' . $user->idutilisateur . '/recto/recto.jpg'))}}" alt="">
+                                    <img src="data:image/jpeg;base64,{{base64_encode(\Illuminate\Support\Facades\Storage::disk('local')->get('/cni/' . $user->idutilisateur . '/verso/verso.jpg'))}}" alt="">
                                 </div>
-                            </div>
-                            <div class="flex items-center gap-2 z-20">
-                                <form action="{{ route('services-petites-annonces.verifier', $annonce->idannonce) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" data-stop-prop class="px-3 py-2 rounded-md bg-[#EA580C] text-white text-sm font-semibold hover:bg-[#c2410c] border">Valider</button>
-                                </form>
-                                <form action="{{ route('services-petites-annonces.delete', $annonce->idannonce) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" data-stop-prop class="px-3 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 border">Supprimer</button>
-                                </form>
+                                <div class=" flex space-x-4">
+                                    <form action="" method="POST" data-stop-prop>
+                                        @csrf
+                                        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Vérifier</button>
+                                    </form>
+                                    <form action="" method="POST" data-stop-prop>
+                                        @csrf
+                                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">Rejeter</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </a>
                 @endforeach
             </div>
         @endif

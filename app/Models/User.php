@@ -68,7 +68,7 @@ class User extends Authenticatable
 
     public function isCNIValidate()
     {
-        return is_dir(storage_path('app/private/cni/' . $this->getKey()));
+        return $this->identiteEstVerifie();
     }
 
     /* Un utilisateur a beaucoup ou pas de ... */
@@ -170,6 +170,12 @@ class User extends Authenticatable
     public function identiteEstVerifie(){
         return (bool) $this->identity_verified;
     }
+    
+    public function hasCniFiles()
+    {
+        return is_dir(storage_path('app/private/cni/' . $this->idutilisateur));
+    }
+
     public function estRecommande()
     {
         $bonneNote = ($this->avis_recus_avg_nombreetoiles ?? 0) >= 4;
