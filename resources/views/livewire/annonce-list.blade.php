@@ -27,7 +27,7 @@
 
     <h1 class="text-xl font-bold mb-6">Annonces Location vacances</h1>
     
-    <p class="mb-6 font-bold">{{ $annonces->count() }} annonces {{ $location ? 'pour "' . $location . '"' : '' }}</p>
+    <p class="mb-6 font-bold">{{ $annonces->total() }} annonces {{ $location ? 'pour "' . $location . '"' : '' }}</p>
 
     <div class="flex flex-col lg:flex-row gap-6 relative">
 
@@ -161,6 +161,10 @@
                     <hr class="my-6 opacity-50">
                 @endforeach
             @endif
+
+            <div class="mt-6 flex justify-center">
+                {{ $annonces->links('pagination.custom') }}
+            </div>
         </div>
 
         @if($hasSearch)

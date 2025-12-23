@@ -11,10 +11,12 @@ use App\Models\Departement;
 use App\Models\Region;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Cache;
 
 class AnnonceList extends Component
 {
+    use WithPagination;
     public $markers = [];
     public $location = ''; 
     public $filterTypes = [];
@@ -110,7 +112,10 @@ class AnnonceList extends Component
     }
 
     #[On('locationSelected')] 
-    public function updateLocation($nom) { $this->location = $nom; }
+    public function updateLocation($nom) { 
+        $this->location = $nom; 
+        $this->resetPage();
+    }
 
     #[On('filtersUpdated')]
     public function updateFilters(array $types = [], string $dateArrivee = '', string $dateDepart = '', int $nbVoyageurs = 1, int $nbChambres = 0, $minPrice = null, $maxPrice = null, array $commodites = [])  
@@ -123,6 +128,7 @@ class AnnonceList extends Component
         $this->minPrice = $minPrice;
         $this->maxPrice = $maxPrice;
         $this->selectedCommodites = $commodites;
+        $this->resetPage();
     }
 
     public function render()
@@ -177,11 +183,14 @@ class AnnonceList extends Component
             $query->where('prixnuitee', '<=', (float)$this->maxPrice);
         }
 
-        $annonces = $query->get();
-        $cacheKeys = $annonces->map(fn($a) => 'gps_v2_adresse_' . $a->idadresse)->toArray();
+        // Clone query to get all announcements for map markers
+        $mapQuery = clone $query;
+        $allAnnoncesForMap = $mapQuery->get();
+
+        $cacheKeys = $allAnnoncesForMap->map(fn($a) => 'gps_v2_adresse_' . $a->idadresse)->toArray();
         $allCoords = Cache::many($cacheKeys);
 
-        $this->markers = $annonces->map(function ($annonce) use ($allCoords) {
+        $this->markers = $allAnnoncesForMap->map(function ($annonce) use ($allCoords) {
             if (!$annonce->adresse) return null; 
 
             $key = 'gps_v2_adresse_' . $annonce->idadresse;
@@ -199,6 +208,8 @@ class AnnonceList extends Component
                 'img' => $annonce->photos->first()->lienphoto ?? null 
             ];
         })->filter()->values()->toArray(); 
+
+        $annonces = $query->paginate(20); 
 
         $this->dispatch('update-map');
 
