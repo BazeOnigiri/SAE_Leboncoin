@@ -12,12 +12,15 @@
                         <div class="flex items-center justify-between gap-4 relative z-10">
                             <div class="space-y-1">
                                 <a href="{{ route('user.profile', ['id' => $user->idutilisateur]) }}" class="text-xs text-gray-500">#{{ $user->idutilisateur }}</a>
-                                @if($user->particulier())
+                                @if($user->particulier()->exists())
                                     <p class="text-sm font-medium text-gray-900">Particulier</p>
-                                    <p class="text-lg font-semibold text-gray-900">{{ $user->particulier->prenomutilisateur }} {{ $user->particulier->nomutilisateur }}</p>
+                                    <p class="text-lg font-semibold text-gray-900">{{ $user->particulier->prenomutilisateur ?? 'Pas de prénom' }} {{ $user->particulier->nomutilisateur ?? 'Pas de nom' }}</p>
                                     <p class="text-sm text-gray-600">Né(e) le {{ $user->particulier->dateNaissance ? \Carbon\Carbon::parse($user->particulier->dateNaissance->date)->format('d/m/Y') : 'Date inconnue' }}</p>
-                                    @elseif($user->professionnel())
+                                @elseif($user->professionnels()->exists())
                                     <p class="text-sm font-medium text-gray-900">Professionnel</p>
+                                    <p class="text-sm font-medium text-gray-900">SIRET : {{ $user->professionnels()->first()->numsiret ?? 'Inconnu' }}</p>
+                                    <p class="text-lg font-semibold text-gray-900">{{ $user->professionnels()->first()->nomsociete ?? 'Nom inconnu' }}</p>
+                                    <p class="text-sm text-gray-600">Secteur : {{ $user->professionnels()->first()->secteuractivite ?? 'Inconnu' }}</p>
                                 @endif
                                 <p class="text-sm text-gray-600">{{ $user->email }}</p>
                                 @php
