@@ -43,7 +43,7 @@
                                         @csrf
                                         <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Vérifier</button>
                                     </form>
-                                    <form action="" method="POST" data-stop-prop>
+                                    <form action="{{ route('services-petites-annonces.reject', ['id' => $user->idutilisateur]) }}" method="POST" data-stop-prop>
                                         @csrf
                                         <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">Rejeter</button>
                                     </form>
