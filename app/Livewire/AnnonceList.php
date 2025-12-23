@@ -26,6 +26,8 @@ class AnnonceList extends Component
     public $maxPrice = null;
     public $selectedCommodites = [];
 
+    public $favoriteIds = [];
+
     public function mount()
     {
         $this->location = request()->query('location', '');
@@ -37,6 +39,10 @@ class AnnonceList extends Component
         $this->maxPrice = request()->query('maxPrice');
         $this->filterTypes = request()->query('filterTypes', []);
         $this->selectedCommodites = request()->query('commodites', []);
+
+        if (Auth::check()) {
+            $this->favoriteIds = Auth::user()->annoncesFavorisees()->pluck('favoriser.idannonce')->toArray();
+        }
     }
 
     public function saveSearch()

@@ -63,6 +63,39 @@
                                     <div class="dot{{ $annonce->idannonce }} w-2 h-2 rounded-full bg-white/50 transition-all duration-300"></div>
                                 @endforeach
                             </div>
+                            
+                            @auth
+                            <div x-data="{ 
+                                isFavorite: {{ in_array($annonce->idannonce, $favoriteIds ?? []) ? 'true' : 'false' }},
+                                loading: false
+                            }" class="absolute top-2 right-2 z-20">
+                                <button @click="
+                                    loading = true;
+                                    isFavorite = !isFavorite;
+                                    fetch('{{ route('user.favorites.toggle') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                            'Accept': 'application/json'
+                                        },
+                                        body: JSON.stringify({ idannonce: {{ $annonce->idannonce }} })
+                                    }).then(() => loading = false).catch(() => { isFavorite = !isFavorite; loading = false; })
+                                " class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white transition relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                                        class="w-5 h-5 transition-colors duration-300"
+                                        :class="isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                    </svg>
+                                    <span x-show="loading" class="absolute inset-0 flex items-center justify-center bg-white/80 rounded-full">
+                                        <svg class="animate-spin h-4 w-4 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                            @endauth
                         </div>
 
                         <script>
