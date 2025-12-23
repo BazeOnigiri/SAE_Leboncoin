@@ -58,7 +58,7 @@
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="font-bold text-gray-900 line-clamp-1 text-lg">{{ $annonce->titreannonce }}</h3>
                                     <div class="flex flex-col items-end">
-                                         <span class="font-bold text-gray-900 border border-gray-100 bg-gray-50 px-2 py-0.5 rounded text-nowrap">{{ $annonce->prixnuitee }} € <span class="text-xs font-normal text-gray-500">/nuit</span></span>
+                                        <span class="font-bold text-gray-900 border border-gray-100 bg-gray-50 px-2 py-0.5 rounded text-nowrap">{{ $annonce->prixnuitee }} € <span class="text-xs font-normal text-gray-500">/nuit</span></span>
                                     </div>
                                 </div>
                                 
