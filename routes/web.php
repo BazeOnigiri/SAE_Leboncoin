@@ -71,8 +71,8 @@ Route::middleware([
         ->middleware('can:annonces.verif')
         ->group(function () {
             Route::get('/', [ServicePetiteAnnonceController::class, 'index'])->name('index');
-            Route::post('/{id}', [ServicePetiteAnnonceController::class, 'verify'])->name('verify');
-            Route::delete('/{id}', [ServicePetiteAnnonceController::class, 'reject'])->name('reject');
+            Route::post('/v/{id}', [ServicePetiteAnnonceController::class, 'verify'])->name('verify');
+            Route::post('/r/{id}', [ServicePetiteAnnonceController::class, 'reject'])->name('reject');
         });
     });
 

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AnnonceRejectedMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 
 class ServicePetiteAnnonceController extends Controller
@@ -28,5 +31,19 @@ class ServicePetiteAnnonceController extends Controller
         $user->save();
 
         return redirect()->route('services-petites-annonces.index')->with('success', 'L\'identité de l\'utilisateur a été vérifiée avec succès.');
+    }
+
+    public function reject($idutilisateur)
+    {
+        $user = User::findOrFail($idutilisateur);
+
+        $cniPath = 'cni/' . $user->idutilisateur;
+        if (Storage::disk('local')->exists($cniPath)) {
+            Storage::disk('local')->deleteDirectory($cniPath);
+        }
+
+        Mail::to($user->email)->send(new AnnonceRejectedMail($user));
+
+        return redirect()->route('services-petites-annonces.index')->with('success', 'La demande de vérification a été rejetée et l\'utilisateur a été notifié par email.');
     }
 }
