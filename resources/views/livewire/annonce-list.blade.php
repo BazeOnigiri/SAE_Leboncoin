@@ -1,5 +1,19 @@
 <div>
-    <x-alert />
+    @if (session('success'))
+    <div x-data="{ show: true }" 
+        x-init="setTimeout(() => show = false, 8000)" 
+        x-show="show" 
+        x-transition.duration.500ms
+        class="bottom-0 right-0 mb-6 mr-6 fixed z-50">
+        <div class="p-4 bg-green-50 border-l-4 border-green-500 text-green-800 border rounded-md shadow-lg relative overflow-hidden">
+            {{ session('success') }}
+            <div class="mt-2 h-1 bg-green-200 overflow-hidden rounded">
+                <div class="h-full bg-green-500 transition-all duration-[8000ms] ease-linear w-0"
+                    x-init="setTimeout(() => $el.style.width = '100%', 50)"></div>
+            </div>
+        </div>
+    </div>
+    @endif
     @php
         $hasSearch = !empty($location) 
             || !empty($filterTypes) 
@@ -36,7 +50,7 @@
                             <button onclick="scrollLeft{{ $annonce->idannonce }}()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">‹</button>
                             <button onclick="scrollRight{{ $annonce->idannonce }}()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">›</button>
                         
-                            <div id="carousel{{ $annonce->idannonce }}" class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scrollbar-hide">
+                            <div id="carousel{{ $annonce->idannonce }}" class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scroll r-hide">
                                 @foreach ($annonce->photos ?? [] as $photo)
                                     <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
                                         <img src="{{ $photo->lienphoto }}" loading="lazy" class="w-full h-full object-cover">
@@ -152,7 +166,6 @@
 
             let bounds = L.latLngBounds();
 
-            // 1. Grouper les marqueurs par coordonnées identiques
             let groups = {};
             markersData.forEach(marker => {
                 let key = marker.lat + '_' + marker.lng;
@@ -160,7 +173,6 @@
                 groups[key].push(marker);
             });
 
-            // 2. Traiter chaque groupe
             Object.values(groups).forEach(group => {
                 let count = group.length;
                 
@@ -168,10 +180,9 @@
                     let lat = parseFloat(marker.lat);
                     let lng = parseFloat(marker.lng);
 
-                    // Si plusieurs marqueurs au même endroit, on les décale en cercle
                     if (count > 1) {
-                        let angle = (index / count) * Math.PI * 2; // Distribution uniforme
-                        let radius = 0.0001; // ~10 mètres de décalage
+                        let angle = (index / count) * Math.PI * 2; 
+                        let radius = 0.0001; 
                         
                         lat += Math.sin(angle) * radius;
                         lng += Math.cos(angle) * radius;
