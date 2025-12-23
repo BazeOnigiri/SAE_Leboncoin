@@ -52,7 +52,13 @@ class AnnonceController extends Controller
         $commoditesGroupees = $annonce->commodites->groupBy(function ($commodite) {
             return $commodite->categorie->nomcategorie ?? 'Autres';
         });
-        return view("annonce-view", compact('annonce', 'commoditesGroupees'));
+
+        $isFavorite = false;
+        if (Auth::check()) {
+            $isFavorite = Auth::user()->annoncesFavorisees()->where('favoriser.idannonce', $id)->exists();
+        }
+
+        return view("annonce-view", compact('annonce', 'commoditesGroupees', 'isFavorite'));
     }
 
     public function show($id)
