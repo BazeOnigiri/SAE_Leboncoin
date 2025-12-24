@@ -322,6 +322,16 @@
         });
     </script>
     @endauth
+
+    <script>
+        var botmanWidget = {
+            aboutText: 'BotMan',
+            introMessage: "Bienvenue dans notre site web",
+            chatServer: "/botman" 
+        };
+    </script>
+    <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
+
 </body>
 
 </html>
