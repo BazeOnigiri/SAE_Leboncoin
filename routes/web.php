@@ -9,6 +9,7 @@ use App\Http\Controllers\DevController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\IncidentController;
+use App\Http\Controllers\BotManController;
 
 if (app()->environment('local')) {
     Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
@@ -83,3 +84,5 @@ Route::middleware([
     })->middleware('auth')->name('check.reservation');
 
     Route::get('/reservation/creer/{id}', [ReservationController::class, 'create'])->name('reservation.create');
+
+    Route::match(['get', 'post'], '/botman','App\Http\Controllers\BotManController@handle');
