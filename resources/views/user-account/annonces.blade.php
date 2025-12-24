@@ -130,10 +130,17 @@
                                     </div>
 
                                     <div class="flex items-center gap-6 mt-4 pt-3 border-t border-gray-100 text-sm font-bold">
-                                        <span class="text-gray-500 flex items-center gap-1">
-                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                            En attente de vérification
-                                        </span>
+                                        @if($annonce->sms_verification_code)
+                                            <a href="{{ route('annonce.verify-sms', $annonce) }}" class="text-orange-600 hover:text-orange-700 flex items-center gap-1 transition group">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                                Vérifier par SMS
+                                            </a>
+                                        @else
+                                            <span class="text-gray-500 flex items-center gap-1">
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                En attente de vérification par notre équipe
+                                            </span>
+                                        @endif
                                         <button class="text-gray-700 hover:text-orange-600 flex items-center gap-1 transition group">
                                             <svg class="w-4 h-4 text-gray-400 group-hover:text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                             Modifier

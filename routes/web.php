@@ -1,5 +1,6 @@
 <?php use Illuminate\Support\Facades\Route; 
 use App\Http\Controllers\AnnonceController; 
+use App\Http\Controllers\AnnonceVerificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConnexionController;
 use App\Http\Controllers\CNIController;
@@ -53,6 +54,10 @@ Route::middleware([
 
         Route::get('/deposer-une-annonce', [AnnonceController::class, 'create'])->name('annonce.create');
         Route::post('/annonce', [AnnonceController::class, 'store'])->name('annonce.store');
+
+        Route::get('/annonce/{annonce}/verify-sms', [AnnonceVerificationController::class, 'show'])->where('annonce', '[0-9]+')->name('annonce.verify-sms');
+        Route::post('/annonce/{annonce}/verify-sms', [AnnonceVerificationController::class, 'verify'])->where('annonce', '[0-9]+')->name('annonce.verify-sms.submit');
+        Route::post('/annonce/{annonce}/verify-sms/resend', [AnnonceVerificationController::class, 'resend'])->where('annonce', '[0-9]+')->name('annonce.verify-sms.resend');
 
         Route::get('/cni', [CNIController::class, 'index'])->name('cni.index');
         Route::post('/cni', [CNIController::class, 'store'])->name('cni.store');

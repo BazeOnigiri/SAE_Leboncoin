@@ -134,6 +134,7 @@ class DevController extends Controller
             'solde' => 0,
             'idadresse' => 1,
             'iddate' => 1,
+            'telephoneutilisateur' => '0767718877',
         ]);
 
         if ($type === 'particulier') {

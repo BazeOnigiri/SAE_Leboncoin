@@ -18,6 +18,7 @@ use App\Models\Ville;
 use App\Models\Categorie;
 use App\Models\Region;
 use App\Models\Departement;
+use App\Services\SmsService;
 use Illuminate\Http\RedirectResponse;
 
 class AnnonceController extends Controller
@@ -249,8 +250,25 @@ class AnnonceController extends Controller
 
                 return $annonce;
             });
+
+            $user = Auth::user();
+            if (!empty($user->telephoneutilisateur)) {
+                $smsService = app(SmsService::class);
+                $code = $smsService->generateCode();
+                
+                $annonce->update([
+                    'sms_verification_code' => $code,
+                    'sms_verification_expires_at' => now()->addMinutes(10),
+                ]);
+
+                $message = "Leboncoin : Votre code de vérification pour l'annonce \"{$annonce->titreannonce}\" est : {$code}. Valide 10 minutes.";
+                $smsService->send($user->telephoneutilisateur, $message);
+
+                return redirect()->route('annonce.verify-sms', $annonce)
+                    ->with('success', 'Annonce créée ! Vérifiez votre téléphone pour valider.');
+            }
             
-            return back()->with('success', 'Annonce publiée avec succès.');
+            return redirect()->route('user.annonces')->with('success', 'Annonce publiée avec succès. Elle sera visible après validation.');
         } catch (\Exception $e) {
             report($e);
             return back()->withInput()->withErrors(['error' => 'Erreur : ' . $e->getMessage()]);
