@@ -45,7 +45,7 @@
                 </div>
             @else
                 @foreach ($annonces as $annonce)
-                    <div class="flex mb-2.5">
+                    <div wire:key="annonce-{{ $annonce->idannonce }}" class="flex mb-2.5">
                         <div class="relative w-80 h-56 mr-4 flex-shrink-0">
                             <button onclick="scrollLeft{{ $annonce->idannonce }}()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">‹</button>
                             <button onclick="scrollRight{{ $annonce->idannonce }}()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">›</button>
@@ -96,12 +96,34 @@
                                 </button>
                             </div>
                             @else
-                            <div class="absolute top-2 right-2 z-20">
-                                <a href="{{ route('auth.check') }}" class="block bg-white/80 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-600">
+                            <div x-data="{ 
+                                isFavorite: JSON.parse(localStorage.getItem('guest_favorites') || '[]').includes({{ $annonce->idannonce }}),
+                                toggle() {
+                                    let favorites = JSON.parse(localStorage.getItem('guest_favorites') || '[]');
+                                    const id = {{ $annonce->idannonce }};
+                                    
+                                    if (favorites.includes(id)) {
+                                        favorites = favorites.filter(f => f !== id);
+                                        this.isFavorite = false;
+                                    } else {
+                                        favorites.push(id);
+                                        this.isFavorite = true;
+                                    }
+                                    
+                                    localStorage.setItem('guest_favorites', JSON.stringify(favorites));
+                                },
+                                init() {
+                                    let favorites = JSON.parse(localStorage.getItem('guest_favorites') || '[]');
+                                    this.isFavorite = favorites.includes({{ $annonce->idannonce }});
+                                }
+                            }" class="absolute top-2 right-2 z-20">
+                                <button @click.prevent="toggle()" class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white transition relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                                        class="w-5 h-5 transition-colors duration-300"
+                                        :class="isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                                     </svg>
-                                </a>
+                                </button>
                             </div>
                             @endauth
                         </div>

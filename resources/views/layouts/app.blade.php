@@ -293,6 +293,35 @@
     @stack('scripts')
 
     @livewireScripts
+    
+    @auth
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const guestFavorites = JSON.parse(localStorage.getItem('guest_favorites') || '[]');
+            
+            if (guestFavorites.length > 0) {
+                fetch('{{ route('user.favorites.sync') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ favorites: guestFavorites })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        localStorage.removeItem('guest_favorites');
+                        console.log('Favoris synchronisés avec succès');
+                        window.location.reload();
+                    }
+                })
+                .catch(error => console.error('Erreur de synchronisation des favoris:', error));
+            }
+        });
+    </script>
+    @endauth
 </body>
 
 </html>

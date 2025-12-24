@@ -78,6 +78,20 @@ class UserAccountController extends Controller
         ]);
     }
 
+    public function syncFavorites(Request $request)
+    {
+        $request->validate(['favorites' => 'required|array', 'favorites.*' => 'integer|exists:annonce,idannonce']);
+        
+        $user = Auth::user();
+        $favorites = $request->favorites;
+        
+        if (!empty($favorites)) {
+            $user->annoncesFavorisees()->syncWithoutDetaching($favorites);
+        }
+        
+        return response()->json(['status' => 'success']);
+    }
+
     public function searches()
     {
         $searches = Auth::user()->recherches()
