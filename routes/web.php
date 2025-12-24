@@ -64,6 +64,7 @@ Route::middleware([
         Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
         Route::get('/favorites', [UserAccountController::class, 'favorites'])->name('user.favorites');
         Route::post('/favorites/toggle', [UserAccountController::class, 'toggleFavorite'])->name('user.favorites.toggle');
+        Route::post('/favorites/sync', [UserAccountController::class, 'syncFavorites'])->name('user.favorites.sync');
         Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
         Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
 
