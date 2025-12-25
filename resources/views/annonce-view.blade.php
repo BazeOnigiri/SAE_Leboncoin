@@ -277,20 +277,20 @@
                                     <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Arrivée</label>
                                     <div class="relative">
                                         <input type="date" 
-                                        min="{{ date('Y-m-d') }}" 
-                                        onchange="updateReservationLink()"
-                                        class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
-                                        id="dateArriveeInput" 
+                                            id="dateArriveeInput"
+                                            min="{{ date('Y-m-d') }}" 
+                                            onchange="updateReservationLink()"
+                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                                     </div>
                                 </div>
                                 <div class="flex-1">
                                     <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Départ</label>
                                     <div class="relative">
                                         <input type="date" 
-                                        min="{{ date('Y-m-d') }}" 
-                                        onchange="updateReservationLink()"
-                                        class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
-                                        id="dateDepartInput" 
+                                            id="dateDepartInput"
+                                            min="{{ date('Y-m-d') }}" 
+                                            onchange="updateReservationLink()"
+                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
                                     </div>
                                 </div>
                             </div>

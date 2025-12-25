@@ -1,5 +1,30 @@
 @extends('layouts.app')
 @section('content')
+    @php
+        use Carbon\Carbon;
+        
+        $dateArrivee = old('date_debut', $arrivee ?? null);
+        $dateDepart = old('date_fin', $depart ?? null);
+        
+        $nbNuits = 0;
+        $formattedArrivee = '-';
+        $formattedDepart = '-';
+
+        if($dateArrivee && $dateDepart) {
+            try {
+                $start = Carbon::parse($dateArrivee);
+                $end = Carbon::parse($dateDepart);
+                
+                if($end->gt($start)) {
+                    $nbNuits = $start->diffInDays($end);
+                    $formattedArrivee = $start->format('d/m/Y');
+                    $formattedDepart = $end->format('d/m/Y');
+                }
+            } catch (\Exception $e) {
+                // Dates invalides, on laisse à 0
+            }
+        }
+    @endphp
     <div class="bg-white min-h-screen pt-32 pb-12">
         <div class="max-w-6xl mx-auto px-6 md:px-12 xl:px-6">
 
@@ -15,7 +40,7 @@
                 </span>
             </div>
 
-            <form action="#" method="POST">
+            <form action="#" method="POST" data-price="{{ $annonce->prixnuitee }}" data-nights="{{ $nbNuits > 0 ? $nbNuits : 1 }}">
                 @csrf
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -24,32 +49,6 @@
 
                         <section>
     <h2 class="text-xl font-bold text-slate-900 mb-4">Vos dates de séjour</h2>
-
-    @php
-    use Carbon\Carbon;
-
-    $dateArrivee = old('date_debut', $arrivee ?? null);
-    $dateDepart = old('date_fin', $depart ?? null);
-    
-    $nbNuits = 0;
-    $formattedArrivee = '-';
-    $formattedDepart = '-';
-
-    if($dateArrivee && $dateDepart) {
-        try {
-            $start = Carbon::parse($dateArrivee);
-            $end = Carbon::parse($dateDepart);
-            
-            if($end->gt($start)) {
-                $nbNuits = $start->diffInDays($end);
-                $formattedArrivee = $start->format('d/m/Y');
-                $formattedDepart = $end->format('d/m/Y');
-            }
-        } catch (\Exception $e) {
-            // Dates invalides, on laisse à 0
-        }
-    }
-@endphp
 
 <p class="text-slate-600 mb-4">
     @if($nbNuits > 0)
@@ -121,6 +120,10 @@
                                 </div>
                             </div>
 
+                            <p class="text-xs text-gray-500 mt-2">
+                                Capacité maximale : <span id="max-capacity">{{ $annonce->capacite ?? 2 }}</span> personnes | Maximum <span id="max-babies">6</span> bébés | Au moins 1 adulte requis
+                            </p>
+
                             <div class="flex justify-between items-center opacity-50">
                                 <div>
                                     <div class="font-medium text-slate-900">Animaux</div>
@@ -136,16 +139,6 @@
                                 </div>
                             </div>
                         </section>
-
-
-
-
-
-
-
-
-
-//fonctionne pas
 
 
 
@@ -181,7 +174,7 @@
                                             name="telephoneutilisateur" 
                                             value="{{ old('telephone', Auth::user()->telephone ?? '') }}" 
                                             class="w-full border-gray-300 rounded-lg shadow-sm focus:border-orange-500 focus:ring-orange-500 h-12" 
-                                            placeholder="0652251273">
+                                            placeholder="06 12 34 56 78">
                                 </div>
                                 <p class="text-xs text-gray-500">Votre numéro de téléphone sera partagé à l'hôte une fois votre demande de réservation acceptée</p>
                             </section>
@@ -279,63 +272,80 @@
 
                             @php
                                 $pricePerNight = $annonce->prixnuitee;
-
                                 $nightsToCalculate = ($nbNuits > 0) ? $nbNuits : 1;
-
+                                $totalPersons = 1;
                                 $totalRent = $pricePerNight * $nightsToCalculate;
-                                $serviceFee = $totalRent * 0.14; 
-                                $touristTax = 4.00 * $nightsToCalculate; 
+                                $serviceFee = $totalRent * 0.14;
+                                $touristTax = 4.00 * $nightsToCalculate * $totalPersons;
                                 $total = $totalRent + $serviceFee + $touristTax;
-                                $payNow = $serviceFee + ($totalRent * 0.35); 
+                                $payNow = $serviceFee + ($totalRent * 0.35);
                                 $payLater = $total - $payNow;
                             @endphp
 
-                            <div>
-                                <h3 class="font-bold text-lg text-slate-900 mb-4">Récapitulatif du paiement</h3>
-                                
-                                @if($nbNuits == 0)
-                                    <div class="bg-red-100 text-red-700 px-3 py-2 rounded text-sm mb-4">
-                                        Veuillez sélectionner vos dates sur l'annonce.
-                                    </div>
-                                @endif
+                            <div class="p-4 bg-white rounded-lg shadow-lg">
 
-                                <div class="space-y-3 text-sm text-slate-600">
-                                    <div class="flex justify-between">
-                                        <span>Montant de la location <span class="cursor-help" title="Détails">ⓘ</span></span>
-                                        <span>{{ number_format($totalRent, 2, ',', ' ') }} €</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span>Frais de service <span class="cursor-help" title="Détails">ⓘ</span></span>
-                                        <span>{{ number_format($serviceFee, 2, ',', ' ') }} €</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span>Taxe de séjour <span class="cursor-help" title="Détails">ⓘ</span></span>
-                                        <span>{{ number_format($touristTax, 2, ',', ' ') }} €</span>
-                                    </div>
-                                </div>
+    <!-- Titre du récapitulatif -->
+    <h3 class="font-bold text-lg text-slate-900 mb-6">Récapitulatif du paiement</h3>
 
-                                <hr class="border-gray-200 my-4">
+    <!-- Vérification de la sélection des dates -->
+    @if($nbNuits == 0)
+        <div class="bg-red-100 text-red-700 px-4 py-3 rounded text-sm mb-6">
+            Veuillez sélectionner vos dates sur l'annonce.
+        </div>
+    @endif
 
-                                <div class="flex justify-between items-center font-bold text-lg text-slate-900 mb-4">
-                                    <span>Total</span>
-                                    <span>{{ number_format($total, 2, ',', ' ') }} €</span>
-                                </div>
+    <!-- Détails du paiement -->
+    <div class="space-y-4 text-sm text-slate-600">
+        <!-- Montant de la location -->
+        <div class="flex justify-between">
+            <span>Montant de la location</span>
+            <span class="ml-auto" data-update-rent>{{ number_format($totalRent, 2, ',', ' ') }}</span> €
+        </div>
 
-                                <div class="space-y-3">
-                                    <div class="flex justify-between items-center text-[#EA580C] font-bold">
-                                        <span>À payer maintenant</span>
-                                        <span>{{ number_format($payNow, 2, ',', ' ') }} €</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-slate-600">
-                                        <span>Restera à payer sur place</span>
-                                        <span>{{ number_format($payLater, 2, ',', ' ') }} €</span>
-                                    </div>
-                                </div>
+        <!-- Frais de service -->
+        <div class="flex justify-between">
+            <span>Frais de service</span>
+            <span class="ml-auto" data-update-service>{{ number_format($serviceFee, 2, ',', ' ') }}</span> €
+        </div>
 
-                                <p class="text-xs text-gray-500 mt-4 leading-relaxed">
-                                    Ce paiement nous sert à garantir votre réservation. Il inclut un acompte pour la location, les frais de service et la taxe de séjour. Retrouvez le détail de nos conditions d'annulation ici.
-                                </p>
-                            </div>
+        <!-- Taxe de séjour -->
+        <div class="flex justify-between">
+            <span>Taxe de séjour</span>
+            <span class="ml-auto" data-update-tourist>{{ number_format($touristTax, 2, ',', ' ') }}</span> €
+        </div>
+    </div>
+
+    <!-- Ligne de séparation -->
+    <hr class="border-gray-200 my-6">
+
+    <!-- Total -->
+    <div class="flex justify-between items-center font-bold text-lg text-slate-900 mb-6">
+        <span>Total</span>
+        <span class="ml-auto" data-update-total>{{ number_format($total, 2, ',', ' ') }}</span> €
+    </div>
+
+    <!-- À payer maintenant et à payer plus tard -->
+    <div class="space-y-4">
+        <!-- À payer maintenant -->
+        <div class="flex justify-between items-center text-[#EA580C] font-bold">
+            <span>À payer maintenant</span>
+            <span class="ml-auto" data-update-pay-now>{{ number_format($payNow, 2, ',', ' ') }}</span> €
+        </div>
+
+        <!-- Restera à payer sur place -->
+        <div class="flex justify-between items-center text-slate-600">
+            <span>Restera à payer sur place</span>
+            <span class="ml-auto" data-update-pay-later>{{ number_format($payLater, 2, ',', ' ') }}</span> €
+        </div>
+    </div>
+
+    <!-- Message d'explication -->
+    <p class="text-xs text-gray-500 mt-6 leading-relaxed">
+        Ce paiement nous sert à garantir votre réservation. Il inclut un acompte pour la location, les frais de service et la taxe de séjour. Retrouvez le détail de nos conditions d'annulation ici.
+    </p>
+
+</div>
+
 
                         </div>
                     </div>
@@ -347,19 +357,78 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const maxCapacity = parseInt(document.getElementById('max-capacity').textContent);
+            const maxBabies = 6;
+            const minAdults = 1;
             const buttons = document.querySelectorAll('.btn-plus, .btn-minus');
 
+            function getTotalGuests() {
+                const adults = parseInt(document.getElementById('input-adults').value) || 0;
+                const children = parseInt(document.getElementById('input-children').value) || 0;
+                const babies = parseInt(document.getElementById('input-babies').value) || 0;
+                return adults + children + babies;
+            }
+
+            function updateButtonStates() {
+                const totalGuests = getTotalGuests();
+                const adults = parseInt(document.getElementById('input-adults').value) || 0;
+                const babies = parseInt(document.getElementById('input-babies').value) || 0;
+                
+                document.querySelectorAll('.btn-plus, .btn-minus').forEach(btn => {
+                    const targetName = btn.getAttribute('data-target');
+                    const currentValue = parseInt(document.getElementById('input-' + targetName).value) || 0;
+                    let shouldDisable = false;
+
+                    if (btn.classList.contains('btn-plus')) {
+                        if (targetName === 'babies') {
+                            shouldDisable = currentValue >= maxBabies;
+                        } else {
+                            shouldDisable = totalGuests >= maxCapacity;
+                        }
+                    } else if (btn.classList.contains('btn-minus')) {
+                        if (targetName === 'adults') {
+                            shouldDisable = currentValue <= minAdults;
+                        } else {
+                            shouldDisable = currentValue === 0;
+                        }
+                    }
+
+                    if (shouldDisable) {
+                        btn.disabled = true;
+                        btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                });
+            }
+
             buttons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
                     const targetName = this.getAttribute('data-target');
                     const input = document.getElementById('input-' + targetName);
                     const display = document.getElementById('count-' + targetName);
-                    let currentValue = parseInt(input.value);
+                    let currentValue = parseInt(input.value) || 0;
+                    const totalGuests = getTotalGuests();
 
                     if (this.classList.contains('btn-plus')) {
-                        currentValue++;
+                        if (targetName === 'babies') {
+                            if (currentValue < maxBabies) {
+                                currentValue++;
+                            }
+                        } else {
+                            if (totalGuests < maxCapacity) {
+                                currentValue++;
+                            }
+                        }
                     } else if (this.classList.contains('btn-minus')) {
-                        if (currentValue > 0) {
+                        if (targetName === 'adults') {
+                            if (currentValue > minAdults) {
+                                currentValue--;
+                            }
+                        } else if (currentValue > 0) {
                             currentValue--;
                         }
                     }
@@ -367,14 +436,55 @@
                     input.value = currentValue;
                     display.innerText = currentValue;
 
-                    const minusBtn = this.parentElement.querySelector('.btn-minus');
-                    if(currentValue === 0) {
-                        minusBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    } else {
-                        minusBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    }
+                    updateButtonStates();
+                    updatePaymentSummary();
                 });
             });
+
+            updateButtonStates();
         });
+
+        function updatePaymentSummary() {
+            const adults = parseInt(document.getElementById('input-adults').value) || 0;
+            const children = parseInt(document.getElementById('input-children').value) || 0;
+            const babies = parseInt(document.getElementById('input-babies').value) || 0;
+            const totalPersons = adults + children + babies;
+
+            const form = document.querySelector('form');
+            const pricePerNight = parseFloat(form?.dataset.price || 0);
+            const nights = parseInt(form?.dataset.nights || 1);
+
+            if (pricePerNight > 0 && nights > 0) {
+                const totalRent = pricePerNight * nights;
+                const serviceFee = totalRent * 0.14;
+                const touristTax = 4.00 * nights * totalPersons;
+                const total = totalRent + serviceFee + touristTax;
+                const payNow = serviceFee + (totalRent * 0.35);
+                const payLater = total - payNow;
+
+                const formatPrice = (value) => {
+                    return value.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                };
+
+                document.querySelectorAll('[data-update-rent]').forEach(el => {
+                    el.textContent = formatPrice(totalRent);
+                });
+                document.querySelectorAll('[data-update-service]').forEach(el => {
+                    el.textContent = formatPrice(serviceFee);
+                });
+                document.querySelectorAll('[data-update-tourist]').forEach(el => {
+                    el.textContent = formatPrice(touristTax);
+                });
+                document.querySelectorAll('[data-update-total]').forEach(el => {
+                    el.textContent = formatPrice(total);
+                });
+                document.querySelectorAll('[data-update-pay-now]').forEach(el => {
+                    el.textContent = formatPrice(payNow);
+                });
+                document.querySelectorAll('[data-update-pay-later]').forEach(el => {
+                    el.textContent = formatPrice(payLater);
+                });
+            }
+        }
     </script>
 @endsection
