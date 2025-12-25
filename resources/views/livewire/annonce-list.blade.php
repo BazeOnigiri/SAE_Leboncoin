@@ -1,5 +1,19 @@
 <div>
-    <x-alert />
+    @if (session('success'))
+    <div x-data="{ show: true }" 
+        x-init="setTimeout(() => show = false, 8000)" 
+        x-show="show" 
+        x-transition.duration.500ms
+        class="bottom-0 right-0 mb-6 mr-6 fixed z-50">
+        <div class="p-4 bg-green-50 border-l-4 border-green-500 text-green-800 border rounded-md shadow-lg relative overflow-hidden">
+            {{ session('success') }}
+            <div class="mt-2 h-1 bg-green-200 overflow-hidden rounded">
+                <div class="h-full bg-green-500 transition-all duration-[8000ms] ease-linear w-0"
+                    x-init="setTimeout(() => $el.style.width = '100%', 50)"></div>
+            </div>
+        </div>
+    </div>
+    @endif
     @php
         $hasSearch = !empty($location) 
             || !empty($filterTypes) 
@@ -13,7 +27,7 @@
 
     <h1 class="text-xl font-bold mb-6">Annonces Location vacances</h1>
     
-    <p class="mb-6 font-bold">{{ $annonces->count() }} annonces {{ $location ? 'pour "' . $location . '"' : '' }}</p>
+    <p class="mb-6 font-bold">{{ $annonces->total() }} annonces {{ $location ? 'pour "' . $location . '"' : '' }}</p>
 
     <div class="flex flex-col lg:flex-row gap-6 relative">
 
@@ -31,12 +45,12 @@
                 </div>
             @else
                 @foreach ($annonces as $annonce)
-                    <div class="flex mb-2.5">
+                    <div wire:key="annonce-{{ $annonce->idannonce }}" class="flex mb-2.5">
                         <div class="relative w-80 h-56 mr-4 flex-shrink-0">
                             <button onclick="scrollLeft{{ $annonce->idannonce }}()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">‹</button>
                             <button onclick="scrollRight{{ $annonce->idannonce }}()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">›</button>
                         
-                            <div id="carousel{{ $annonce->idannonce }}" class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scrollbar-hide">
+                            <div id="carousel{{ $annonce->idannonce }}" class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scroll r-hide">
                                 @foreach ($annonce->photos ?? [] as $photo)
                                     <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
                                         <img src="{{ $photo->lienphoto }}" loading="lazy" class="w-full h-full object-cover">
@@ -49,6 +63,69 @@
                                     <div class="dot{{ $annonce->idannonce }} w-2 h-2 rounded-full bg-white/50 transition-all duration-300"></div>
                                 @endforeach
                             </div>
+                            
+                            @auth
+                            <div x-data="{ 
+                                isFavorite: {{ in_array($annonce->idannonce, $favoriteIds ?? []) ? 'true' : 'false' }},
+                                loading: false
+                            }" class="absolute top-2 right-2 z-20">
+                                <button @click="
+                                    loading = true;
+                                    isFavorite = !isFavorite;
+                                    fetch('{{ route('user.favorites.toggle') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                            'Accept': 'application/json'
+                                        },
+                                        body: JSON.stringify({ idannonce: {{ $annonce->idannonce }} })
+                                    }).then(() => loading = false).catch(() => { isFavorite = !isFavorite; loading = false; })
+                                " class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white transition relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                                        class="w-5 h-5 transition-colors duration-300"
+                                        :class="isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                    </svg>
+                                    <span x-show="loading" class="absolute inset-0 flex items-center justify-center bg-white/80 rounded-full">
+                                        <svg class="animate-spin h-4 w-4 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                            @else
+                            <div x-data="{ 
+                                isFavorite: JSON.parse(localStorage.getItem('guest_favorites') || '[]').includes({{ $annonce->idannonce }}),
+                                toggle() {
+                                    let favorites = JSON.parse(localStorage.getItem('guest_favorites') || '[]');
+                                    const id = {{ $annonce->idannonce }};
+                                    
+                                    if (favorites.includes(id)) {
+                                        favorites = favorites.filter(f => f !== id);
+                                        this.isFavorite = false;
+                                    } else {
+                                        favorites.push(id);
+                                        this.isFavorite = true;
+                                    }
+                                    
+                                    localStorage.setItem('guest_favorites', JSON.stringify(favorites));
+                                },
+                                init() {
+                                    let favorites = JSON.parse(localStorage.getItem('guest_favorites') || '[]');
+                                    this.isFavorite = favorites.includes({{ $annonce->idannonce }});
+                                }
+                            }" class="absolute top-2 right-2 z-20">
+                                <button @click.prevent="toggle()" class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white transition relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
+                                        class="w-5 h-5 transition-colors duration-300"
+                                        :class="isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            @endauth
                         </div>
 
                         <script>
@@ -106,6 +183,10 @@
                     <hr class="my-6 opacity-50">
                 @endforeach
             @endif
+
+            <div class="mt-6 flex justify-center">
+                {{ $annonces->links('pagination.custom') }}
+            </div>
         </div>
 
         @if($hasSearch)
@@ -152,7 +233,6 @@
 
             let bounds = L.latLngBounds();
 
-            // 1. Grouper les marqueurs par coordonnées identiques
             let groups = {};
             markersData.forEach(marker => {
                 let key = marker.lat + '_' + marker.lng;
@@ -160,7 +240,6 @@
                 groups[key].push(marker);
             });
 
-            // 2. Traiter chaque groupe
             Object.values(groups).forEach(group => {
                 let count = group.length;
                 
@@ -168,10 +247,9 @@
                     let lat = parseFloat(marker.lat);
                     let lng = parseFloat(marker.lng);
 
-                    // Si plusieurs marqueurs au même endroit, on les décale en cercle
                     if (count > 1) {
-                        let angle = (index / count) * Math.PI * 2; // Distribution uniforme
-                        let radius = 0.0001; // ~10 mètres de décalage
+                        let angle = (index / count) * Math.PI * 2; 
+                        let radius = 0.0001; 
                         
                         lat += Math.sin(angle) * radius;
                         lng += Math.cos(angle) * radius;

@@ -37,6 +37,11 @@ return [
 
     'google' => [
         'maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
-],
+    ],
+
+    'notificationapi' => [
+        'client_id' => env('NOTIFICATIONAPI_CLIENT_ID'),
+        'client_secret' => env('NOTIFICATIONAPI_CLIENT_SECRET'),
+    ],
 
 ];

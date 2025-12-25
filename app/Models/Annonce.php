@@ -28,6 +28,13 @@ class Annonce extends Model
         'nombreanimauxmax',
         'nombrebebesmax',
         'possibilitefumeur',
+        'estverifie',
+        'sms_verification_code',
+        'sms_verification_expires_at',
+    ];
+
+    protected $casts = [
+        'sms_verification_expires_at' => 'datetime',
     ];
 
     /* Une annonce a beaucoup ou pas de ... */

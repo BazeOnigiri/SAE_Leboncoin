@@ -37,7 +37,7 @@ php artisan migrate:fresh --seed
 Faire clique droit sur la DB --> Refresh dans PgAdmin4 pour voir les changements.
 
 
-Pour que le navigateur puisse charger les images :
+## Pour que le navigateur puisse charger les images :
 ```
 
 php artisan storage:link

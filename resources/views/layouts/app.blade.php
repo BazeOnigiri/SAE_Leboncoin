@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'leboncoin') }}</title>
 
@@ -171,16 +172,41 @@
 
             <div id="dev-menu-panel" class="hidden mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl">
             <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200">
-                <span class="text-sm font-semibold text-gray-800">Connexions rapides</span>
+                <span class="text-sm font-semibold text-gray-800">Menu dev</span>
                 <button id="dev-menu-close" type="button" class="text-gray-500 hover:text-gray-700">X</button>
             </div>
-            <div class="max-h-72 overflow-y-auto divide-y divide-gray-100">
-                @foreach($devAccounts as $account)
-                <button type="button" data-dev-login-email="{{ $account['email'] }}" class="w-full text-left px-3 py-2 hover:bg-orange-50 flex flex-col">
-                    <span class="text-sm font-semibold text-gray-900">{{ $account['label'] }}</span>
-                    <span class="text-[11px] text-gray-500">{{ $account['email'] }}</span>
-                </button>
-                @endforeach
+            <div class="max-h-80 overflow-y-auto divide-y divide-gray-100">
+                <div class="px-3 py-2">
+                    <button type="button" class="flex w-full items-center justify-between text-sm font-semibold text-gray-800" data-dev-collapse="login">
+                        Connexions rapides
+                        <span class="text-xs text-gray-500" data-dev-arrow="login">▶</span>
+                    </button>
+                    <div class="mt-2 space-y-0.5 hidden" data-dev-section="login">
+                        <form action="/logout" method="POST">
+                            @csrf
+                            <input type="submit" class="w-full text-left px-3 py-2 hover:bg-orange-50 flex flex-col bg-white border border-gray-100 rounded" value="Se déconnecter">
+                        </form>
+                        @foreach($devAccounts as $account)
+                        <button type="button" data-dev-login-email="{{ $account['email'] }}" class="w-full text-left px-3 py-2 hover:bg-orange-50 flex flex-col border border-transparent rounded">
+                            <span class="text-sm font-semibold text-gray-900">{{ $account['label'] }}</span>
+                            <span class="text-[11px] text-gray-500">{{ $account['email'] }}</span>
+                        </button>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="px-3 py-2">
+                    <button type="button" class="flex w-full items-center justify-between text-sm font-semibold text-gray-800" data-dev-collapse="create">
+                        Créer et se connecter
+                        <span class="text-xs text-gray-500" data-dev-arrow="create">▶</span>
+                    </button>
+                    <div class="mt-2 grid grid-cols-2 gap-2 hidden" data-dev-section="create">
+                        <button type="button" data-dev-create="particulier" class="px-2 py-2 rounded-md bg-orange-100 text-orange-800 text-xs font-semibold hover:bg-orange-200">Particulier</button>
+                        <button type="button" data-dev-create="professionnel" class="px-2 py-2 rounded-md bg-blue-100 text-blue-800 text-xs font-semibold hover:bg-blue-200">Professionnel</button>
+                        <button type="button" data-dev-create-annonce class="px-2 py-2 rounded-md bg-green-100 text-green-800 text-xs font-semibold hover:bg-green-200 col-span-2">Créer une annonce (utilisateur connecté)</button>
+                        <button type="button" data-dev-create-cni class="px-2 py-2 rounded-md bg-purple-100 text-purple-800 text-xs font-semibold hover:bg-purple-200 col-span-2">Ajouter une CNI (utilisateur connecté)</button>
+                    </div>
+                </div>
             </div>
             <div class="px-3 py-2 text-[11px] text-gray-500 border-t border-gray-200">Dev only - se connecter en un clic.</div>
             </div>
@@ -188,6 +214,19 @@
             <form id="dev-login-form" method="POST" action="{{ route('dev.login-as') }}" class="hidden">
             @csrf
             <input id="dev-login-email" type="hidden" name="email" value="">
+            </form>
+
+            <form id="dev-create-form" method="POST" action="{{ route('dev.create-user') }}" class="hidden">
+            @csrf
+            <input id="dev-create-type" type="hidden" name="type" value="">
+            </form>
+
+            <form id="dev-create-annonce-form" method="POST" action="{{ route('dev.create-annonce') }}" class="hidden">
+            @csrf
+            </form>
+
+            <form id="dev-create-cni-form" method="POST" action="{{ route('dev.create-cni') }}" class="hidden">
+            @csrf
             </form>
         </div>
 
@@ -198,6 +237,10 @@
                 const closeBtn = document.getElementById('dev-menu-close');
                 const emailInput = document.getElementById('dev-login-email');
                 const form = document.getElementById('dev-login-form');
+                const createForm = document.getElementById('dev-create-form');
+                const createType = document.getElementById('dev-create-type');
+                const createAnnonceForm = document.getElementById('dev-create-annonce-form');
+                const createCniForm = document.getElementById('dev-create-cni-form');
 
                 const togglePanel = () => {
                     panel.classList.toggle('hidden');
@@ -212,6 +255,37 @@
                         form.submit();
                     });
                 });
+
+                document.querySelectorAll('[data-dev-create]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        createType.value = btn.dataset.devCreate;
+                        createForm.submit();
+                    });
+                });
+
+                document.querySelectorAll('[data-dev-create-annonce]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        createAnnonceForm.submit();
+                    });
+                });
+
+                document.querySelectorAll('[data-dev-create-cni]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        createCniForm.submit();
+                    });
+                });
+
+                document.querySelectorAll('[data-dev-collapse]').forEach((btn) => {
+                    const sectionName = btn.dataset.devCollapse;
+                    const section = document.querySelector(`[data-dev-section="${sectionName}"]`);
+                    const arrow = document.querySelector(`[data-dev-arrow="${sectionName}"]`);
+                    if (!section) return;
+
+                    btn.addEventListener('click', () => {
+                        const isHidden = section.classList.toggle('hidden');
+                        if (arrow) arrow.textContent = isHidden ? '▶' : '▼';
+                    });
+                });
             })();
         </script>
     @endif
@@ -219,6 +293,46 @@
     @stack('scripts')
 
     @livewireScripts
+
+    @auth
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const guestFavorites = JSON.parse(localStorage.getItem('guest_favorites') || '[]');
+            
+            if (guestFavorites.length > 0) {
+                fetch('{{ route('user.favorites.sync') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ favorites: guestFavorites })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        localStorage.removeItem('guest_favorites');
+                        console.log('Favoris synchronisés avec succès');
+                        window.location.reload();
+                    }
+                })
+                .catch(error => console.error('Erreur de synchronisation des favoris:', error));
+            }
+        });
+    </script>
+    @endauth
+
+    <script>
+        var botmanWidget = {
+            aboutText: 'BotMan',
+            introMessage: "Bienvenue sur leboncoin",
+            chatServer: "/botman",
+            title: "Assistant"
+        };
+    </script>
+    <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
+
 </body>
 
 </html>

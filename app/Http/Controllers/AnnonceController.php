@@ -18,6 +18,7 @@ use App\Models\Ville;
 use App\Models\Categorie;
 use App\Models\Region;
 use App\Models\Departement;
+use App\Services\SmsService;
 use Illuminate\Http\RedirectResponse;
 
 class AnnonceController extends Controller
@@ -52,7 +53,13 @@ class AnnonceController extends Controller
         $commoditesGroupees = $annonce->commodites->groupBy(function ($commodite) {
             return $commodite->categorie->nomcategorie ?? 'Autres';
         });
-        return view("annonce-view", compact('annonce', 'commoditesGroupees'));
+
+        $isFavorite = false;
+        if (Auth::check()) {
+            $isFavorite = Auth::user()->annoncesFavorisees()->where('favoriser.idannonce', $id)->exists();
+        }
+
+        return view("annonce-view", compact('annonce', 'commoditesGroupees', 'isFavorite'));
     }
 
     public function show($id)
@@ -66,58 +73,19 @@ class AnnonceController extends Controller
 
     public function create()
     {
-        if (!auth()->user()->isCNIValidate())
+        if (!auth()->user()->hasCniFiles())
         {
             return redirect()->route('cni.index')->with('info', 'Vous devez valider votre identité avant de pouvoir publier une annonce.');
         }
+        
         $typeHebergements = TypeHebergement::all();
         $categories = Categorie::with('commodites')->get();
         return view("annonce-create", compact('typeHebergements', 'categories'));
     }
 
-    public function annoncesAverifier()
-    {
-        $annonces = Annonce::where('estverifie', false)
-            ->with(['photos', 'typeHebergement', 'adresse.ville'])
-            ->orderBy('idannonce', 'asc')
-            ->get();
-
-        return view('services.petites-annonces', compact('annonces'));
-    }
-
-    public function verifierAnnonce($id): RedirectResponse
-    {
-        $annonce = Annonce::findOrFail($id);
-        $annonce->estverifie = true;
-        $annonce->save();
-
-        return redirect()->route('services-petites-annonces.index')
-            ->with('success', 'L\'annonce #' . $annonce->idannonce . ' a été validée avec succès.');
-    }
-
-    public function deleteAnnonce($id): RedirectResponse
-    {
-        $annonce = Annonce::with('photos')->findOrFail($id);
-
-        DB::transaction(function () use ($annonce) {
-            DB::table('favoriser')->where('idannonce', $annonce->idannonce)->delete();
-            DB::table('ressembler')->where('idannonce_a', $annonce->idannonce)->orWhere('idannonce_b', $annonce->idannonce)->delete();
-            DB::table('relier')->where('idannonce', $annonce->idannonce)->delete();
-            DB::table('proposer')->where('idannonce', $annonce->idannonce)->delete();
-            DB::table('reservation')->where('idannonce', $annonce->idannonce)->delete();
-            DB::table('avis')->where('idannonce', $annonce->idannonce)->delete();
-
-            $annonce->photos()->delete();
-            $annonce->delete();
-        });
-
-        return redirect()->route('services-petites-annonces.index')
-            ->with('success', 'L\'annonce #' . $annonce->idannonce . ' a été supprimée avec succès.');
-    }
-
     public function store(Request $request)
     {
-        if (!auth()->user()->isCNIValidate())
+        if (!auth()->user()->hasCniFiles())
         {
             return redirect()->route('cni.index')->with('info', 'Vous devez valider votre identité avant de pouvoir publier une annonce.');
         }
@@ -282,8 +250,25 @@ class AnnonceController extends Controller
 
                 return $annonce;
             });
+
+            $user = Auth::user();
+            if (!empty($user->telephoneutilisateur)) {
+                $smsService = app(SmsService::class);
+                $code = $smsService->generateCode();
+                
+                $annonce->update([
+                    'sms_verification_code' => $code,
+                    'sms_verification_expires_at' => now()->addMinutes(10),
+                ]);
+
+                $message = "Leboncoin : Votre code de vérification pour l'annonce \"{$annonce->titreannonce}\" est : {$code}. Valide 10 minutes.";
+                $smsService->send($user->telephoneutilisateur, $message);
+
+                return redirect()->route('annonce.verify-sms', $annonce)
+                    ->with('success', 'Annonce créée ! Vérifiez votre téléphone pour valider.');
+            }
             
-            return back()->with('success', 'Annonce publiée avec succès.');
+            return redirect()->route('user.annonces')->with('success', 'Annonce publiée avec succès. Elle sera visible après validation.');
         } catch (\Exception $e) {
             report($e);
             return back()->withInput()->withErrors(['error' => 'Erreur : ' . $e->getMessage()]);

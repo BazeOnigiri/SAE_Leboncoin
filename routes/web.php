@@ -1,35 +1,22 @@
 <?php use Illuminate\Support\Facades\Route; 
 use App\Http\Controllers\AnnonceController; 
+use App\Http\Controllers\AnnonceVerificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConnexionController;
 use App\Http\Controllers\CNIController;
 use App\Http\Controllers\UserAccountController;
+use App\Http\Controllers\ServicePetiteAnnonceController;
+use App\Http\Controllers\DevController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\IncidentController;
-use Illuminate\Http\Request;
-use App\Models\User;
+use App\Http\Controllers\BotManController;
 
 if (app()->environment('local')) {
-    Route::post('/dev/login-as', function (Request $request) {
-        $email = $request->input('email');
-
-        abort_if(!$email, 400);
-
-        $user = User::where('email', $email)->first();
-        abort_if(!$user, 404);
-
-        if (!$user->hasVerifiedEmail()) {
-            $user->forceFill(['email_verified_at' => now()])->save();
-        }
-
-        Auth::logout();
-        Auth::guard('web')->login($user, true);
-        $request->session()->regenerate();
-        $request->session()->put('auth.password_confirmed_at', time());
-
-        return redirect()->intended('/');
-    })->name('dev.login-as');
+    Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
+    Route::post('/dev/create-user', [DevController::class, 'createUser'])->name('dev.create-user');
+    Route::post('/dev/create-annonce', [DevController::class, 'createAnnonce'])->name('dev.create-annonce');
+    Route::post('/dev/create-cni', [DevController::class, 'createCni'])->name('dev.create-cni');
 }
 
 Route::middleware(['auth'])->group(function () {
@@ -68,6 +55,10 @@ Route::middleware([
         Route::get('/deposer-une-annonce', [AnnonceController::class, 'create'])->name('annonce.create');
         Route::post('/annonce', [AnnonceController::class, 'store'])->name('annonce.store');
 
+        Route::get('/annonce/{annonce}/verify-sms', [AnnonceVerificationController::class, 'show'])->where('annonce', '[0-9]+')->name('annonce.verify-sms');
+        Route::post('/annonce/{annonce}/verify-sms', [AnnonceVerificationController::class, 'verify'])->where('annonce', '[0-9]+')->name('annonce.verify-sms.submit');
+        Route::post('/annonce/{annonce}/verify-sms/resend', [AnnonceVerificationController::class, 'resend'])->where('annonce', '[0-9]+')->name('annonce.verify-sms.resend');
+
         Route::get('/cni', [CNIController::class, 'index'])->name('cni.index');
         Route::post('/cni', [CNIController::class, 'store'])->name('cni.store');
         Route::get('/compte/profil/modifier', [UserAccountController::class, 'edit'])->name('user.edit');
@@ -78,20 +69,25 @@ Route::middleware([
         Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
         Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
         Route::get('/favorites', [UserAccountController::class, 'favorites'])->name('user.favorites');
+        Route::post('/favorites/toggle', [UserAccountController::class, 'toggleFavorite'])->name('user.favorites.toggle');
+        Route::post('/favorites/sync', [UserAccountController::class, 'syncFavorites'])->name('user.favorites.sync');
         Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
         Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
 
-        Route::prefix('services-petites-annonces')
+        Route::prefix('/services-petites-annonces')
         ->as('services-petites-annonces.')
         ->middleware('can:annonces.verif')
         ->group(function () {
-            Route::get('/', [AnnonceController::class, 'annoncesAverifier'])->name('index');
-            Route::post('/{id}', [AnnonceController::class, 'verifierAnnonce'])->name('verifier');
-            Route::delete('/{id}', [AnnonceController::class, 'deleteAnnonce'])->name('delete');
+            Route::get('/', [ServicePetiteAnnonceController::class, 'index'])->name('index');
+            Route::post('/v/{id}', [ServicePetiteAnnonceController::class, 'verify'])->name('verify');
+            Route::post('/r/{id}', [ServicePetiteAnnonceController::class, 'reject'])->name('reject');
         });
     });
+
     Route::get('/check-reservation/{id}', function ($id) {
         return redirect()->route('annonce.view', ['id' => $id]);
     })->middleware('auth')->name('check.reservation');
 
     Route::get('/reservation/creer/{id}', [ReservationController::class, 'create'])->name('reservation.create');
+
+    Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);

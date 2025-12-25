@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 class CNIController extends Controller
 {
     public function index() {
-        if (auth()->user()->isCNIValidate()) {
-            return redirect()->route('dashboard')->with('info', 'Votre CNI est déjà vérifiée.');
+        if (auth()->user()->hasCniFiles() || auth()->user()->identiteEstVerifie()) {
+            return redirect()->route('dashboard')->with('info', 'Vous avez déjà fait une demande de vérification de votre CNI ou elle est déjà vérifiée.');
         }
         return view("cni.index");
     }
 
     public function store(Request $request) {
-        if (auth()->user()->isCNIValidate()) {
+        if (auth()->user()->identiteEstVerifie()) {
             return redirect()->route('dashboard')->with('info', 'Votre CNI est déjà vérifiée.');
         }
         $validated = $request->validate([
@@ -23,12 +23,21 @@ class CNIController extends Controller
         ]);
 
         $idutilisateur = auth()->id();
-        if (!$idutilisateur) {
-            return redirect()->back()->withErrors(['error' => 'Aucun ID utilisateur trouvé. Veuillez vous connecter.']);
-        }
 
-        $rectoPath = $request->file('recto')->store('cni/' . $idutilisateur . '/recto', 'local');
-        $versoPath = $request->file('verso')->store('cni/' . $idutilisateur . '/verso', 'local');
+        $rectoExt = $request->file('recto')->getClientOriginalExtension();
+        $versoExt = $request->file('verso')->getClientOriginalExtension();
+
+        $request->file('recto')->storeAs(
+            "cni/{$idutilisateur}/recto",
+            "recto.$rectoExt",
+            'local'
+        );
+
+        $request->file('verso')->storeAs(
+            "cni/{$idutilisateur}/verso",
+            "verso.$versoExt",
+            'local'
+        );
 
         return redirect()->route('dashboard')->with([
             'success' => 'CNI traité avec succès.',

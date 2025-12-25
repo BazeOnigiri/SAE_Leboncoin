@@ -55,7 +55,41 @@ class UserAccountController extends Controller
 
     public function favorites()
     {
-        return view('user-account.favorites');
+        $favorites = Auth::user()->annoncesFavorisees()
+            ->with(['photos', 'typeHebergement', 'adresse.ville'])
+            ->orderBy('idannonce', 'desc')
+            ->get();
+
+        return view('user-account.favorites', compact('favorites'));
+    }
+
+    public function toggleFavorite(Request $request)
+    {
+        $request->validate(['idannonce' => 'required|integer|exists:annonce,idannonce']);
+        
+        $user = Auth::user();
+        $idAnnonce = $request->idannonce;
+        
+        $attached = $user->annoncesFavorisees()->toggle($idAnnonce);
+        
+        return response()->json([
+            'status' => 'success',
+            'is_favorite' => count($attached['attached']) > 0
+        ]);
+    }
+
+    public function syncFavorites(Request $request)
+    {
+        $request->validate(['favorites' => 'required|array', 'favorites.*' => 'integer|exists:annonce,idannonce']);
+        
+        $user = Auth::user();
+        $favorites = $request->favorites;
+        
+        if (!empty($favorites)) {
+            $user->annoncesFavorisees()->syncWithoutDetaching($favorites);
+        }
+        
+        return response()->json(['status' => 'success']);
     }
 
     public function searches()
