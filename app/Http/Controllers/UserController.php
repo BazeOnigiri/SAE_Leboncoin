@@ -11,12 +11,15 @@ class UserController extends Controller
 {
     $user = User::with([
                     'adresse.ville.departement',
-                    'annoncesPubliees.photos',  
-                    'annoncesPubliees.adresse.ville' 
+                    'annoncesPubliees' => function ($query) {
+                        $query->where('estverifie', true)->with(['photos', 'adresse.ville']);
+                    },
                 ])
                 ->withCount('avisRecus')
                 ->withAvg('avisRecus', 'nombreetoiles')
-                ->withCount('annoncesPubliees')
+                ->withCount(['annoncesPubliees' => function ($query) {
+                    $query->where('estverifie', true);
+                }])
                 ->findOrFail($id);
 
     return view('user-profile', ['user' => $user]);
