@@ -1,5 +1,215 @@
 @extends('layouts.app')
 @section('content')
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        /* Customisation du calendrier Flatpickr style Bon Coin */
+        .flatpickr-calendar {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            width: auto !important;
+        }
+
+        .flatpickr-months {
+            padding: 16px;
+            display: flex;
+            gap: 40px;
+        }
+
+        .flatpickr-months .flatpickr-month {
+            flex: 0 0 calc(50% - 20px);
+            width: 100%;
+        }
+
+        .flatpickr-month {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1f2937;
+            text-align: center;
+            padding-bottom: 16px;
+        }
+
+        .flatpickr-prev-month,
+        .flatpickr-next-month {
+            color: #EA580C;
+            fill: #EA580C;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            top: 0 !important;
+            height: auto;
+        }
+
+        .flatpickr-prev-month:hover,
+        .flatpickr-next-month:hover {
+            opacity: 0.7;
+        }
+
+        .flatpickr-prev-month {
+            left: -40px;
+        }
+
+        .flatpickr-next-month {
+            right: -40px;
+        }
+
+        .flatpickr-weekdays {
+            background: transparent;
+            padding: 8px 0;
+            font-weight: 400;
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+        }
+
+        .flatpickr-weekday {
+            width: 32px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flatpickr-days {
+            padding: 8px;
+            width: 100%;
+        }
+
+        .flatpickr-day {
+            width: 32px;
+            height: 32px;
+            max-width: none;
+            font-size: 13px;
+            color: #1f2937;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+            position: relative;
+        }
+
+        .flatpickr-day.today {
+            background-color: transparent;
+            color: #1f2937;
+            font-weight: 600;
+            border: 1px solid #EA580C;
+        }
+
+        .flatpickr-day.selected {
+            background-color: #FED7AA;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange {
+            background-color: #FED7AA;
+            color: #1f2937;
+        }
+
+        .flatpickr-day.inRange {
+            background-color: #FEF3C7;
+            color: #1f2937;
+        }
+
+        .flatpickr-day.disabled,
+        .flatpickr-day.flatpickr-disabled {
+            background-color: transparent;
+            color: #d1d5db;
+            cursor: not-allowed;
+            opacity: 1;
+            text-decoration: line-through;
+            text-decoration-color: #d1d5db;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 3px;
+        }
+
+        .flatpickr-day.disabled::after,
+        .flatpickr-day.flatpickr-disabled::after {
+            content: '';
+            display: none;
+        }
+
+        .flatpickr-day.prevMonthDay,
+        .flatpickr-day.nextMonthDay {
+            color: #d1d5db;
+            background-color: transparent;
+        }
+
+        .flatpickr-day:hover:not(.disabled):not(.prevMonthDay):not(.nextMonthDay):not(.flatpickr-disabled) {
+            background-color: #FEF3C7;
+            cursor: pointer;
+        }
+
+        .flatpickr-time {
+            display: none;
+        }
+
+        .flatpickr-innerContainer {
+            display: flex;
+            gap: 20px;
+            padding: 0 16px;
+        }
+
+        .flatpickr-monthContainer {
+            flex: 0 0 220px;
+        }
+
+        /* Input style */
+        .flatpickr-input {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .flatpickr-input:focus {
+            outline: none;
+            border-color: #EA580C;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+        }
+
+        /* Mode range - sélection entre deux dates */
+        .flatpickr-day.nextMonthDay.start,
+        .flatpickr-day.prevMonthDay.start,
+        .flatpickr-day.start {
+            background-color: #FED7AA;
+            border-radius: 4px;
+        }
+
+        .flatpickr-day.end,
+        .flatpickr-day.nextMonthDay.end,
+        .flatpickr-day.prevMonthDay.end {
+            background-color: #FED7AA;
+            border-radius: 4px;
+        }
+
+        .flatpickr-day.inRange:not(.flatpickr-disabled) {
+            background-color: #FEF3C7;
+        }
+
+        /* Month selector dropdown */
+        .flatpickr-monthDropdown-months {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 4px;
+            font-size: 13px;
+            color: #1f2937;
+        }
+
+        .flatpickr-monthDropdown-months:hover {
+            border-color: #EA580C;
+        }
+    </style>
     <div class="bg-white p-7 max-w-6xl mx-auto px-6 md:px-12 xl:px-6 pt-32">
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -420,7 +630,8 @@
                                             id="dateArriveeInput"
                                             min="{{ date('Y-m-d') }}" 
                                             onchange="updateReservationLink()"
-                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                                            placeholder="Sélectionnez une date">
                                     </div>
                                 </div>
                                 <div class="flex-1">
@@ -430,7 +641,8 @@
                                             id="dateDepartInput"
                                             min="{{ date('Y-m-d') }}" 
                                             onchange="updateReservationLink()"
-                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                                            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                                            placeholder="Sélectionnez une date">
                                     </div>
                                 </div>
                             </div>
@@ -540,4 +752,70 @@
         </div>
 
     </div>
+
+    <!-- Flatpickr JS avec locale française -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+    <script>
+        // Définir la locale française
+        flatpickr.localize(flatpickr.l10ns.fr);
+
+        // Dates réservées depuis le backend
+        const reservedDates = @json($reservedDates ?? []);
+        
+        console.log('Dates réservées:', reservedDates);
+
+        // Fonction pour vérifier si une date est réservée
+        function isDateReserved(date) {
+            const dateStr = date.toISOString().split('T')[0];
+            return reservedDates.includes(dateStr);
+        }
+
+        // Initialiser le calendrier d'arrivée
+        const dateArrivee = flatpickr("#dateArriveeInput", {
+            minDate: "{{ date('Y-m-d') }}",
+            dateFormat: "d/m/Y",
+            locale: "fr",
+            mode: "range",
+            showMonths: 2,
+            monthSelectorType: "dropdown",
+            disable: [
+                function(date) {
+                    return isDateReserved(date);
+                }
+            ],
+            onChange: function(selectedDates) {
+                if (selectedDates.length === 2) {
+                    // Mettre à jour les deux champs
+                    dateArrivee.setDate(selectedDates[0], true);
+                    dateDepart.setDate(selectedDates[1], true);
+                    updateReservationLink();
+                }
+            }
+        });
+
+        // Initialiser le calendrier de départ (visible seulement si clic sur arrivée d'abord)
+        const dateDepart = flatpickr("#dateDepartInput", {
+            minDate: "{{ date('Y-m-d') }}",
+            dateFormat: "d/m/Y",
+            locale: "fr",
+            disable: [
+                function(date) {
+                    return isDateReserved(date);
+                }
+            ],
+            onChange: function() {
+                updateReservationLink();
+            }
+        });
+
+        // Gérer l'affichage du calendrier
+        document.getElementById('dateArriveeInput').addEventListener('focus', function() {
+            dateArrivee.open();
+        });
+
+        document.getElementById('dateDepartInput').addEventListener('focus', function() {
+            dateArrivee.open();
+        });
+    </script>
 @endsection

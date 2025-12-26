@@ -41,6 +41,8 @@ class AnnonceController extends Controller
             'heuredepart',
             'annonces.photos',
             'annonces.adresse.ville',
+            'reservations.dateDebut',
+            'reservations.dateFin',
         ])
         ->withAvg('avis', 'nombreetoiles')
         ->withCount('avis')
@@ -59,7 +61,30 @@ class AnnonceController extends Controller
             $isFavorite = Auth::user()->annoncesFavorisees()->where('favoriser.idannonce', $id)->exists();
         }
 
-        return view("annonce-view", compact('annonce', 'commoditesGroupees', 'isFavorite'));
+        // Récupérer les dates réservées (uniquement les réservations en cours et futures)
+        $reservedDates = [];
+        $today = \Carbon\Carbon::today();
+        
+        foreach ($annonce->reservations as $reservation) {
+            // Vérifier que la réservation n'est pas passée (date de fin >= aujourd'hui)
+            if ($reservation->dateFin && $reservation->dateFin->date) {
+                $endDate = \Carbon\Carbon::parse($reservation->dateFin->date);
+                // Griser les dates si la réservation n'est pas encore terminée
+                if ($endDate >= $today) {
+                    if ($reservation->dateDebut && $reservation->dateDebut->date) {
+                        $start = \Carbon\Carbon::parse($reservation->dateDebut->date);
+                        $end = \Carbon\Carbon::parse($reservation->dateFin->date);
+                        while ($start <= $end) {
+                            $reservedDates[] = $start->format('Y-m-d');
+                            $start->addDay();
+                        }
+                    }
+                }
+            }
+        }
+        $reservedDates = array_unique($reservedDates);
+
+        return view("annonce-view", compact('annonce', 'commoditesGroupees', 'isFavorite', 'reservedDates'));
     }
 
     public function show($id)
