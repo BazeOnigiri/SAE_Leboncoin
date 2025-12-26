@@ -303,6 +303,19 @@
                 @enderror
             </div>
 
+            <div>
+                <label for="possibiliteanimaux" class="block text-sm font-medium text-gray-700">Animaux autorisés</label>
+                <select name="possibiliteanimaux" id="possibiliteanimaux" required
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
+                    <option value="">-- Sélectionner une option --</option>
+                    <option value="1" {{ old('possibiliteanimaux') === '1' ? 'selected' : '' }}>Oui</option>
+                    <option value="0" {{ old('possibiliteanimaux') === '0' ? 'selected' : '' }}>Non</option>
+                </select>
+                @error('possibiliteanimaux') 
+                <p class="text-red-600 text-sm mt-1">{{ $message }}</p> 
+                @enderror
+            </div>
+
 
             <div>
                 <button type="submit"

@@ -126,6 +126,7 @@ class AnnonceController extends Controller
             'heuredepart' => ['required', 'date_format:H:i'],
             'heurearrivee' => ['required', 'date_format:H:i'],
             'possibilitefumeur' => ['required', 'in:0,1'],
+            'possibiliteanimaux' => ['required', 'in:0,1'],
             'prixnuitee' => ['required', 'numeric', 'min:0', 'max:10000'],
             'minimumnuitee' => ['required', 'integer', 'min:1', 'max:365'],
             'pourcentageacompte' => ['required', 'integer', 'min:0', 'max:100'],
@@ -236,6 +237,7 @@ class AnnonceController extends Controller
                     'minimumnuitee'      => $validated['minimumnuitee'],
                     'pourcentageacompte' => $validated['pourcentageacompte'],
                     'possibilitefumeur'  => (bool) $validated['possibilitefumeur'],
+                    'possibiliteanimaux' => (bool) $validated['possibiliteanimaux'],
                     'nbchambres'         => $validated['nbchambres'],
                 ]);
 

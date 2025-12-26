@@ -85,7 +85,7 @@ create table annonce (
    capacite             int4                 null,
    nbChambres           int4                 null,
    minimumnuitee        int4                 null,
-   nombreanimauxmax     int4                 null,
+   possibiliteanimaux   bool                 not null,
    nombrebebesmax       int4                 null,
    possibilitefumeur    bool                 not null,
    estverifie           bool                 not null default false,
@@ -733,7 +733,6 @@ ALTER TABLE annonce
    ADD CONSTRAINT chk_annonce_montantacompte CHECK (montantacompte >= 0),
    ADD CONSTRAINT chk_annonce_pourcentageacompte CHECK (pourcentageacompte >= 0 AND pourcentageacompte <= 100),
    ADD CONSTRAINT chk_annonce_minimumnuitee CHECK (minimumnuitee >= 1),
-   ADD CONSTRAINT chk_annonce_nombreanimauxmax CHECK (nombreanimauxmax >= 0),
    ADD CONSTRAINT chk_annonce_nombrebebesmax CHECK (nombrebebesmax >= 0),
    ADD CONSTRAINT chk_annonce_etoiles CHECK (nombreetoilesleboncoin >= 1 AND nombreetoilesleboncoin <= 5),
    ADD CONSTRAINT chk_annonce_montantacompte_pourcentageacompte_exclusivite CHECK (montantacompte IS NULL OR pourcentageacompte IS NULL);

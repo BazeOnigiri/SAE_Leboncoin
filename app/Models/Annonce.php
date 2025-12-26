@@ -25,7 +25,7 @@ class Annonce extends Model
         'capacite',
         'nbchambres',
         'minimumnuitee',
-        'nombreanimauxmax',
+        'possibiliteanimaux',
         'nombrebebesmax',
         'possibilitefumeur',
         'estverifie',
