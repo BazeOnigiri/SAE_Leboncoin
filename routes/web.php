@@ -90,4 +90,4 @@ Route::middleware([
 
     Route::get('/reservation/creer/{id}', [ReservationController::class, 'create'])->name('reservation.create');
 
-    Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
+    Route::match(['get','post'], '/botman', [BotManController::class, 'handle'])->name('botman.handle');
