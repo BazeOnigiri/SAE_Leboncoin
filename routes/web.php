@@ -19,16 +19,7 @@ if (app()->environment('local')) {
     Route::post('/dev/create-cni', [DevController::class, 'createCni'])->name('dev.create-cni');
 }
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])
-        ->name('incidents.create');
 
-    Route::post('/reservations/{reservation}/incident', [IncidentController::class, 'store'])
-        ->name('incidents.store');
-});
-
-
-Route::get('/', [AnnonceController::class, 'index'])->name('home');
 Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
 
@@ -42,6 +33,26 @@ Route::post('/connexion', [ConnexionController::class, 'checkEmail'])
     ->middleware('guest')
     ->name('auth.verify');
 
+Route::middleware([
+    'user.only'
+])->group(function () {
+    Route::get('/', [AnnonceController::class, 'index'])->name('home');
+
+    Route::get('/check-reservation/{id}', function ($id) {
+        return redirect()->route('annonce.view', ['id' => $id]);
+    })->middleware('auth')->name('check.reservation');
+    Route::get('/reservation/creer/{id}', [ReservationController::class, 'create'])->name('reservation.create');
+    Route::match(['get','post'], '/botman', [BotManController::class, 'handle'])->name('botman.handle');
+    
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])
+            ->name('incidents.create');
+
+        Route::post('/reservations/{reservation}/incident', [IncidentController::class, 'store'])
+            ->name('incidents.store');
+    });
+});
+
 Route::middleware([ 
     'auth:sanctum', 
     config('jetstream.auth_session'), 
@@ -52,28 +63,37 @@ Route::middleware([
             return view('dashboard', ['user' => $user]); 
         })->name('dashboard');
 
-        Route::get('/deposer-une-annonce', [AnnonceController::class, 'create'])->name('annonce.create');
-        Route::post('/annonce', [AnnonceController::class, 'store'])->name('annonce.store');
+        Route::middleware(['user.only'])->group(function () {
 
-        Route::get('/annonce/{annonce}/verify-sms', [AnnonceVerificationController::class, 'show'])->where('annonce', '[0-9]+')->name('annonce.verify-sms');
-        Route::post('/annonce/{annonce}/verify-sms', [AnnonceVerificationController::class, 'verify'])->where('annonce', '[0-9]+')->name('annonce.verify-sms.submit');
-        Route::post('/annonce/{annonce}/verify-sms/resend', [AnnonceVerificationController::class, 'resend'])->where('annonce', '[0-9]+')->name('annonce.verify-sms.resend');
+            Route::get('/deposer-une-annonce', [AnnonceController::class, 'create'])->name('annonce.create');
+            Route::post('/annonce', [AnnonceController::class, 'store'])->name('annonce.store');
 
-        Route::get('/cni', [CNIController::class, 'index'])->name('cni.index');
-        Route::post('/cni', [CNIController::class, 'store'])->name('cni.store');
-        Route::get('/compte/profil/modifier', [UserAccountController::class, 'edit'])->name('user.edit');
-        Route::get('/compte/mes-annonces', [UserAccountController::class, 'annonces'])->name('user.annonces');
-        Route::get('/compte/profil-espaces', [UserAccountController::class, 'spaces'])->name('user.spaces');
-        Route::get('/compte/connexion-securite', [UserAccountController::class, 'security'])->name('user.security');
-        Route::get('/compte/parametres', [UserAccountController::class, 'settings'])->name('user.settings');
-        Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
-        Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
-        Route::get('/favorites', [UserAccountController::class, 'favorites'])->name('user.favorites');
-        Route::post('/favorites/toggle', [UserAccountController::class, 'toggleFavorite'])->name('user.favorites.toggle');
-        Route::post('/favorites/sync', [UserAccountController::class, 'syncFavorites'])->name('user.favorites.sync');
-        Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
-        Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
+            Route::get('/annonce/{annonce}/verify-sms', [AnnonceVerificationController::class, 'show'])->where('annonce', '[0-9]+')->name('annonce.verify-sms');
+            Route::post('/annonce/{annonce}/verify-sms', [AnnonceVerificationController::class, 'verify'])->where('annonce', '[0-9]+')->name('annonce.verify-sms.submit');
+            Route::post('/annonce/{annonce}/verify-sms/resend', [AnnonceVerificationController::class, 'resend'])->where('annonce', '[0-9]+')->name('annonce.verify-sms.resend');
 
+            Route::get('/cni', [CNIController::class, 'index'])->name('cni.index');
+            Route::post('/cni', [CNIController::class, 'store'])->name('cni.store');
+            Route::get('/compte/profil/modifier', [UserAccountController::class, 'edit'])->name('user.edit');
+            Route::get('/compte/mes-annonces', [UserAccountController::class, 'annonces'])->name('user.annonces');
+            Route::get('/compte/profil-espaces', [UserAccountController::class, 'spaces'])->name('user.spaces');
+            Route::get('/compte/connexion-securite', [UserAccountController::class, 'security'])->name('user.security');
+            Route::get('/compte/parametres', [UserAccountController::class, 'settings'])->name('user.settings');
+            Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
+            Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
+            Route::get('/favorites', [UserAccountController::class, 'favorites'])->name('user.favorites');
+            Route::post('/favorites/toggle', [UserAccountController::class, 'toggleFavorite'])->name('user.favorites.toggle');
+            Route::post('/favorites/sync', [UserAccountController::class, 'syncFavorites'])->name('user.favorites.sync');
+            Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
+            Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
+        });
+    });
+    
+    Route::middleware([ 
+        'auth:sanctum', 
+        config('jetstream.auth_session'), 
+        'verified', 
+    ])->group(function () {
         Route::prefix('/services-petites-annonces')
         ->as('services-petites-annonces.')
         ->middleware('can:annonces.verif')
@@ -82,12 +102,5 @@ Route::middleware([
             Route::post('/v/{id}', [ServicePetiteAnnonceController::class, 'verify'])->name('verify');
             Route::post('/r/{id}', [ServicePetiteAnnonceController::class, 'reject'])->name('reject');
         });
+
     });
-
-    Route::get('/check-reservation/{id}', function ($id) {
-        return redirect()->route('annonce.view', ['id' => $id]);
-    })->middleware('auth')->name('check.reservation');
-
-    Route::get('/reservation/creer/{id}', [ReservationController::class, 'create'])->name('reservation.create');
-
-    Route::match(['get','post'], '/botman', [BotManController::class, 'handle'])->name('botman.handle');

@@ -39,7 +39,7 @@ class DevController extends Controller
         $request->session()->regenerate();
         $request->session()->put('auth.password_confirmed_at', time());
 
-        return redirect()->intended('/');
+        return redirect()->intended('/dashboard');
     }
 
     public function createAnnonce(Request $request)
@@ -167,6 +167,6 @@ class DevController extends Controller
         $request->session()->regenerate();
         $request->session()->put('auth.password_confirmed_at', time());
 
-        return redirect()->intended('/');
+        return redirect()->intended('/dashboard');
     }
 }

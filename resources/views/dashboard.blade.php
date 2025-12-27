@@ -27,12 +27,13 @@
                                             {{ substr(Auth::user()->pseudonyme, 0, 1) }}
                                         @endif
                                     </div>
-                                    
-                                    <a href="{{ route('user.edit') }}" class="absolute bottom-0 -right-1 bg-white text-gray-700 p-2 rounded-full shadow-md border border-gray-100 hover:bg-gray-50 z-20 flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                            <path d="M21.731 2.269a2.625 2.625 0 113.71 3.71l-9.399 9.399-1.127 1.127a2.25 2.25 0 01-1.59.659h-5.376a.75.75 0 01-.75-.75v-5.376a2.25 2.25 0 01.659-1.59l1.128-1.127 9.399-9.399zM8.679 13.72a.75.75 0 10-1.06-1.06L5.25 15.031v2.421l2.421.26 2.369-2.369z" />
-                                        </svg>
-                                    </a>
+                                    @if($isSuperAdminOrNoRoles)
+                                        <a href="{{ route('user.edit') }}" class="absolute bottom-0 -right-1 bg-white text-gray-700 p-2 rounded-full shadow-md border border-gray-100 hover:bg-gray-50 z-20 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                                <path d="M21.731 2.269a2.625 2.625 0 113.71 3.71l-9.399 9.399-1.127 1.127a2.25 2.25 0 01-1.59.659h-5.376a.75.75 0 01-.75-.75v-5.376a2.25 2.25 0 01.659-1.59l1.128-1.127 9.399-9.399zM8.679 13.72a.75.75 0 10-1.06-1.06L5.25 15.031v2.421l2.421.26 2.369-2.369z" />
+                                            </svg>
+                                        </a>
+                                    @endif
                                 </div>
 
                                 <div class="flex flex-col">
@@ -63,7 +64,9 @@
                                     @endif
                                 </div>
                             </div>
-                            <a class="text-gray-900 font-bold hover:underline" href="{{ route('user.edit') }}">Modifier</a>
+                            @if($isSuperAdminOrNoRoles)
+                                <a class="text-gray-900 font-bold hover:underline" href="{{ route('user.edit') }}">Modifier</a>
+                            @endif
                         </div>
                     </div>
                 </div>
