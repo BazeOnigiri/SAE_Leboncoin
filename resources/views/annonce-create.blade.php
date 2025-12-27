@@ -253,11 +253,20 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach ($categories as $categorie)
                         @if ($categorie->commodites->isNotEmpty())
-                            <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="border border-gray-200 rounded-lg p-4" x-data="{ search: '' }">
                                 <p class="font-semibold text-gray-800 mb-2">{{ $categorie->nomcategorie }}</p>
-                                <div class="space-y-2">
+                                <input 
+                                    type="text" 
+                                    x-model="search" 
+                                    placeholder="Rechercher..." 
+                                    class="w-full mb-3 px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                                >
+                                <div class="space-y-2 max-h-48 overflow-y-auto">
                                     @foreach ($categorie->commodites as $commodite)
-                                        <label class="flex items-center space-x-2">
+                                        <label 
+                                            class="flex items-center space-x-2"
+                                            x-show="search === '' || '{{ strtolower($commodite->nomcommodite) }}'.includes(search.toLowerCase())"
+                                        >
                                             <input type="checkbox" name="commodites[]" value="{{ $commodite->idcommodite }}" class="rounded text-orange-600"
                                                 {{ in_array($commodite->idcommodite, old('commodites', [])) ? 'checked' : '' }}>
                                             <span class="text-sm text-gray-700">{{ $commodite->nomcommodite }}</span>
