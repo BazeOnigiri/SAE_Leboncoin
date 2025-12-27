@@ -132,7 +132,7 @@ class AnnonceController extends Controller
             'pourcentageacompte' => ['required', 'integer', 'min:0', 'max:100'],
             'commodites' => ['nullable', 'array'],
             'commodites.*' => ['integer', 'exists:commodite,idcommodite'],
-            'numerorue'  => ['nullable', 'integer', 'min:1', 'max:99999'],
+            'numerorue'  => ['required', 'integer', 'min:1', 'max:99999'],
             'nomrue'     => ['required', 'string', 'max:39'],
             'codepostal' => ['required', 'string', 'size:5', 'regex:/^[0-9]{5}$/'],
             'ville'      => ['required', 'string', 'max:40'],

@@ -29,7 +29,7 @@
                     document.getElementById('locality_display').value = props.city;
 
                     // Remplissage caché (Backend)
-                    document.getElementById('numerorue').value = props.housenumber || 1;
+                    document.getElementById('numerorue').value = props.housenumber;
                     document.getElementById('nomrue').value = props.street || props.name;
                     document.getElementById('codepostal').value = props.postcode;
                     document.getElementById('ville').value = props.city;
@@ -145,6 +145,19 @@
                 <input type="hidden" name="nomrue" id="nomrue">
                 <input type="hidden" name="codepostal" id="codepostal">
                 <input type="hidden" name="ville" id="ville">
+
+                @error('numerorue')
+                    <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                @enderror
+                @error('nomrue')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+                @error('codepostal')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
+                @error('ville')
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <h3 class="text-lg font-semibold mt-6 mb-2">Photos</h3>
