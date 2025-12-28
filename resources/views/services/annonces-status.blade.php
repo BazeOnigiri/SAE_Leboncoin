@@ -77,6 +77,14 @@
                                             Téléphone
                                         </span>
                                     @endif
+                                    @can('annonce.toggleSms')
+                                        <form action="{{ route('services.annonces.toggleSms', ['id' => $annonce->idannonce]) }}" method="POST" class="inline-block ml-2">
+                                            @csrf
+                                            <button type="submit" class="px-2 py-0.5 rounded text-xs font-medium {{ $annonce->smsverifie ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600' }} text-white transition">
+                                                {{ $annonce->smsverifie ? 'Désactiver SMS' : 'Activer SMS' }}
+                                            </button>
+                                        </form>
+                                    @endcan
                                 @if ($annonce->sms_verification_expires_at)
                                     <p class="text-sm text-gray-600">Code SMS : {{ $annonce->sms_verification_code }}</p>
                                     <p class="text-sm text-gray-600">Date d'expiration du code : {{ $annonce->sms_verification_expires_at->format('d/m/Y H:i') }}</p>

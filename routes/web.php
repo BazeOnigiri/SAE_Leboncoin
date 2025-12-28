@@ -108,6 +108,9 @@ Route::middleware([
         ->middleware('can:annonce.status')
         ->group(function () {
             Route::get('/annonces', [AnnonceController::class, 'servicesShowStatus'])->name('annonces');
+            Route::post('/annonces/{id}/toggle-sms', [AnnonceController::class, 'toggleSmsVerifie'])
+                ->name('annonces.toggleSms')
+                ->middleware('can:annonce.toggleSms');
         });
 
     });

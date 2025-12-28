@@ -33,5 +33,12 @@ class RoleSeeder extends Seeder
         ])->assignRole(
             ...Role::all()
         );
+
+        Permision::create([
+            'name' => 'annonce.toggleSms',
+        ])->assignRole(
+            Role::firstWhere('name', RoleEnum::SERVICE_PETITE_ANNONCE->value),
+            Role::firstWhere('name', RoleEnum::DIRECTEUR_SERVICE_PETITE_ANNONCE->value),
+        );
     }
 }
