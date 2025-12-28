@@ -311,4 +311,14 @@ class AnnonceController extends Controller
 
         return view('services.annonces-status', compact('annonces'));
     }
+
+    public function toggleSmsVerifie($id)
+    {
+        $annonce = Annonce::findOrFail($id);
+        $annonce->smsverifie = !$annonce->smsverifie;
+        $annonce->save();
+
+        $status = $annonce->smsverifie ? 'activée' : 'désactivée';
+        return back()->with('success', "Vérification SMS {$status} pour l'annonce #{$annonce->idannonce}");
+    }
 }
