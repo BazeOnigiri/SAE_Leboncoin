@@ -66,6 +66,11 @@ class AnnonceVerificationController extends Controller
         $annonce->update([
             'sms_verification_code' => null,
             'sms_verification_expires_at' => null,
+            'smsverifie' => true,
+        ]);
+
+        Auth::user()->update([
+            'phone_verified' => true,
         ]);
 
         return redirect()->route('user.annonces')->with('success', 'Votre annonce a été vérifiée par SMS ! Elle sera visible après validation par notre équipe.');

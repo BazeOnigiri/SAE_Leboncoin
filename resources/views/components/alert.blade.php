@@ -22,6 +22,29 @@
         </script>
 @endif
 
+@if (session('error'))
+    <div class="p-4 bg-red-50 border-l-4 border-red-500 text-red-800 border rounded-md z-50">
+        {{ session('error') }}
+        <div class="mt-2 h-1 bg-red-200 overflow-hidden rounded">
+            <div id="progress" class="h-full bg-red-500" style="width:0%"></div>
+        </div>
+    </div>
+    <script>
+        const script = document.currentScript;
+        const alertDiv = script.parentElement;
+        const bar = alertDiv.querySelector('#progress');
+
+        requestAnimationFrame(() => {
+            bar.style.transition = 'width 8s linear';
+            bar.style.width = '100%';
+        });
+
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 8000);
+    </script>
+@endif
+
 @if ($errors->has('error'))
     <div class="p-4 bg-red-50 border-l-4 border-red-500 text-red-800 border rounded-md z-50">
         {{ $errors->first('error') }}
