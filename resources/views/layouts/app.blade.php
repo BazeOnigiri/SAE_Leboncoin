@@ -332,16 +332,12 @@
     </script>
     @endauth
 
-    <script>
-        var botmanWidget = {
-            aboutText: 'BotMan',
-            introMessage: "Bienvenue sur leboncoin",
-            chatServer: "/botman",
-            title: "Assistant"
-        };
-    </script>
-    <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
-
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger 
+    intent="WELCOME" 
+    chat-title="chatbotLeboncoin" 
+    agent-id="e0fbb1f0-e9cc-44db-997f-fde068a0a051" 
+    language-code="fr"></df-messenger>
 </body>
 
 </html>
