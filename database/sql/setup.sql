@@ -89,6 +89,7 @@ create table annonce (
    nombrebebesmax       int4                 null,
    possibilitefumeur    bool                 not null,
    estverifie           bool                 not null default false,
+   smsverifie           bool                 not null default false,
    constraint pk_annonce primary key (idannonce)
 );
 

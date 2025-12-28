@@ -337,7 +337,17 @@
                 </script>
                 <div>
                     <div class="flex items-start justify-between gap-4 mb-3">
-                        <h1 class="text-3xl font-bold text-slate-900">{{ $annonce->titreannonce }}</h1>
+                        <div class="flex items-center gap-3">
+                            <h1 class="text-3xl font-bold text-slate-900">{{ $annonce->titreannonce }}</h1>
+                            @if($annonce->smsverifie)
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800" title="Annonce vérifiée par SMS">
+                                    <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Vérifié SMS
+                                </span>
+                            @endif
+                        </div>
                         
                         <div class="flex items-center gap-2">
                             <div x-data="{ 

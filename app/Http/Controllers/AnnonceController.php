@@ -48,7 +48,7 @@ class AnnonceController extends Controller
         ->withCount('avis')
         ->findOrFail($id);
 
-        if (!$annonce->estverifie && !Auth::user()?->can('annonces.verif')) {
+        if (!$annonce->estverifie && !Auth::user()?->can('user.verifID')) {
             abort(404);
         }
 
@@ -300,5 +300,15 @@ class AnnonceController extends Controller
             report($e);
             return back()->withInput()->withErrors(['error' => 'Erreur : ' . $e->getMessage()]);
         }
+    }
+
+    public function servicesShowStatus()
+    {
+        $annonces = Annonce::where('estverifie', false)
+            ->with('utilisateur', 'adresse.ville', 'typehebergement', 'datePublication')
+            ->orderBy('idannonce', 'desc')
+            ->get();
+
+        return view('services.annonces-status', compact('annonces'));
     }
 }

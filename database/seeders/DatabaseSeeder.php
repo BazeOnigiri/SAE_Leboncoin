@@ -98,7 +98,7 @@ class DatabaseSeeder extends Seeder
                 'descriptionannonce' => $data['descriptionannonce'],
                 'prixnuitee' => $data['prixnuitee'],
                 'minimumnuitee' => 1,
-                'nombreanimauxmax' => 0,
+                'possibiliteanimaux' => false,
                 'nombrebebesmax' => 0,
                 'possibilitefumeur' => false,
                 'capacite' => 2,

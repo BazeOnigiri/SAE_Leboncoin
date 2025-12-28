@@ -29,6 +29,7 @@ class Annonce extends Model
         'nombrebebesmax',
         'possibilitefumeur',
         'estverifie',
+        'smsverifie',
         'sms_verification_code',
         'sms_verification_expires_at',
     ];

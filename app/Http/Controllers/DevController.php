@@ -67,7 +67,7 @@ class DevController extends Controller
             'descriptionannonce' => 'Annonce créée via menu dev pour tests.',
             'prixnuitee' => random_int(40, 150),
             'minimumnuitee' => 1,
-            'nombreanimauxmax' => 0,
+            'possibiliteanimaux' => false,
             'nombrebebesmax' => 0,
             'possibilitefumeur' => false,
             'capacite' => 2,
@@ -88,12 +88,12 @@ class DevController extends Controller
         $urlRecto = 'https://images.squarespace-cdn.com/content/v1/600757141ab2dc6f4c35c661/1615406994382-RHRJR18HYTB6SNQQ15TB/MCLOVIN-SHADOW.png';
         $urlVerso = 'https://cosology.com/cdn/shop/products/BADGEMCLOVIN-back.png?v=1568345402&width=1426 1426w';
 
-        $response = Http::timeout(5)->get($urlRecto);
+        $response = Http::timeout(10)->get($urlRecto);
         if ($response->successful()) {
             $rectoData = $response->body();
         }
 
-        $response = Http::timeout(5)->get($urlVerso);
+        $response = Http::timeout(10)->get($urlVerso);
         if ($response->successful()) {
             $versoData = $response->body();
         }

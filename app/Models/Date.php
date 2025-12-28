@@ -15,8 +15,10 @@ class Date extends Model
     // Si la colonne contenant la date réelle s'appelle 'date' (recommandé)
     protected $fillable = ['date']; 
     
-    // Permet de désigner la colonne comme un objet Carbon pour les relations (facultatif mais propre)
-    protected $dates = ['date']; 
+    // Cast la colonne date en objet Carbon
+    protected $casts = [
+        'date' => 'date',
+    ]; 
 
     public function annonces()
     {
