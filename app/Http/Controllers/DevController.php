@@ -67,7 +67,7 @@ class DevController extends Controller
             'descriptionannonce' => 'Annonce créée via menu dev pour tests.',
             'prixnuitee' => random_int(40, 150),
             'minimumnuitee' => 1,
-            'nombreanimauxmax' => 0,
+            'possibiliteanimaux' => false,
             'nombrebebesmax' => 0,
             'possibilitefumeur' => false,
             'capacite' => 2,

@@ -21,11 +21,17 @@ class RoleSeeder extends Seeder
             ]);
         }
 
-        (Permision::create([
-            'name' => 'annonces.verif',
-        ]))->assignRole(
+        Permision::create([
+            'name' => 'user.verifID',
+        ])->assignRole(
             Role::firstWhere('name', RoleEnum::SERVICE_PETITE_ANNONCE->value),
             Role::firstWhere('name', RoleEnum::DIRECTEUR_SERVICE_PETITE_ANNONCE->value),
+        );
+
+        Permision::create([
+            'name' => 'annonce.status',
+        ])->assignRole(
+            ...Role::all()
         );
     }
 }

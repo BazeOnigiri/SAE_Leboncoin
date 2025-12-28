@@ -96,11 +96,18 @@ Route::middleware([
     ])->group(function () {
         Route::prefix('/services-petites-annonces')
         ->as('services-petites-annonces.')
-        ->middleware('can:annonces.verif')
+        ->middleware('can:user.verifID')
         ->group(function () {
             Route::get('/', [ServicePetiteAnnonceController::class, 'index'])->name('index');
             Route::post('/v/{id}', [ServicePetiteAnnonceController::class, 'verify'])->name('verify');
             Route::post('/r/{id}', [ServicePetiteAnnonceController::class, 'reject'])->name('reject');
+        });
+
+        Route::prefix('/services')
+        ->as('services.')
+        ->middleware('can:annonce.status')
+        ->group(function () {
+            Route::get('/annonces', [AnnonceController::class, 'servicesShowStatus'])->name('annonces');
         });
 
     });
