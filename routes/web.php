@@ -119,4 +119,13 @@ Route::middleware([
                 ->name('annonces.toggleSms')
                 ->middleware('can:annonce.toggleSms');
         });
+
+    Route::prefix('/services/immobilier')
+        ->as('services.immobilier.')
+        ->middleware('can:annonce.immobilier')
+        ->group(function () {
+            Route::get('/annonces', [AnnonceController::class, 'immobilierAnnonces'])->name('annonces');
+            Route::post('/annonces/{id}/accepter', [AnnonceController::class, 'accepterAnnonce'])->name('accepter');
+            Route::post('/annonces/{id}/rejeter', [AnnonceController::class, 'rejeterAnnonce'])->name('rejeter');
+        });
 });
