@@ -20,6 +20,9 @@ use App\Models\Region;
 use App\Models\Departement;
 use App\Services\SmsService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AnnonceAcceptedMail;
+use App\Mail\AnnonceDeletedMail;
 
 class AnnonceController extends Controller
 {
@@ -48,7 +51,7 @@ class AnnonceController extends Controller
         ->withCount('avis')
         ->findOrFail($id);
 
-        if (!$annonce->estverifie && !Auth::user()?->can('user.verifID')) {
+        if (!$annonce->estverifie && (!Auth::check() || Auth::user()->isSuperAdminOrNoRoles())) {
             abort(404);
         }
 
@@ -320,5 +323,64 @@ class AnnonceController extends Controller
 
         $status = $annonce->smsverifie ? 'activée' : 'désactivée';
         return back()->with('success', "Vérification SMS {$status} pour l'annonce #{$annonce->idannonce}");
+    }
+
+    public function immobilierAnnonces()
+    {
+        $annonces = Annonce::where('estverifie', false)
+            ->whereHas('utilisateur', function ($query) {
+                $query->where('identity_verified', true);
+            })
+            ->with('utilisateur', 'adresse.ville', 'typehebergement', 'datePublication')
+            ->orderBy('idannonce', 'desc')
+            ->get();
+
+        return view('services.immobilier-annonces', compact('annonces'));
+    }
+
+    public function accepterAnnonce($id)
+    {
+        $annonce = Annonce::with('utilisateur')->findOrFail($id);
+        
+        $annonce->estverifie = true;
+        $annonce->save();
+
+        if ($annonce->utilisateur && $annonce->utilisateur->email) {
+            Mail::to($annonce->utilisateur->email)
+                ->send(new AnnonceAcceptedMail($annonce->utilisateur, $annonce->titreannonce));
+        }
+
+        return back()->with('success', "Annonce #{$annonce->idannonce} « {$annonce->titreannonce} » validée avec succès.");
+    }
+
+    public function rejeterAnnonce(Request $request, $id)
+    {
+        $annonce = Annonce::with(['utilisateur', 'photos', 'commodites', 'reservations', 'avis'])->findOrFail($id);
+        
+        $user = $annonce->utilisateur;
+        $titreAnnonce = $annonce->titreannonce;
+        $motif = $request->input('motif');
+
+        DB::transaction(function () use ($annonce) {
+            foreach ($annonce->photos as $photo) {
+                $path = str_replace('/storage/', '', $photo->lienphoto);
+                Storage::disk('public')->delete($path);
+            }
+            
+            $annonce->photos()->delete();
+            $annonce->commodites()->detach();
+            $annonce->users()->detach();
+            $annonce->dates()->detach();
+            $annonce->annonces()->detach();
+            
+            $annonce->delete();
+        });
+
+        if ($user && $user->email) {
+            Mail::to($user->email)
+                ->send(new AnnonceDeletedMail($user, $titreAnnonce, $motif));
+        }
+
+        return back()->with('success', "Annonce « {$titreAnnonce} » rejetée et supprimée.");
     }
 }

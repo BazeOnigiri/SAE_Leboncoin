@@ -1,5 +1,5 @@
 @php
-    $isSuperAdminOrNoRoles = auth()->user()->roles->isEmpty() || auth()->user()->hasRole('Super Admin');
+    $isSuperAdminOrNoRoles = Auth::user()->isSuperAdminOrNoRoles();
 @endphp
 <x-app-layout>
     <x-slot name="header">
@@ -42,7 +42,7 @@
                                     </div>
 
                                     <div class="flex flex-col">
-                                        <a href="{{ route('user.edit') }}" class="group">
+                                        <{{ $isSuperAdminOrNoRoles ? 'a' : 'p'}} href="{{ route('user.edit') }}" class="group">
                                             <h2 class="text-2xl font-bold text-gray-900 group-hover:underline mb-1">
                                                 @if (Auth::user()->particulier)
                                                     {{ Auth::user()->particulier->prenomutilisateur }}
@@ -53,7 +53,7 @@
                                                     {{ Auth::user()->pseudonyme }}
                                                 @endif
                                             </h2>
-                                        </a>
+                                        </{{ $isSuperAdminOrNoRoles ? 'a' : 'p'}}>
                                         @forelse(auth()->user()->roles as $role)
                                             <span
                                                 class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-orange-200 bg-orange-50 text-orange-700 text-xs font-semibold shadow-sm w-fit">
@@ -130,6 +130,24 @@
                             <div>
                                 <h2 class="text-lg font-bold text-gray-900">Status Nouvelles Annonces</h2>
                                 <p class="text-gray-500 text-sm mt-1">Verifier le status des nouvelles annonces</p>
+                            </div>
+                        </a>
+                    @endcan
+
+                    @can('annonce.immobilier')
+                        <a href="{{ route('services.immobilier.annonces') }}"
+                            class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 flex-shrink-0 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-bold text-gray-900">Service Immobilier</h2>
+                                <p class="text-gray-500 text-sm mt-1">Vérifier les annonces (identité confirmée)</p>
                             </div>
                         </a>
                     @endcan
