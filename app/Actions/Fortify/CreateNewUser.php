@@ -10,6 +10,7 @@ use App\Models\Professionnel;
 use App\Models\Departement;
 use App\Models\Region;
 use App\Models\Date;
+use App\Services\SmsService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -154,15 +155,25 @@ class CreateNewUser implements CreatesNewUsers
 
             $creationDate = Date::firstOrCreate(['date' => now()->toDateString()]);
 
+            $smsService = app(SmsService::class);
+            $code = $smsService->generateCode();
+
             $user = User::create([
-                'idadresse'            => $adresse->idadresse,
-                'iddate'               => $creationDate->iddate,
-                'pseudonyme'           => $input['pseudo'],
-                'email'                => $input['email'],
-                'telephoneutilisateur' => $input['telephone'],
-                'solde'                => 0,
-                'password'             => Hash::make($input['password']),
+                'idadresse'                   => $adresse->idadresse,
+                'iddate'                      => $creationDate->iddate,
+                'pseudonyme'                  => $input['pseudo'],
+                'email'                       => $input['email'],
+                'telephoneutilisateur'        => $input['telephone'],
+                'phone_verified'              => false,
+                'phone_verification_code'     => $code,
+                'phone_verification_expires_at'=> now()->addMinutes(10),
+                'solde'                       => 0,
+                'password'                    => Hash::make($input['password']),
             ]);
+
+            $message = "Leboncoin : votre code de vérification est : {$code}. Valide 10 minutes.";
+            $smsService->send($user->telephoneutilisateur, $message);
+
 
             if ($input['role'] === 'particulier') {
                 $birthDate = Date::firstOrCreate(['date' => $input['date_naissance']]);
