@@ -398,7 +398,7 @@ CREATE TABLE utilisateur (
    email                     VARCHAR(320)    NOT NULL UNIQUE,
    email_verified_at         TIMESTAMP       NULL,
    password                  VARCHAR(255)    NOT NULL,
-   telephoneutilisateur      CHAR(10)        NULL,
+   telephoneutilisateur      CHAR(10)        NOT NULL UNIQUE,
    phone_verified            BOOLEAN         NOT NULL,
    identity_verified         BOOLEAN         NOT NULL,
    solde                     DECIMAL(10,2)   NOT NULL,
