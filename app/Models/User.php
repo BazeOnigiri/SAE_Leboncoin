@@ -68,7 +68,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function isSuperAdminOrNoRoles() {
-        return auth()->user()->roles->isEmpty() || auth()->user()->hasRole('Super Admin');
+        return $this->roles->isEmpty() || $this->hasRole('Super Admin');
     }
 
     public function isCNIValidate()

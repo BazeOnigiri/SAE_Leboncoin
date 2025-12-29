@@ -14,6 +14,7 @@ use App\Http\Controllers\DevController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\BotManController;
+use App\Http\Controllers\ServiceInscriptionController;
 
 if (app()->environment('local')) {
     Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
@@ -127,5 +128,12 @@ Route::middleware([
             Route::get('/annonces', [AnnonceController::class, 'immobilierAnnonces'])->name('annonces');
             Route::post('/annonces/{id}/accepter', [AnnonceController::class, 'accepterAnnonce'])->name('accepter');
             Route::post('/annonces/{id}/rejeter', [AnnonceController::class, 'rejeterAnnonce'])->name('rejeter');
+        });
+
+    Route::prefix('/services/inscription')
+        ->as('services.inscription.')
+        ->middleware('can:service.inscription')
+        ->group(function () {
+            Route::get('/', [ServiceInscriptionController::class, 'index'])->name('index');
         });
 });

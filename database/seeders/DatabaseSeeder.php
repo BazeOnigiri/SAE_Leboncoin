@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
             'civilite' => 'Monsieur',
         ]);
 
-        foreach (RoleEnum::cases() as $roleEnum) {
+        foreach (RoleEnum::cases() as $index => $roleEnum) {
             $role = Role::firstWhere('name', $roleEnum->value);
 
             $base = Str::slug($roleEnum->value, '_');
@@ -54,6 +54,7 @@ class DatabaseSeeder extends Seeder
                     'solde' => 0.00,
                     'idadresse' => 1,
                     'iddate' => 1,
+                    'telephoneutilisateur' => sprintf('0699%06d', $index),
                 ],
             );
 
