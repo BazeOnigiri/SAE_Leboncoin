@@ -47,5 +47,12 @@ class RoleSeeder extends Seeder
             Role::firstWhere('name', RoleEnum::SERVICE_IMOBILIER->value),
             Role::firstWhere('name', RoleEnum::DIRECTEUR_SERVICE_IMOBILIER->value),
         );
+
+        Permision::create([
+            'name' => 'service.inscription',
+        ])->assignRole(
+            Role::firstWhere('name', RoleEnum::SERVICE_INSCRIPTION->value),
+            Role::firstWhere('name', RoleEnum::DIRECTEUR_SERVICE_INSCRIPTION->value),
+        );
     }
 }
