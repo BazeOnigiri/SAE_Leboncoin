@@ -15,6 +15,7 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\BotManController;
 use App\Http\Controllers\ServiceInscriptionController;
+use App\Http\Controllers\PhoneVerificationController;
 
 if (app()->environment('local')) {
     Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
@@ -23,11 +24,8 @@ if (app()->environment('local')) {
     Route::post('/dev/create-cni', [DevController::class, 'createCni'])->name('dev.create-cni');
 }
 
-
 Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
-
-
 
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')
@@ -37,6 +35,12 @@ Route::post('/connexion', [ConnexionController::class, 'checkEmail'])
     ->middleware('guest')
     ->name('auth.verify');
 
+Route::middleware(['auth:sanctum', config('jetstream.auth_session')])->group(function () {
+    Route::get('/verify-phone', [PhoneVerificationController::class, 'show'])->name('phone.verify.show');
+    Route::post('/verify-phone/resend', [PhoneVerificationController::class, 'resend'])->name('phone.verify.resend');
+    Route::post('/verify-phone/verify', [PhoneVerificationController::class, 'verify'])->name('phone.verify.verify');
+});
+
 Route::middleware([
     'user.only'
 ])->group(function () {
@@ -45,9 +49,11 @@ Route::middleware([
     Route::get('/check-reservation/{id}', function ($id) {
         return redirect()->route('annonce.view', ['id' => $id]);
     })->middleware(['auth', 'verified'])->name('check.reservation');
+    
     Route::get('/reservation/creer/{id}', [ReservationController::class, 'create'])
         ->middleware(['auth', 'verified'])
         ->name('reservation.create');
+        
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])
             ->name('incidents.create');
@@ -61,6 +67,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'phone.verified',
 ])->group(function () {
 
     Route::get('/dashboard', function () {
@@ -96,10 +103,12 @@ Route::middleware([
         Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
     });
 });
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'phone.verified'
 ])->group(function () {
 
     Route::prefix('/services-petites-annonces')

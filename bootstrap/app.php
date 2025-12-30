@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'user.only' => \App\Http\Middleware\EnsureNotServiceRole::class,
+            'phone.verified' => \App\Http\Middleware\EnsurePhoneIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

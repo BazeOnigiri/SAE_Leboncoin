@@ -21,10 +21,9 @@
 
             <form method="POST" action="{{ route('verification.send') }}" class="mb-4">
                 @csrf
-                <button type="submit"
-                        class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 rounded">
+                <x-button type="submit"class="w-full justify-center">
                     Renvoyer l’e-mail
-                </button>
+                </x-button>
             </form>
 
             <div class="flex items-center justify-between text-sm">

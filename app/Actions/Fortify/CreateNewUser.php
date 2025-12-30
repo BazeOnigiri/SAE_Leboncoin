@@ -55,7 +55,7 @@ class CreateNewUser implements CreatesNewUsers
             'email'          => ['required', 'string', 'email', 'max:255', 'unique:utilisateur,email'],
             'password'       => $this->passwordRules(),
             'pseudo'         => ['required', 'string', 'max:50'],
-            'telephone'      => ['required', 'regex:/^0[1-9][0-9]{8}$/'],
+            'telephone'      => ['required', 'regex:/^0[1-9][0-9]{8}$/', 'unique:utilisateur,telephoneutilisateur'],
 
             'numerorue'      => ['required', 'string'],
             'nomrue'         => ['required', 'string'],

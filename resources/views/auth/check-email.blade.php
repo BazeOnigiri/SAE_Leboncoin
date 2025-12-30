@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="absolute top-4 left-4 z-10">
-        <a href="/" class="text-sm text-gray-600 hover:text-gray-900">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900 flex items-center">
             ← Retour à l'accueil
         </a>
     </div>
@@ -12,38 +12,37 @@
                     <x-authentication-card-logo />
                 </x-slot>
 
-                <h2 class="text-lg font-semibold text-center mb-4 text-gray-900">
+                <h2 class="text-lg font-semibold text-center mb-6 text-gray-900">
                     Connexion / Création de compte
                 </h2>
 
                 <x-validation-errors class="mb-4" />
 
-                <form method="POST" action="{{ route('auth.verify') }}" class="space-y-4">
+                <form method="POST" action="{{ route('auth.verify') }}" class="space-y-6">
                     @csrf
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail *</label>
+                        <x-label for="email" value="E-mail *" />
 
-                        <input
-                            id="email"
-                            class="block w-full border border-gray-300 rounded py-2 px-3 focus:border-orange-600 focus:ring-0 placeholder-gray-400"
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            required
-                            autofocus
-                            placeholder="Ex : jean.dupont@gmail.com"
+                        <x-input 
+                            id="email" 
+                            class="block mt-1 w-full focus:border-orange-600 focus:ring-orange-600" 
+                            type="email" 
+                            name="email" 
+                            :value="old('email')" 
+                            required 
+                            autofocus 
+                            placeholder="Ex : jean.dupont@gmail.com" 
                         />
-
-                        @error('email')
-                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                        @enderror
+                        
+                        <x-input-error for="email" class="mt-2" />
                     </div>
 
-                    <button type="submit"
-                            class="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded">
-                        Continuer
-                    </button>
+                    <div class="mt-4">
+                        <x-button-orange class="w-full">
+                            Continuer
+                        </x-button-orange>
+                    </div>
                 </form>
             </x-authentication-card>
         </div>
