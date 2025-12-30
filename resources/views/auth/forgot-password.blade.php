@@ -1,9 +1,7 @@
 <x-guest-layout>
     <div class="absolute top-4 left-4 z-10">
-        <a href="{{ route('login') }}"
-           class="flex items-center gap-2 text-gray-600 hover:text-orange-600 text-sm transition">
-            <i class="fa-solid fa-arrow-left"></i>
-            <span>Retour</span>
+        <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-gray-900 flex items-center transition">
+            ←Retour
         </a>
     </div>
 
@@ -22,46 +20,40 @@
                     Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.
                 </p>
 
-                @session('status')
-                    <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-                        {{ $value }}
+                @if (session('status'))
+                    <div class="mb-4 font-medium text-sm text-green-600 bg-green-50 border border-green-200 px-4 py-3 rounded-lg">
+                        {{ session('status') }}
                     </div>
-                @endsession
+                @endif
 
                 <x-validation-errors class="mb-4" />
 
-                <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
+                <form method="POST" action="{{ route('password.email') }}" class="space-y-6">
                     @csrf
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                            Adresse e-mail *
-                        </label>
+                        <x-label for="email" value="Adresse e-mail *" />
 
-                        <input
-                            id="email"
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            required
-                            autofocus
-                            autocomplete="username"
-                            placeholder="Ex : jean.dupont@gmail.com"
-                            class="w-full border border-gray-300 rounded-md px-3 py-2
-                                   focus:border-[#ec5a13] focus:ring-0"
+                        <x-input 
+                            id="email" 
+                            class="block mt-1 w-full focus:border-orange-600 focus:ring-orange-600" 
+                            type="email" 
+                            name="email" 
+                            :value="old('email')" 
+                            required 
+                            autofocus 
+                            autocomplete="username" 
+                            placeholder="Ex : jean.dupont@gmail.com" 
                         />
 
-                        @error('email')
-                            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-                        @enderror
+                        <x-input-error for="email" class="mt-2" />
                     </div>
 
-                    <button
-                        type="submit"
-                        class="w-full bg-[#ec5a13] hover:bg-[#d64d0e]
-                               text-white font-semibold py-2.5 rounded-md transition">
-                        Envoyer le lien de réinitialisation
-                    </button>
+                    <div>
+                        <x-button-orange class="w-full justify-center">
+                            Envoyer le lien de réinitialisation
+                        </x-button-orange>
+                    </div>
                 </form>
             </x-authentication-card>
         </div>
