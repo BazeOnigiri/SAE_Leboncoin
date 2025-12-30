@@ -11,7 +11,11 @@ class EnsurePhoneIsVerified
     {
         $user = $request->user();
 
-        if ($user && !$user->phone_verified && !$request->routeIs('phone.verify.*')) {
+        if (!$user || $user->roles->isNotEmpty()) {
+            return $next($request);
+        }
+        
+        if (!$user->phone_verified && !$request->routeIs('phone.verify.*')) {
             return redirect()->route('phone.verify.show');
         }
 
