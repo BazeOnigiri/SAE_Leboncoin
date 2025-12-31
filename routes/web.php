@@ -53,6 +53,10 @@ Route::middleware([
     Route::get('/reservation/creer/{id}', [ReservationController::class, 'create'])
         ->middleware(['auth', 'verified'])
         ->name('reservation.create');
+    
+    Route::post('/reservation/creer/{id}', [ReservationController::class, 'store'])
+        ->middleware(['auth', 'verified'])
+        ->name('reservation.store');
         
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])

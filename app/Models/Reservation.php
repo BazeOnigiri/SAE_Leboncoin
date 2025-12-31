@@ -11,6 +11,17 @@ class Reservation extends Model
     
     protected $primaryKey = 'idreservation';
     public $timestamps = false;
+
+    protected $fillable = [
+        'idannonce',
+        'idutilisateur',
+        'iddatedebutreservation',
+        'iddatefinreservation',
+        'nomclient',
+        'prenomclient',
+        'telephoneclient',
+    ];
+    
     public function annonce() {
         return $this->belongsTo(Annonce::class, 'idannonce');
     }

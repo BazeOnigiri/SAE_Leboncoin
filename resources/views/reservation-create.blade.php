@@ -48,7 +48,7 @@
                 </span>
             </div>
 
-            <form id="reservation-form" action="#" method="POST" data-price="{{ $annonce->prixnuitee }}" data-nights="{{ $nbNuits > 0 ? $nbNuits : 1 }}">
+            <form id="reservation-form" action="{{ route('reservation.store', ['id' => $annonce->idannonce]) }}" method="POST" data-price="{{ $annonce->prixnuitee }}" data-nights="{{ $nbNuits > 0 ? $nbNuits : 1 }}">
                 @csrf
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
