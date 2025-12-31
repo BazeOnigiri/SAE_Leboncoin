@@ -48,14 +48,14 @@
                                     <div>
                                         <div class="flex justify-between items-start">
                                             <h3 class="font-bold text-lg text-gray-900 line-clamp-1">{{ $reservation->annonce->titreannonce ?? 'Logement' }}</h3>
-                                            <span class="font-bold text-gray-900 text-lg">{{ $reservation->transaction->montanttransaction ?? '0.00' }} €</span>
+                                            <span class="font-bold text-gray-900 text-lg">{{ number_format($reservation->transaction->montanttransaction ?? 0, 2, ',', ' ') }} €</span>
                                         </div>
                                         <p class="text-gray-500 text-sm mt-1 flex items-center gap-1">
                                             <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                                             </svg>                        
-                                            {{ $reservation->annonce->capacite}} pers.
+                                            {{ $reservation->annonce->adresse->ville->nomville ?? 'Ville inconnue' }}
                                         </p>
                                         <div class="mt-3 flex gap-4 text-xs text-gray-500 font-medium">
                                             <span class="flex items-center gap-1">
@@ -64,7 +64,7 @@
                                             </span>
                                             <span class="flex items-center gap-1">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                                {{ $reservation->voyageurs_count ?? 1 }} voyageurs
+                                                {{ $reservation->nombreVoyageur ?? $reservation->annonce->capacite ?? 1 }} voyageur{{ ($reservation->nombreVoyageur ?? 1) > 1 ? 's' : '' }}
                                             </span>
                                         </div>
                                     </div>
@@ -112,8 +112,8 @@
                                 <div class="flex-grow flex flex-col justify-between">
                                     <div>
                                         <div class="flex justify-between items-start">
-                                            <h3 class="font-bold text-lg text-gray-900 line-clamp-1">{{ $reservation->annonce->titre ?? 'Logement' }}</h3>
-                                            <span class="font-bold text-gray-900 text-lg">{{ $reservation->transaction->montanttransaction ?? '0.00' }} €</span>
+                                            <h3 class="font-bold text-lg text-gray-900 line-clamp-1">{{ $reservation->annonce->titreannonce ?? 'Logement' }}</h3>
+                                            <span class="font-bold text-gray-900 text-lg">{{ number_format($reservation->transaction->montanttransaction ?? 0, 2, ',', ' ') }} €</span>
                                         </div>
                                         <p class="text-gray-500 text-sm mt-1 flex items-center gap-1">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
@@ -123,6 +123,10 @@
                                             <span class="flex items-center gap-1">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                                 Du {{ \Carbon\Carbon::parse($reservation->dateDebut->date)->format('d/m') }} au {{ \Carbon\Carbon::parse($reservation->dateFin->date)->format('d/m/Y') }}
+                                            </span>
+                                            <span class="flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                                {{ $reservation->nombreVoyageur ?? $reservation->annonce->capacite ?? 1 }} voyageur{{ ($reservation->nombreVoyageur ?? 1) > 1 ? 's' : '' }}
                                             </span>
                                         </div>
                                     </div>
