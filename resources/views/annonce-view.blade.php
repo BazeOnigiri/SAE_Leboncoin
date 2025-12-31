@@ -3,7 +3,6 @@
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        /* Customisation du calendrier Flatpickr style Bon Coin */
         .flatpickr-calendar {
             background: white;
             border: 1px solid #e5e7eb;
@@ -160,7 +159,6 @@
             flex: 0 0 220px;
         }
 
-        /* Input style */
         .flatpickr-input {
             background: white;
             border: 1px solid #d1d5db;
@@ -177,7 +175,6 @@
             box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
         }
 
-        /* Mode range - sélection entre deux dates */
         .flatpickr-day.nextMonthDay.start,
         .flatpickr-day.prevMonthDay.start,
         .flatpickr-day.start {
@@ -196,7 +193,6 @@
             background-color: #FEF3C7;
         }
 
-        /* Month selector dropdown */
         .flatpickr-monthDropdown-months {
             background: white;
             border: 1px solid #d1d5db;
@@ -304,7 +300,7 @@
                                 baseUrl = "{{ route('check.reservation', ['id' => $annonce->idannonce]) }}";
                             @endauth
 
-                            btn.href = baseUrl + "?arrivee=" + arriveeInput.value + "&depart=" + departInput.value;
+                            btn.href = baseUrl + "?arrivee=" + encodeURIComponent(arriveeInput.value) + "&depart=" + encodeURIComponent(departInput.value);
 
                             btn.classList.remove('bg-gray-300', 'cursor-not-allowed', 'pointer-events-none', 'shadow-none');
                             btn.classList.add('bg-[#EA580C]', 'hover:bg-[#C2410C]', 'shadow-sm', 'cursor-pointer');
@@ -763,15 +759,13 @@
 
     </div>
 
-    <!-- Flatpickr JS avec locale française -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
     <script>
         flatpickr.localize(flatpickr.l10ns.fr);
 
         const reservedDatesObj = @json($reservedDates ?? []);
-    
-        // Convertir l'objet en array de dates
+
         const reservedDates = Array.isArray(reservedDatesObj) 
             ? reservedDatesObj 
             : Object.values(reservedDatesObj);

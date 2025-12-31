@@ -12,8 +12,17 @@
 
         if($dateArrivee && $dateDepart) {
             try {
-                $start = Carbon::parse($dateArrivee);
-                $end = Carbon::parse($dateDepart);
+                if (strpos($dateArrivee, '/') !== false) {
+                    $start = Carbon::createFromFormat('d/m/Y', $dateArrivee);
+                } else {
+                    $start = Carbon::parse($dateArrivee);
+                }
+                
+                if (strpos($dateDepart, '/') !== false) {
+                    $end = Carbon::createFromFormat('d/m/Y', $dateDepart);
+                } else {
+                    $end = Carbon::parse($dateDepart);
+                }
                 
                 if($end->gt($start)) {
                     $nbNuits = $start->diffInDays($end);
@@ -21,7 +30,6 @@
                     $formattedDepart = $end->format('d/m/Y');
                 }
             } catch (\Exception $e) {
-                // Dates invalides, on laisse à 0
             }
         }
     @endphp
@@ -40,7 +48,7 @@
                 </span>
             </div>
 
-            <form action="#" method="POST" data-price="{{ $annonce->prixnuitee }}" data-nights="{{ $nbNuits > 0 ? $nbNuits : 1 }}">
+            <form id="reservation-form" action="#" method="POST" data-price="{{ $annonce->prixnuitee }}" data-nights="{{ $nbNuits > 0 ? $nbNuits : 1 }}">
                 @csrf
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -284,62 +292,50 @@
 
                             <div class="p-4 bg-white rounded-lg shadow-lg">
 
-    <!-- Titre du récapitulatif -->
     <h3 class="font-bold text-lg text-slate-900 mb-6">Récapitulatif du paiement</h3>
 
-    <!-- Vérification de la sélection des dates -->
     @if($nbNuits == 0)
         <div class="bg-red-100 text-red-700 px-4 py-3 rounded text-sm mb-6">
             Veuillez sélectionner vos dates sur l'annonce.
         </div>
     @endif
 
-    <!-- Détails du paiement -->
     <div class="space-y-4 text-sm text-slate-600">
-        <!-- Montant de la location -->
         <div class="flex justify-between">
             <span>Montant de la location</span>
             <span class="ml-auto" data-update-rent>{{ number_format($totalRent, 2, ',', ' ') }}</span> €
         </div>
 
-        <!-- Frais de service -->
         <div class="flex justify-between">
             <span>Frais de service</span>
             <span class="ml-auto" data-update-service>{{ number_format($serviceFee, 2, ',', ' ') }}</span> €
         </div>
 
-        <!-- Taxe de séjour -->
         <div class="flex justify-between">
             <span>Taxe de séjour</span>
             <span class="ml-auto" data-update-tourist>{{ number_format($touristTax, 2, ',', ' ') }}</span> €
         </div>
     </div>
 
-    <!-- Ligne de séparation -->
     <hr class="border-gray-200 my-6">
 
-    <!-- Total -->
     <div class="flex justify-between items-center font-bold text-lg text-slate-900 mb-6">
         <span>Total</span>
         <span class="ml-auto" data-update-total>{{ number_format($total, 2, ',', ' ') }}</span> €
     </div>
 
-    <!-- À payer maintenant et à payer plus tard -->
     <div class="space-y-4">
-        <!-- À payer maintenant -->
         <div class="flex justify-between items-center text-[#EA580C] font-bold">
             <span>À payer maintenant</span>
             <span class="ml-auto" data-update-pay-now>{{ number_format($payNow, 2, ',', ' ') }}</span> €
         </div>
 
-        <!-- Restera à payer sur place -->
         <div class="flex justify-between items-center text-slate-600">
             <span>Restera à payer sur place</span>
             <span class="ml-auto" data-update-pay-later>{{ number_format($payLater, 2, ',', ' ') }}</span> €
         </div>
     </div>
 
-    <!-- Message d'explication -->
     <p class="text-xs text-gray-500 mt-6 leading-relaxed">
         Ce paiement nous sert à garantir votre réservation. Il inclut un acompte pour la location, les frais de service et la taxe de séjour. Retrouvez le détail de nos conditions d'annulation ici.
     </p>
@@ -365,8 +361,7 @@
             function getTotalGuests() {
                 const adults = parseInt(document.getElementById('input-adults').value) || 0;
                 const children = parseInt(document.getElementById('input-children').value) || 0;
-                const babies = parseInt(document.getElementById('input-babies').value) || 0;
-                return adults + children + babies;
+                return adults + children;
             }
 
             function updateButtonStates() {
@@ -442,22 +437,24 @@
             });
 
             updateButtonStates();
+            updatePaymentSummary(); 
         });
 
         function updatePaymentSummary() {
-            const adults = parseInt(document.getElementById('input-adults').value) || 0;
+            const adults = parseInt(document.getElementById('input-adults').value) || 1;
             const children = parseInt(document.getElementById('input-children').value) || 0;
             const babies = parseInt(document.getElementById('input-babies').value) || 0;
-            const totalPersons = adults + children + babies;
 
-            const form = document.querySelector('form');
+            const form = document.getElementById('reservation-form');
             const pricePerNight = parseFloat(form?.dataset.price || 0);
             const nights = parseInt(form?.dataset.nights || 1);
+
+            console.log('Calcul:', { adults, nights, pricePerNight });
 
             if (pricePerNight > 0 && nights > 0) {
                 const totalRent = pricePerNight * nights;
                 const serviceFee = totalRent * 0.14;
-                const touristTax = 4.00 * nights * totalPersons;
+                const touristTax = 4.00 * nights * adults; 
                 const total = totalRent + serviceFee + touristTax;
                 const payNow = serviceFee + (totalRent * 0.35);
                 const payLater = total - payNow;
