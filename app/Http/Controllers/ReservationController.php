@@ -53,11 +53,9 @@ class ReservationController extends Controller
 
         $annonce = Annonce::findOrFail($id);
 
-        // Parser les dates au format français
         $dateDebut = \Carbon\Carbon::createFromFormat('d/m/Y', $request->date_debut);
         $dateFin = \Carbon\Carbon::createFromFormat('d/m/Y', $request->date_fin);
 
-        // Créer les entrées dans la table Date
         $dateDebutEntry = \App\Models\Date::firstOrCreate(
             ['date' => $dateDebut->format('Y-m-d')]
         );
@@ -66,7 +64,6 @@ class ReservationController extends Controller
             ['date' => $dateFin->format('Y-m-d')]
         );
 
-        // Créer la réservation selon la structure réelle de la BDD
         $reservation = new Reservation();
         $reservation->idannonce = $annonce->idannonce;
         $reservation->idutilisateur = Auth::id();
