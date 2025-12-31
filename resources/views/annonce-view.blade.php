@@ -636,23 +636,23 @@
                                 <div class="flex-1">
                                     <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Arrivée</label>
                                     <div class="relative">
-                                        <input type="date" 
+                                        <input type="text" 
                                             id="dateArriveeInput"
-                                            min="{{ date('Y-m-d') }}" 
                                             onchange="updateReservationLink()"
                                             class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
-                                            placeholder="Sélectionnez une date">
+                                            placeholder="Sélectionnez une date"
+                                            readonly>
                                     </div>
                                 </div>
                                 <div class="flex-1">
                                     <label class="block text-xs font-bold text-slate-500 mb-1 ml-1">Départ</label>
                                     <div class="relative">
-                                        <input type="date" 
+                                        <input type="text" 
                                             id="dateDepartInput"
-                                            min="{{ date('Y-m-d') }}" 
                                             onchange="updateReservationLink()"
                                             class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
-                                            placeholder="Sélectionnez une date">
+                                            placeholder="Sélectionnez une date"
+                                            readonly>
                                     </div>
                                 </div>
                             </div>
@@ -767,26 +767,26 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
     <script>
-        // Définir la locale française
         flatpickr.localize(flatpickr.l10ns.fr);
 
-        // Dates réservées depuis le backend
-        const reservedDates = @json($reservedDates ?? []);
-        
+        const reservedDatesObj = @json($reservedDates ?? []);
+    
+        // Convertir l'objet en array de dates
+        const reservedDates = Array.isArray(reservedDatesObj) 
+            ? reservedDatesObj 
+            : Object.values(reservedDatesObj);
+    
         console.log('Dates réservées:', reservedDates);
 
-        // Fonction pour vérifier si une date est réservée
         function isDateReserved(date) {
             const dateStr = date.toISOString().split('T')[0];
             return reservedDates.includes(dateStr);
         }
 
-        // Initialiser le calendrier d'arrivée
         const dateArrivee = flatpickr("#dateArriveeInput", {
             minDate: "{{ date('Y-m-d') }}",
             dateFormat: "d/m/Y",
             locale: "fr",
-            mode: "range",
             showMonths: 2,
             monthSelectorType: "dropdown",
             disable: [
@@ -795,20 +795,21 @@
                 }
             ],
             onChange: function(selectedDates) {
-                if (selectedDates.length === 2) {
-                    // Mettre à jour les deux champs
-                    dateArrivee.setDate(selectedDates[0], true);
-                    dateDepart.setDate(selectedDates[1], true);
+                if (selectedDates.length > 0) {
+                    const nextDay = new Date(selectedDates[0]);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    dateDepart.set('minDate', nextDay);
                     updateReservationLink();
                 }
             }
         });
 
-        // Initialiser le calendrier de départ (visible seulement si clic sur arrivée d'abord)
         const dateDepart = flatpickr("#dateDepartInput", {
             minDate: "{{ date('Y-m-d') }}",
             dateFormat: "d/m/Y",
             locale: "fr",
+            showMonths: 2,
+            monthSelectorType: "dropdown",
             disable: [
                 function(date) {
                     return isDateReserved(date);
@@ -817,15 +818,6 @@
             onChange: function() {
                 updateReservationLink();
             }
-        });
-
-        // Gérer l'affichage du calendrier
-        document.getElementById('dateArriveeInput').addEventListener('focus', function() {
-            dateArrivee.open();
-        });
-
-        document.getElementById('dateDepartInput').addEventListener('focus', function() {
-            dateArrivee.open();
         });
     </script>
 @endsection
