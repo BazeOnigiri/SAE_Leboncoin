@@ -126,6 +126,10 @@ class DevController extends Controller
 
         $email = 'dev_' . $type . '_' . Str::lower(Str::random(6)) . '@example.com';
 
+        do {
+            $phone = '06' . str_pad(random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
+        } while (User::where('telephoneutilisateur', $phone)->exists());
+
         $user = User::create([
             'pseudonyme' => Str::title($type) . ' ' . Str::random(4),
             'password' => bcrypt('password'),
@@ -134,7 +138,7 @@ class DevController extends Controller
             'solde' => 0,
             'idadresse' => 1,
             'iddate' => 1,
-            'telephoneutilisateur' => '0767718877',
+            'telephoneutilisateur' => $phone,
         ]);
 
         if ($type === 'particulier') {

@@ -9,7 +9,13 @@ class ServiceInscriptionController extends Controller
 {
     public function index()
     {
-        $users = User::doesntHave('roles')->whereNull('email_verified_at')->paginate(20);
+        $users = User::doesntHave('roles')
+            ->where(function ($query) {
+                $query->where('phone_verified', false)
+                      ->orWhereNull('email_verified_at');
+            })
+            ->orderBy('idutilisateur', 'desc')
+            ->paginate(25);
         return view('services.inscription', compact('users'));
     }
 }
