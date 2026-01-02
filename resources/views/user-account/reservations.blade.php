@@ -4,7 +4,7 @@
     </x-slot>
 
     @section('content')
-    <div class="bg-[#f8f9fb] min-h-screen py-8" x-data="{ activeTab: 'upcoming' }">
+    <div class="bg-[#f8f9fb] min-h-screen py-8" x-data="{ activeTab: 'upcoming', showCancelModal: false, reservationToCancel: null, reservationTitle: '' }">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-6">Mes voyages</h1>
             
@@ -78,7 +78,9 @@
                                         <a href="{{ route('incidents.create', $reservation) }}" class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition group">
                                             Signaler un incident
                                         </a>
-                                        <button class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition ml-auto group">
+                                        <button 
+                                            @click="showCancelModal = true; reservationToCancel = {{ $reservation->idreservation }}; reservationTitle = '{{ addslashes($reservation->annonce->titreannonce ?? 'cette réservation') }}'"
+                                            class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition ml-auto group">
                                             Annuler
                                         </button>
                                     </div>
@@ -145,6 +147,60 @@
                 @endif
             </div>
 
+        </div>
+
+        <div x-show="showCancelModal" 
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                style="display: none;">
+            <div class="fixed inset-0 bg-black/50" @click="showCancelModal = false"></div>
+            
+            <div x-show="showCancelModal"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95"
+                class="relative bg-white rounded-2xl shadow-xl max-w-md w-full p-6 z-10">
+                
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Confirmer l'annulation</h3>
+                    <p class="text-gray-600 mb-6">
+                        Êtes-vous sûr de vouloir annuler votre réservation pour 
+                        <span class="font-semibold" x-text="reservationTitle"></span> ?
+                        <br><span class="text-sm text-gray-500 mt-2 block">Cette action est irréversible.</span>
+                    </p>
+                </div>
+
+                <div class="flex gap-3">
+                    <button @click="showCancelModal = false" 
+                            class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition">
+                        Annuler
+                    </button>
+                    <form method="POST" class="flex-1" x-bind:action="'{{ url('/reservations') }}/' + reservationToCancel + '/cancel'">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                                class="w-full px-4 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">
+                            Confirmer
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     @endsection

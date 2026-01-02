@@ -46,7 +46,13 @@ class UserAccountController extends Controller
     {
         $user = Auth::user();
         $annonces = Annonce::where('idutilisateur', $user->idutilisateur)
-            ->with(['photos', 'typeHebergement', 'adresse.ville'])
+            ->with([
+                'photos',
+                'typeHebergement',
+                'adresse.ville',
+                'reservations.dateDebut',
+                'reservations.dateFin',
+            ])
             ->orderBy('idannonce', 'desc')
             ->get();
 

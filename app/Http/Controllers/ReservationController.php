@@ -77,4 +77,20 @@ class ReservationController extends Controller
         return redirect()->route('user.mes-reservations')
             ->with('success', 'Votre demande de réservation a été envoyée avec succès !');
     }
+
+    public function cancel(Reservation $reservation)
+    {
+        if ($reservation->idutilisateur !== Auth::id()) {
+            abort(403, 'Vous n\'êtes pas autorisé à annuler cette réservation.');
+        }
+
+        if ($reservation->transaction) {
+            $reservation->transaction->delete();
+        }
+
+        $reservation->delete();
+
+        return redirect()->route('user.mes-reservations')
+            ->with('success', 'La réservation a été annulée avec succès.');
+    }
 }

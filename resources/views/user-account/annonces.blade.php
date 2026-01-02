@@ -56,11 +56,54 @@
                                             <span class="mx-1">•</span>
                                             {{ $annonce->typeHebergement->nomtypehebergement ?? 'Logement' }}
                                         </p>
-                                        
-                                        <div class="mt-3 flex gap-4 text-xs text-gray-500 font-medium">
-                                            <span class="flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> 0 vues</span>
-                                            <span class="flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg> 0 messages</span>
+                                    </div>
+
+                                    @php
+                                        $reservations = $annonce->reservations->sortByDesc(fn($r) => optional($r->dateDebut)->date);
+                                    @endphp
+                                    <div class="mt-4 border-t border-gray-100 pt-3">
+                                        <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                            <span>Réservations ({{ $annonce->reservations->count() }})</span>
+                                            <span class="text-xs text-gray-500">Défilez pour voir tout</span>
                                         </div>
+                                        @if($reservations->isEmpty())
+                                            <p class="text-sm text-gray-500 mt-2">Aucune réservation pour cette annonce.</p>
+                                        @else
+                                            <div class="mt-2 space-y-2 max-h-24 overflow-y-auto pr-1">
+                                                @foreach($reservations as $reservation)
+                                                    @php
+                                                        $start = optional($reservation->dateDebut)->date;
+                                                        $end = optional($reservation->dateFin)->date;
+                                                        $profileUrl = $reservation->idutilisateur ? route('user.profile', ['id' => $reservation->idutilisateur]) : null;
+                                                        $isPast = $reservation->est_passee;
+                                                    @endphp
+                                                    <a @if($profileUrl) href="{{ $profileUrl }}" @endif class="bg-white/70 border border-gray-200 rounded-lg px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:border-orange-200 hover:shadow-sm transition {{ $isPast ? 'opacity-60 bg-gray-50' : '' }}">
+                                                        <div class="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                                                            <span>{{ $reservation->prenomclient }} {{ $reservation->nomclient }}</span>
+                                                            @if($isPast)
+                                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-200 text-gray-700">
+                                                                    Passée
+                                                                </span>
+                                                            @else
+                                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
+                                                                    À venir
+                                                                </span>
+                                                            @endif
+                                                            @if($profileUrl)
+                                                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-50 text-orange-700 border border-orange-100" title="Contacter ce client">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25v8.25A2.25 2.25 0 0118.75 18.75H5.25A2.25 2.25 0 013 16.5V8.25m18 0A2.25 2.25 0 0018.75 6H5.25A2.25 2.25 0 003 8.25m18 0v.243a2.25 2.25 0 01-1.07 1.91l-6.75 4.05a2.25 2.25 0 01-2.31 0l-6.75-4.05A2.25 2.25 0 013 8.493V8.25" />
+                                                                    </svg>
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                        <div class="text-xs text-gray-600">
+                                                            {{ $start ? $start->format('d/m/Y') : 'N/C' }} – {{ $end ? $end->format('d/m/Y') : 'N/C' }}
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </div>
 
                                     <!-- Actions -->
@@ -123,10 +166,54 @@
                                             {{ $annonce->typeHebergement->nomtypehebergement ?? 'Logement' }}
                                         </p>
 
-                                        <div class="mt-3 flex gap-4 text-xs text-gray-500 font-medium">
-                                            <span class="flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> 0 vues</span>
-                                            <span class="flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg> 0 messages</span>
+                                    </div>
+
+                                    @php
+                                        $reservations = $annonce->reservations->sortByDesc(fn($r) => optional($r->dateDebut)->date);
+                                    @endphp
+                                    <div class="mt-4 border-t border-gray-100 pt-3">
+                                        <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                            <span>Réservations ({{ $annonce->reservations->count() }})</span>
+                                            <span class="text-xs text-gray-500">Défilez pour voir tout</span>
                                         </div>
+                                        @if($reservations->isEmpty())
+                                            <p class="text-sm text-gray-500 mt-2">Aucune réservation pour cette annonce.</p>
+                                        @else
+                                            <div class="mt-2 space-y-2 max-h-24 overflow-y-auto pr-1">
+                                                @foreach($reservations as $reservation)
+                                                    @php
+                                                        $start = optional($reservation->dateDebut)->date;
+                                                        $end = optional($reservation->dateFin)->date;
+                                                        $profileUrl = $reservation->idutilisateur ? route('user.profile', ['id' => $reservation->idutilisateur]) : null;
+                                                        $isPast = $reservation->est_passee;
+                                                    @endphp
+                                                    <a @if($profileUrl) href="{{ $profileUrl }}" @endif class="bg-white/70 border border-gray-200 rounded-lg px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:border-orange-200 hover:shadow-sm transition {{ $isPast ? 'opacity-60 bg-gray-50' : '' }}">
+                                                        <div class="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                                                            <span>{{ $reservation->prenomclient }} {{ $reservation->nomclient }}</span>
+                                                            @if($isPast)
+                                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-200 text-gray-700">
+                                                                    Passée
+                                                                </span>
+                                                            @else
+                                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
+                                                                    À venir
+                                                                </span>
+                                                            @endif
+                                                            @if($profileUrl)
+                                                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-50 text-orange-700 border border-orange-100" title="Contacter ce client">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25v8.25A2.25 2.25 0 0118.75 18.75H5.25A2.25 2.25 0 013 16.5V8.25m18 0A2.25 2.25 0 0018.75 6H5.25A2.25 2.25 0 003 8.25m18 0v.243a2.25 2.25 0 01-1.07 1.91l-6.75 4.05a2.25 2.25 0 01-2.31 0l-6.75-4.05A2.25 2.25 0 013 8.493V8.25" />
+                                                                    </svg>
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                        <div class="text-xs text-gray-600">
+                                                            {{ $start ? $start->format('d/m/Y') : 'N/C' }} – {{ $end ? $end->format('d/m/Y') : 'N/C' }}
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </div>
 
                                     <div class="flex items-center gap-6 mt-4 pt-3 border-t border-gray-100 text-sm font-bold">
