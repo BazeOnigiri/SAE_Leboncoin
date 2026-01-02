@@ -151,3 +151,5 @@ Route::middleware([
             Route::get('/', [ServiceInscriptionController::class, 'index'])->name('index');
         });
 });
+
+Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);

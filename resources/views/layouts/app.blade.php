@@ -332,12 +332,20 @@
     </script>
     @endauth
 
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger 
-    intent="WELCOME" 
-    chat-title="chatbotLeboncoin" 
-    agent-id="e0fbb1f0-e9cc-44db-997f-fde068a0a051" 
-    language-code="fr"></df-messenger>
+     <script>
+        var botmanWidget = {
+            frameEndpoint: '/botman/chat',
+            introMessage: "Bienvenue ! Je suis votre assistant Leboncoin. Comment puis-je vous aider ?",
+            chatServer: '/botman',
+            mainColor: '#ec5a13',
+            bubbleBackground: '#ec5a13',
+            // bubbleAvatarUrl: '<URL>',
+            title: 'Assistant Leboncoin',
+            headerTextColor: '#ffffffff',
+            placeholderText: 'Écrivez votre message ici...',
+        };
+    </script>
+    <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
 </body>
 
 </html>
