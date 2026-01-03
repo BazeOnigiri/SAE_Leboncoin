@@ -11,8 +11,12 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-lg">
-                            {{ strtoupper(substr($interlocuteur->pseudonyme ?? 'U', 0, 1)) }}
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-lg">
+                            @php
+                                $interlocuteurAvatar = $interlocuteur->profile_photo_url
+                                    ?? 'https://ui-avatars.com/api/?name=' . urlencode($interlocuteur->pseudonyme ?? 'Utilisateur');
+                            @endphp
+                            <img src="{{ $interlocuteurAvatar }}" alt="Photo de profil" class="w-full h-full object-cover">
                         </div>
                         <div>
                             <h1 class="text-xl font-bold text-gray-900">
@@ -70,14 +74,19 @@
                     @forelse($messages as $message)
                         @php
                             $isOwnMessage = $message->idutilisateurexpediteur === Auth::id();
+                            $avatarUrl = $message->expediteur->profile_photo_url
+                                ?? 'https://ui-avatars.com/api/?name=' . urlencode($message->expediteur->pseudonyme ?? 'Utilisateur');
                         @endphp
                         
-                        <div class="flex {{ $isOwnMessage ? 'justify-end' : 'justify-start' }}">
+                        <div class="flex {{ $isOwnMessage ? 'justify-end' : 'justify-start' }} items-end gap-2">
+                            @if(!$isOwnMessage)
+                                <img src="{{ $avatarUrl }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover flex-shrink-0">
+                            @endif
                             <div class="max-w-[75%] {{ $isOwnMessage ? 'order-2' : 'order-1' }}">
                                 @if(!$isOwnMessage)
                                     <div class="flex items-center gap-2 mb-1">
-                                        <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-xs font-bold">
-                                            {{ strtoupper(substr($message->expediteur->pseudonyme ?? 'U', 0, 1)) }}
+                                        <div class="w-6 h-6 rounded-full overflow-hidden bg-gray-200">
+                                            <img src="{{ $avatarUrl }}" alt="Avatar" class="w-full h-full object-cover">
                                         </div>
                                         <span class="text-xs text-gray-500">{{ $message->expediteur->pseudonyme ?? 'Utilisateur' }}</span>
                                     </div>
@@ -98,6 +107,9 @@
                                     @endif
                                 </div>
                             </div>
+                            @if($isOwnMessage)
+                                <img src="{{ $avatarUrl }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover flex-shrink-0">
+                            @endif
                         </div>
                     @empty
                         <div class="text-center py-12">
