@@ -98,6 +98,7 @@ Route::middleware([
         Route::post('/compte/parametres', [UserAccountController::class, 'updateSettings'])->name('user.settings.update');
 
         Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
+        Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
         Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
 
         Route::get('/conversation/{reservation}', [App\Http\Controllers\ConversationController::class, 'show'])->name('conversation.show');

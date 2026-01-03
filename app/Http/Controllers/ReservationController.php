@@ -67,6 +67,9 @@ class ReservationController extends Controller
             ['date' => $dateFin->format('Y-m-d')]
         );
 
+        $children = $request->children ?? 0;
+        $babies = $request->babies ?? 0;
+
         $reservation = new Reservation();
         $reservation->idannonce = $annonce->idannonce;
         $reservation->idutilisateur = Auth::id();
@@ -75,6 +78,10 @@ class ReservationController extends Controller
         $reservation->nomclient = $request->nomutilisateur;
         $reservation->prenomclient = $request->prenomutilisateur;
         $reservation->telephoneclient = $request->telephoneutilisateur;
+        $reservation->nombrevoyageur = $request->adults + $children;
+        $reservation->adultes = $request->adults;
+        $reservation->enfants = $children;
+        $reservation->bebes = $babies;
         $reservation->save();
 
         if ($request->filled('message')) {
@@ -96,6 +103,53 @@ class ReservationController extends Controller
 
         return redirect()->route('user.mes-reservations')
             ->with('success', 'Votre demande de réservation a été envoyée avec succès !');
+    }
+
+    public function update(Request $request, Reservation $reservation)
+    {
+        if ($reservation->idutilisateur !== Auth::id()) {
+            abort(403, 'Vous n\'êtes pas autorisé à modifier cette réservation.');
+        }
+
+        $request->validate([
+            'adultes' => 'required|integer|min:1',
+            'enfants' => 'nullable|integer|min:0',
+            'bebes' => 'nullable|integer|min:0|max:6',
+            'nom_client' => 'required|string|max:50',
+            'prenom_client' => 'required|string|max:50',
+            'telephone_client' => 'nullable|string|max:20',
+        ]);
+
+        $adultes = $request->adultes;
+        $enfants = $request->enfants ?? 0;
+        $bebes = $request->bebes ?? 0;
+        $totalComptes = $adultes + $enfants; 
+        $totalVoyageurs = $totalComptes; 
+        $capacite = $reservation->annonce->capacite ?? 20;
+        
+        if ($totalComptes > $capacite) {
+            return back()
+                ->withErrors(['voyageurs' => "Le nombre d'adultes + enfants dépasse la capacité de l'annonce ({$capacite} personnes)."])
+                ->withInput();
+        }
+
+        if ($bebes > 6) {
+            return back()
+                ->withErrors(['bebes' => 'Un maximum de 6 bébés est autorisé.'])
+                ->withInput();
+        }
+
+        $reservation->nombrevoyageur = $totalVoyageurs;
+        $reservation->adultes = $adultes;
+        $reservation->enfants = $enfants;
+        $reservation->bebes = $bebes;
+        $reservation->nomclient = $request->nom_client;
+        $reservation->prenomclient = $request->prenom_client;
+        $reservation->telephoneclient = $request->telephone_client;
+        $reservation->save();
+
+        return redirect()->route('user.mes-reservations')
+            ->with('success', 'La réservation a été modifiée avec succès.');
     }
 
     public function cancel(Reservation $reservation)

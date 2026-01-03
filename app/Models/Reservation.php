@@ -20,6 +20,10 @@ class Reservation extends Model
         'nomclient',
         'prenomclient',
         'telephoneclient',
+        'nombrevoyageur',
+        'adultes',
+        'enfants',
+        'bebes',
     ];
     
     public function annonce() {
