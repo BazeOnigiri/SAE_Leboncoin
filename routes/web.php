@@ -19,6 +19,7 @@ use App\Http\Controllers\PhoneVerificationController;
 
 if (app()->environment('local')) {
     Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
+    Route::post('/dev/login-as-id', [DevController::class, 'loginAsId'])->name('dev.login-as-id');
     Route::post('/dev/create-user', [DevController::class, 'createUser'])->name('dev.create-user');
     Route::post('/dev/create-user-unverified', [DevController::class, 'createUserUnverified'])->name('dev.create-user-unverified');
     Route::post('/dev/create-annonce', [DevController::class, 'createAnnonce'])->name('dev.create-annonce');

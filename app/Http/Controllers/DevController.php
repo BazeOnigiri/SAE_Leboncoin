@@ -42,6 +42,32 @@ class DevController extends Controller
         return redirect()->intended('/dashboard');
     }
 
+    public function loginAsId(Request $request)
+    {
+        $id = $request->input('idutilisateur');
+        abort_if($id === null || $id === '', 400);
+
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        abort_if(!$id || $id < 1, 400);
+
+        $user = User::where('idutilisateur', $id)->first();
+        abort_if(!$user, 404);
+
+        if (!$user->hasVerifiedEmail()) {
+            $user->forceFill(['email_verified_at' => now()])->save();
+        }
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        Auth::guard('web')->login($user, true);
+        $request->session()->regenerate();
+        $request->session()->put('auth.password_confirmed_at', time());
+
+        return redirect()->intended('/dashboard');
+    }
+
     public function createAnnonce(Request $request)
     {
         $user = Auth::user();
