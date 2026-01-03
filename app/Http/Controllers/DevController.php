@@ -121,6 +121,9 @@ class DevController extends Controller
 
     public function createUser(Request $request)
     {
+        $creationDate = DateModel::firstOrCreate(['date' => now()->toDateString()]);
+        $birthDate = DateModel::firstOrCreate(['date' => '1990-01-01']);
+
         $type = $request->input('type');
         abort_unless(in_array($type, ['particulier', 'professionnel']), 400);
 
@@ -135,15 +138,79 @@ class DevController extends Controller
             'password' => bcrypt('password'),
             'email' => $email,
             'email_verified_at' => now(),
+            'phone_verified' => true,
+            'phone_verification_code' => null,
+            'phone_verification_expires_at' => null,
             'solde' => 0,
             'idadresse' => 1,
-            'iddate' => 1,
+            'iddate' => $creationDate->iddate,
             'telephoneutilisateur' => $phone,
         ]);
 
         if ($type === 'particulier') {
             Particulier::create([
-                'iddate' => 1,
+                'iddate' => $birthDate->iddate,
+                'idutilisateur' => $user->idutilisateur,
+                'nomutilisateur' => 'DevNom',
+                'prenomutilisateur' => 'DevPrenom',
+                'civilite' => 'Monsieur',
+            ]);
+        } else {
+            $siret = '';
+            for ($i = 0; $i < 13; $i++) {
+                $siret .= random_int(0, 9);
+            }
+
+            Professionnel::create([
+                'idutilisateur' => $user->idutilisateur,
+                'numsiret' => $siret,
+                'nomsociete' => 'DevSociete',
+                'secteuractivite' => 'Informatique',
+            ]);
+        }
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        Auth::guard('web')->login($user, true);
+        $request->session()->regenerate();
+        $request->session()->put('auth.password_confirmed_at', time());
+
+        return redirect()->intended('/dashboard');
+    }
+
+    public function createUserUnverified(Request $request)
+    {
+        $creationDate = DateModel::firstOrCreate(['date' => now()->toDateString()]);
+        $birthDate = DateModel::firstOrCreate(['date' => '1990-01-01']);
+
+        $type = $request->input('type');
+        abort_unless(in_array($type, ['particulier', 'professionnel']), 400);
+
+        $email = 'dev_' . $type . '_unverified_' . Str::lower(Str::random(6)) . '@example.com';
+
+        do {
+            $phone = '06' . str_pad(random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
+        } while (User::where('telephoneutilisateur', $phone)->exists());
+
+        $user = User::create([
+            'pseudonyme' => Str::title($type) . ' ' . Str::random(4),
+            'password' => bcrypt('password'),
+            'email' => $email,
+            'email_verified_at' => null,
+            'phone_verified' => false,
+            'phone_verification_code' => null,
+            'phone_verification_expires_at' => null,
+            'solde' => 0,
+            'idadresse' => 1,
+            'iddate' => $creationDate->iddate,
+            'telephoneutilisateur' => $phone,
+        ]);
+
+        if ($type === 'particulier') {
+            Particulier::create([
+                'iddate' => $birthDate->iddate,
                 'idutilisateur' => $user->idutilisateur,
                 'nomutilisateur' => 'DevNom',
                 'prenomutilisateur' => 'DevPrenom',

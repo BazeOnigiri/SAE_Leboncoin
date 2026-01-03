@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Particulier;
 use App\Models\Annonce;
+use App\Models\Date as DateModel;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -23,23 +24,30 @@ class DatabaseSeeder extends Seeder
         $this->call(InsertSeeder::class);
         $this->call(RoleSeeder::class);
 
-        $user = User::create([
-            'pseudonyme' => 'TestPseudo',
-            'password' => bcrypt('passwordT67!'),
-            'email' => 'test@example.com',
-            'telephoneutilisateur' => '0612345678',
-            'solde' => 67.00,
-            'idadresse' => 1,
-            'iddate' => 1,
-        ]);
-        
-        Particulier::create([
-            'iddate' => 1,
-            'idutilisateur' => $user->idutilisateur,
-            'nomutilisateur' => 'TestNom',
-            'prenomutilisateur' => 'TestPrenom', 
-            'civilite' => 'Monsieur',
-        ]);
+        $creationDate = DateModel::firstOrCreate(['date' => now()->toDateString()]);
+        $birthDate = DateModel::firstOrCreate(['date' => '1990-01-01']);
+
+        $user = User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'pseudonyme' => 'TestPseudo',
+                'password' => bcrypt('passwordT67!'),
+                'telephoneutilisateur' => '0612345678',
+                'solde' => 67.00,
+                'idadresse' => 1,
+                'iddate' => $creationDate->iddate,
+            ]
+        );
+
+        Particulier::updateOrCreate(
+            ['idutilisateur' => $user->idutilisateur],
+            [
+                'iddate' => $birthDate->iddate,
+                'nomutilisateur' => 'TestNom',
+                'prenomutilisateur' => 'TestPrenom',
+                'civilite' => 'Monsieur',
+            ]
+        );
 
         foreach (RoleEnum::cases() as $index => $roleEnum) {
             $role = Role::firstWhere('name', $roleEnum->value);
@@ -53,7 +61,7 @@ class DatabaseSeeder extends Seeder
                     'password' => bcrypt('password'),
                     'solde' => 0.00,
                     'idadresse' => 1,
-                    'iddate' => 1,
+                    'iddate' => $creationDate->iddate,
                     'telephoneutilisateur' => sprintf('0699%06d', $index),
                 ],
             );
