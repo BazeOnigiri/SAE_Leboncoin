@@ -20,7 +20,13 @@
                         </div>
                         <div>
                             <h1 class="text-xl font-bold text-gray-900">
-                                {{ $interlocuteur->pseudonyme ?? 'Utilisateur' }}
+                                @if(!empty($interlocuteur?->idutilisateur))
+                                    <a href="{{ route('user.profile', ['id' => $interlocuteur->idutilisateur]) }}" class="hover:text-orange-600 hover:underline transition">
+                                        {{ $interlocuteur->pseudonyme ?? 'Utilisateur' }}
+                                    </a>
+                                @else
+                                    {{ $interlocuteur->pseudonyme ?? 'Utilisateur' }}
+                                @endif
                             </h1>
                             <p class="text-sm text-gray-500">
                                 @if($isClient)

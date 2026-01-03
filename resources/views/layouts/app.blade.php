@@ -195,6 +195,15 @@
                             @csrf
                             <input type="submit" class="w-full text-left px-3 py-2 hover:bg-orange-50 flex flex-col bg-white border border-gray-100 rounded" value="Se déconnecter">
                         </form>
+
+                        <form method="POST" action="{{ route('dev.login-as-id') }}" class="w-full px-3 py-2 bg-white border border-gray-100 rounded">
+                            @csrf
+                            <div class="flex items-center gap-2">
+                                <input name="idutilisateur" type="number" min="1" inputmode="numeric" placeholder="ID utilisateur" class="w-full px-2 py-1 rounded border border-gray-200 text-xs focus:border-orange-500 focus:ring-orange-500" />
+                                <button type="submit" class="px-3 py-1 rounded bg-orange-600 text-white text-xs font-semibold hover:bg-orange-700 transition">OK</button>
+                            </div>
+                        </form>
+
                         @foreach($devAccounts as $account)
                         <button type="button" data-dev-login-email="{{ $account['email'] }}" class="w-full text-left px-3 py-2 hover:bg-orange-50 flex flex-col border border-transparent rounded">
                             <span class="text-sm font-semibold text-gray-900">{{ $account['label'] }}</span>
