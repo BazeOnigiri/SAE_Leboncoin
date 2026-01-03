@@ -212,6 +212,8 @@
                     <div class="mt-2 grid grid-cols-2 gap-2 hidden" data-dev-section="create">
                         <button type="button" data-dev-create="particulier" class="px-2 py-2 rounded-md bg-orange-100 text-orange-800 text-xs font-semibold hover:bg-orange-200">Particulier</button>
                         <button type="button" data-dev-create="professionnel" class="px-2 py-2 rounded-md bg-blue-100 text-blue-800 text-xs font-semibold hover:bg-blue-200">Professionnel</button>
+                        <button type="button" data-dev-create-unverified="particulier" class="px-2 py-2 rounded-md bg-orange-100 text-orange-800 text-xs font-semibold hover:bg-orange-200">Particulier (non vérifié)</button>
+                        <button type="button" data-dev-create-unverified="professionnel" class="px-2 py-2 rounded-md bg-blue-100 text-blue-800 text-xs font-semibold hover:bg-blue-200">Professionnel (non vérifié)</button>
                         <button type="button" data-dev-create-annonce class="px-2 py-2 rounded-md bg-green-100 text-green-800 text-xs font-semibold hover:bg-green-200 col-span-2">Créer une annonce (utilisateur connecté)</button>
                         <button type="button" data-dev-create-cni class="px-2 py-2 rounded-md bg-purple-100 text-purple-800 text-xs font-semibold hover:bg-purple-200 col-span-2">Ajouter une CNI (utilisateur connecté)</button>
                     </div>
@@ -228,6 +230,11 @@
             <form id="dev-create-form" method="POST" action="{{ route('dev.create-user') }}" class="hidden">
             @csrf
             <input id="dev-create-type" type="hidden" name="type" value="">
+            </form>
+
+            <form id="dev-create-unverified-form" method="POST" action="{{ route('dev.create-user-unverified') }}" class="hidden">
+            @csrf
+            <input id="dev-create-unverified-type" type="hidden" name="type" value="">
             </form>
 
             <form id="dev-create-annonce-form" method="POST" action="{{ route('dev.create-annonce') }}" class="hidden">
@@ -248,6 +255,8 @@
                 const form = document.getElementById('dev-login-form');
                 const createForm = document.getElementById('dev-create-form');
                 const createType = document.getElementById('dev-create-type');
+                const createUnverifiedForm = document.getElementById('dev-create-unverified-form');
+                const createUnverifiedType = document.getElementById('dev-create-unverified-type');
                 const createAnnonceForm = document.getElementById('dev-create-annonce-form');
                 const createCniForm = document.getElementById('dev-create-cni-form');
 
@@ -269,6 +278,13 @@
                     btn.addEventListener('click', () => {
                         createType.value = btn.dataset.devCreate;
                         createForm.submit();
+                    });
+                });
+
+                document.querySelectorAll('[data-dev-create-unverified]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        createUnverifiedType.value = btn.dataset.devCreateUnverified;
+                        createUnverifiedForm.submit();
                     });
                 });
 

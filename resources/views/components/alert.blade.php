@@ -1,4 +1,4 @@
-<div class="bottom-0 right-0 mb-6 mr-6 fixed z-50">
+<div class="bottom-20 right-0 mb-6 mr-6 fixed z-50">
     @if (session('success'))
         <div class="p-4 bg-green-50 border-l-4 border-green-500 text-green-800 border rounded-md">
             {{ session('success') }}
