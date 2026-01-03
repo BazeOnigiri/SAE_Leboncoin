@@ -1,34 +1,42 @@
 @extends('layouts.app')
 @section('content')
-    <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .flatpickr-calendar {
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #dddddd;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             width: auto !important;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .flatpickr-calendar.hasTime .flatpickr-time {
+            display: none;
         }
 
         .flatpickr-months {
-            padding: 16px;
+            padding: 24px 16px 16px;
             display: flex;
-            gap: 40px;
+            gap: 60px;
+            background: white;
+            position: relative;
         }
 
         .flatpickr-months .flatpickr-month {
-            flex: 0 0 calc(50% - 20px);
+            flex: 1;
             width: 100%;
+            position: relative;
         }
 
         .flatpickr-month {
             font-weight: 600;
-            font-size: 14px;
-            color: #1f2937;
+            font-size: 16px;
+            color: #222;
             text-align: center;
-            padding-bottom: 16px;
+            padding-bottom: 20px;
         }
 
         .flatpickr-prev-month,
@@ -36,9 +44,14 @@
             color: #EA580C;
             fill: #EA580C;
             cursor: pointer;
-            transition: opacity 0.2s;
-            top: 0 !important;
-            height: auto;
+            transition: all 0.2s ease;
+            top: 18px !important;
+            height: 32px;
+            width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
         }
 
         .flatpickr-prev-month:hover,
@@ -47,85 +60,101 @@
         }
 
         .flatpickr-prev-month {
-            left: -40px;
+            left: 8px !important;
+            right: auto !important;
         }
 
         .flatpickr-next-month {
-            right: -40px;
+            right: 8px !important;
+            left: auto !important;
         }
 
         .flatpickr-weekdays {
-            background: transparent;
-            padding: 8px 0;
-            font-weight: 400;
-            font-size: 11px;
-            color: #6b7280;
+            background: white;
+            padding: 12px 0;
+            font-weight: 500;
+            font-size: 12px;
+            color: #999;
             text-transform: lowercase;
             letter-spacing: 0.5px;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .flatpickr-weekday {
-            width: 32px;
-            height: 28px;
+            width: 42px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 400;
         }
 
         .flatpickr-days {
-            padding: 8px;
+            padding: 12px 8px;
             width: 100%;
+            background: white;
         }
 
         .flatpickr-day {
-            width: 32px;
-            height: 32px;
+            width: 42px;
+            height: 42px;
             max-width: none;
             font-size: 13px;
-            color: #1f2937;
+            color: #222;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
             line-height: 1;
             position: relative;
+            margin: 2px;
+            font-weight: 400;
         }
 
         .flatpickr-day.today {
-            background-color: transparent;
-            color: #1f2937;
+            background-color: white;
+            color: #222;
             font-weight: 600;
-            border: 1px solid #EA580C;
+            border: 1px solid #e0e0e0;
         }
 
-        .flatpickr-day.selected {
-            background-color: #FED7AA;
-            color: #1f2937;
-            font-weight: 600;
+        .flatpickr-day.today:hover {
+            background-color: #fafafa;
         }
 
+        .flatpickr-day.selected,
         .flatpickr-day.startRange,
         .flatpickr-day.endRange {
-            background-color: #FED7AA;
-            color: #1f2937;
+            background-color: #222;
+            color: white;
+            font-weight: 600;
+            border-radius: 4px;
         }
 
         .flatpickr-day.inRange {
-            background-color: #FEF3C7;
-            color: #1f2937;
+            background-color: #f0f0f0;
+            color: #222;
+            border-radius: 0;
+        }
+
+        .flatpickr-day.startRange {
+            border-radius: 4px;
+        }
+
+        .flatpickr-day.endRange {
+            border-radius: 4px;
         }
 
         .flatpickr-day.disabled,
         .flatpickr-day.flatpickr-disabled {
-            background-color: transparent;
-            color: #d1d5db;
+            background-color: white;
+            color: #ccc;
             cursor: not-allowed;
             opacity: 1;
             text-decoration: line-through;
-            text-decoration-color: #d1d5db;
-            text-decoration-thickness: 2px;
-            text-underline-offset: 3px;
+            text-decoration-color: #ccc;
+            text-decoration-thickness: 1px;
         }
 
         .flatpickr-day.disabled::after,
@@ -136,13 +165,17 @@
 
         .flatpickr-day.prevMonthDay,
         .flatpickr-day.nextMonthDay {
-            color: #d1d5db;
+            color: #e0e0e0;
             background-color: transparent;
         }
 
         .flatpickr-day:hover:not(.disabled):not(.prevMonthDay):not(.nextMonthDay):not(.flatpickr-disabled) {
-            background-color: #FEF3C7;
+            background-color: #f0f0f0;
             cursor: pointer;
+        }
+
+        .flatpickr-day.selected:hover {
+            background-color: #222;
         }
 
         .flatpickr-time {
@@ -152,11 +185,11 @@
         .flatpickr-innerContainer {
             display: flex;
             gap: 20px;
-            padding: 0 16px;
+            padding: 0;
         }
 
         .flatpickr-monthContainer {
-            flex: 0 0 220px;
+            flex: 1;
         }
 
         .flatpickr-input {
@@ -173,24 +206,6 @@
             outline: none;
             border-color: #EA580C;
             box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
-        }
-
-        .flatpickr-day.nextMonthDay.start,
-        .flatpickr-day.prevMonthDay.start,
-        .flatpickr-day.start {
-            background-color: #FED7AA;
-            border-radius: 4px;
-        }
-
-        .flatpickr-day.end,
-        .flatpickr-day.nextMonthDay.end,
-        .flatpickr-day.prevMonthDay.end {
-            background-color: #FED7AA;
-            border-radius: 4px;
-        }
-
-        .flatpickr-day.inRange:not(.flatpickr-disabled) {
-            background-color: #FEF3C7;
         }
 
         .flatpickr-monthDropdown-months {
@@ -610,8 +625,8 @@
                 </p>
             </div>
 
-            <div class="lg:col-span-1">
-                <div class="sticky top-24"> 
+            <div class="lg:col-span-1 relative">
+                <div class="sticky top-24" style="max-height: calc(100vh - 7rem); overflow: visible;"> 
                     <div class="bg-white border border-gray-200 rounded-2xl shadow-xl p-6">
 
                         @php
@@ -621,6 +636,8 @@
                         <div class="mb-4">
                             <span class="text-2xl font-bold text-slate-900">{{ $price }} €</span> <span class="text-slate-500">par nuit</span>
                         </div>
+
+                        <input type="hidden" id="pricePerNight" value="{{ $annonce->prixnuitee }}">
 
 
 
@@ -651,6 +668,35 @@
                                             readonly>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div id="dateSummaryPlaceholder"></div>
+
+                            <div id="dateSummaryBar" class="flex items-center justify-between gap-4 bg-gradient-to-r from-orange-50 to-orange-100/50 border border-orange-200 rounded-xl p-4 mb-3 hidden" style="animation: slideInFade 0.3s ease-out forwards;">
+                                <style>
+                                    @keyframes slideInFade {
+                                        from {
+                                            opacity: 0;
+                                            transform: translateY(-8px);
+                                        }
+                                        to {
+                                            opacity: 1;
+                                            transform: translateY(0);
+                                        }
+                                    }
+                                </style>
+                                <div class="flex-1">
+                                    <p class="text-xs font-semibold text-orange-700 uppercase tracking-wider mb-1">Résumé de votre séjour</p>
+                                    <div class="flex items-baseline gap-2">
+                                        <p id="totalPrice" class="text-2xl font-bold text-slate-900">-- €</p>
+                                        <p id="dateSummaryText" class="text-sm text-slate-700 font-medium">Sélectionnez vos dates</p>
+                                    </div>
+                                </div>
+                                <button type="button" 
+                                    id="btnSelectDates"
+                                    class="px-6 py-3 bg-[#EA580C] text-white font-bold rounded-lg shadow-md hover:shadow-lg hover:bg-[#C2410C] transition-all duration-200 transform hover:scale-105 flex-shrink-0">
+                                    Sélectionner
+                                </button>
                             </div>
 
                             <p id="dateWarning" class="text-xs text-red-500 font-medium mb-4 text-center">
@@ -757,6 +803,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/rangePlugin.js"></script>
     <script>
         flatpickr.localize(flatpickr.l10ns.fr);
 
@@ -773,40 +820,127 @@
             return reservedDates.includes(dateStr);
         }
 
-        const dateArrivee = flatpickr("#dateArriveeInput", {
+        function hasReservedDatesInRange(startDate, endDate) {
+            const current = new Date(startDate);
+            while (current < endDate) {
+                if (isDateReserved(current)) {
+                    return true;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+            return false;
+        }
+
+        function updateDateSummary(startDate, endDate) {
+            const bar = document.getElementById('dateSummaryBar');
+            const text = document.getElementById('dateSummaryText');
+            const totalPrice = document.getElementById('totalPrice');
+            if (!bar || !text || !totalPrice) return;
+
+            if (!startDate || !endDate) {
+                text.textContent = 'Sélectionnez vos dates';
+                totalPrice.textContent = '-- €';
+                return;
+            }
+
+            const nights = Math.max(0, Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)));
+            const pricePerNight = parseFloat(document.getElementById('pricePerNight').value);
+            const total = nights * pricePerNight;
+            
+            const opts = { day: 'numeric', month: 'short' };
+            const rangeText = `${startDate.toLocaleDateString('fr-FR', opts)} - ${endDate.toLocaleDateString('fr-FR', opts)} (${nights} nuit${nights > 1 ? 's' : ''})`;
+            text.textContent = rangeText;
+            totalPrice.textContent = Math.round(total) + ' €';
+        }
+
+        const dateSummaryBar = document.getElementById('dateSummaryBar');
+        const dateSummaryPlaceholder = document.getElementById('dateSummaryPlaceholder');
+        const btnSelectDates = document.getElementById('btnSelectDates');
+        let rangePicker;
+
+        function attachSummaryBar(instance) {
+            if (dateSummaryBar && instance?.calendarContainer) {
+                instance.calendarContainer.appendChild(dateSummaryBar);
+                dateSummaryBar.classList.remove('hidden');
+                if (btnSelectDates) {
+                    btnSelectDates.onclick = function() {
+                        rangePicker.close();
+                    };
+                }
+            }
+        }
+
+        function detachSummaryBar() {
+            if (dateSummaryBar && dateSummaryPlaceholder) {
+                dateSummaryPlaceholder.appendChild(dateSummaryBar);
+                dateSummaryBar.classList.add('hidden');
+            }
+        }
+
+        rangePicker = flatpickr("#dateArriveeInput", {
             minDate: "{{ date('Y-m-d') }}",
             dateFormat: "d/m/Y",
             locale: "fr",
             showMonths: 2,
+            mode: "range",
             monthSelectorType: "dropdown",
+            closeOnSelect: false,
+            static: true,
             disable: [
                 function(date) {
                     return isDateReserved(date);
                 }
             ],
-            onChange: function(selectedDates) {
-                if (selectedDates.length > 0) {
-                    const nextDay = new Date(selectedDates[0]);
-                    nextDay.setDate(nextDay.getDate() + 1);
-                    dateDepart.set('minDate', nextDay);
-                    updateReservationLink();
+            plugins: [new rangePlugin({ input: "#dateDepartInput" })],
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 1) {
+                    document.getElementById('dateDepartInput').value = '';
+                    updateDateSummary(null, null);
                 }
+                if (selectedDates.length === 2) {
+                    const [start, end] = selectedDates;
+                    if (hasReservedDatesInRange(start, end)) {
+                        rangePicker.clear();
+                        document.getElementById('dateDepartInput').value = '';
+                        const warning = document.getElementById('dateWarning');
+                        if (warning) {
+                            warning.textContent = '⚠️ Cette plage contient des dates réservées. Veuillez en choisir une autre.';
+                            warning.style.display = 'block';
+                        }
+                        updateDateSummary(null, null);
+                        updateReservationLink();
+                        return;
+                    }
+                    document.getElementById('dateDepartInput').value = instance.formatDate(end, 'd/m/Y');
+                    updateDateSummary(start, end);
+                    const warning = document.getElementById('dateWarning');
+                    if (warning) {
+                        warning.style.display = 'none';
+                    }
+                }
+                updateReservationLink();
+            },
+            onOpen: function(selectedDates, dateStr, instance) {
+                attachSummaryBar(instance);
+                updateDateSummary(selectedDates[0], selectedDates[1]);
+            },
+            onClose: function() {
+                detachSummaryBar();
             }
         });
 
-        const dateDepart = flatpickr("#dateDepartInput", {
-            minDate: "{{ date('Y-m-d') }}",
-            dateFormat: "d/m/Y",
-            locale: "fr",
-            showMonths: 2,
-            monthSelectorType: "dropdown",
-            disable: [
-                function(date) {
-                    return isDateReserved(date);
+        let scrollTimeout;
+        window.addEventListener('scroll', function() {
+            if (rangePicker && rangePicker.isOpen) {
+                const scrollPosition = window.scrollY + window.innerHeight;
+                const pageHeight = document.documentElement.scrollHeight;
+                
+                if (scrollPosition > pageHeight * 0.8) {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(function() {
+                        rangePicker.close();
+                    }, 150);
                 }
-            ],
-            onChange: function() {
-                updateReservationLink();
             }
         });
     </script>
