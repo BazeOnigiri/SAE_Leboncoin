@@ -69,6 +69,20 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-6 mt-4 pt-3 border-t border-gray-100 text-sm font-bold">
+                                        @php
+                                            $unreadCount = $reservation->messagesNonLusPour(Auth::id());
+                                        @endphp
+                                        <a href="{{ route('conversation.show', $reservation) }}" class="text-gray-700 hover:text-orange-600 flex items-center gap-1 transition group relative">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                            </svg>
+                                            Message
+                                            @if($unreadCount > 0)
+                                                <span class="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                                    +{{ $unreadCount }}
+                                                </span>
+                                            @endif
+                                        </a>
                                         <button class="text-gray-700 hover:text-orange-600 flex items-center gap-1 transition group">
                                             Détails
                                         </button>
@@ -133,7 +147,21 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-6 mt-4 pt-3 border-t border-gray-100 text-sm font-bold">
-                                        <button class="text-gray-700 hover:text-orange-600 flex items-center gap-1 transition group">
+                                        @php
+                                            $unreadCountPassee = $reservation->messagesNonLusPour(Auth::id());
+                                        @endphp
+                                        <a href="{{ route('conversation.show', $reservation) }}" class="text-gray-700 hover:text-orange-600 flex items-center gap-1 transition group relative">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                            </svg>
+                                            Message
+                                            @if($unreadCountPassee > 0)
+                                                <span class="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                                    +{{ $unreadCountPassee }}
+                                                </span>
+                                            @endif
+                                        </a>
+                                        <button class="text-grsi je push ay-700 hover:text-orange-600 flex items-center gap-1 transition group">
                                             Revoir détails
                                         </button>
                                         <button class="text-gray-700 hover:text-blue-600 flex items-center gap-1 transition group">

@@ -5,7 +5,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Models\Annonce;
+use App\Models\Message;
+use App\Models\Date;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
@@ -53,14 +56,14 @@ class ReservationController extends Controller
 
         $annonce = Annonce::findOrFail($id);
 
-        $dateDebut = \Carbon\Carbon::createFromFormat('d/m/Y', $request->date_debut);
-        $dateFin = \Carbon\Carbon::createFromFormat('d/m/Y', $request->date_fin);
+        $dateDebut = Carbon::createFromFormat('d/m/Y', $request->date_debut);
+        $dateFin = Carbon::createFromFormat('d/m/Y', $request->date_fin);
 
-        $dateDebutEntry = \App\Models\Date::firstOrCreate(
+        $dateDebutEntry = Date::firstOrCreate(
             ['date' => $dateDebut->format('Y-m-d')]
         );
         
-        $dateFinEntry = \App\Models\Date::firstOrCreate(
+        $dateFinEntry = Date::firstOrCreate(
             ['date' => $dateFin->format('Y-m-d')]
         );
 
@@ -73,6 +76,23 @@ class ReservationController extends Controller
         $reservation->prenomclient = $request->prenomutilisateur;
         $reservation->telephoneclient = $request->telephoneutilisateur;
         $reservation->save();
+
+        if ($request->filled('message')) {
+            $today = Carbon::now();
+            $dateEntry = Date::firstOrCreate(
+                ['date' => $today->format('Y-m-d')]
+            );
+
+            Message::create([
+                'idutilisateurexpediteur' => Auth::id(),
+                'idutilisateurreceveur' => $annonce->idutilisateur,
+                'iddate' => $dateEntry->iddate,
+                'contenumessage' => $request->message,
+                'idreservation' => $reservation->idreservation,
+                'lu' => false,
+                'created_at' => $today,
+            ]);
+        }
 
         return redirect()->route('user.mes-reservations')
             ->with('success', 'Votre demande de réservation a été envoyée avec succès !');

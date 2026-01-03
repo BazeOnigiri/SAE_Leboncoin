@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use App\Models\Reservation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Configurer le binding pour les réservations avec la clé primaire personnalisée
+        Route::bind('reservation', function ($value) {
+            return Reservation::where('idreservation', $value)->firstOrFail();
+        });
     }
 }

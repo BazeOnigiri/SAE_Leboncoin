@@ -38,6 +38,22 @@ class Reservation extends Model
         return $this->hasOne(Transaction::class, 'idreservation', 'idreservation');
     }
 
+    public function messages() {
+        return $this->hasMany(Message::class, 'idreservation', 'idreservation')
+            ->orderBy('created_at', 'asc');
+    }
+
+    public function messagesNonLusPour($userId) {
+        return $this->messages()
+            ->where('idutilisateurreceveur', $userId)
+            ->where('lu', false)
+            ->count();
+    }
+
+    public function utilisateur() {
+        return $this->belongsTo(User::class, 'idutilisateur', 'idutilisateur');
+    }
+
     public function getEstPasseeAttribute()
     {
         if ($this->dateFin && $this->dateFin->date) {

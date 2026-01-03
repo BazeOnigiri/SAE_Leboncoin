@@ -12,7 +12,6 @@
                 $annoncesInactives = $annonces->where('estverifie', false);
             @endphp
             
-            <!-- Onglets -->
             <div class="flex border-b border-gray-200 mb-6 text-sm font-medium" id="annonces-tabs">
                 <button type="button" data-target="tab-en-ligne" class="tab-btn px-6 py-3 border-b-2 border-orange-600 text-orange-600 font-bold">En ligne ({{ $annoncesEnLigne->count() }})</button>
                 <button type="button" data-target="tab-inactives" class="tab-btn px-6 py-3 text-gray-500 hover:text-gray-700">Inactives ({{ $annoncesInactives->count() }})</button>
@@ -31,7 +30,6 @@
                         @foreach($annoncesEnLigne as $annonce)
                             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col sm:flex-row gap-4 hover:shadow-md transition relative group">
                                 
-                                <!-- Image -->
                                 <div class="w-full sm:w-48 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                                     @if($annonce->photos->isNotEmpty())
                                         <img src="{{ $annonce->photos->first()->lienphoto }}" class="w-full h-full object-cover">
@@ -43,7 +41,6 @@
                                     </span>
                                 </div>
                                 
-                                <!-- Contenu -->
                                 <div class="flex-grow flex flex-col justify-between">
                                     <div>
                                         <div class="flex justify-between items-start">
@@ -57,7 +54,6 @@
                                             {{ $annonce->typeHebergement->nomtypehebergement ?? 'Logement' }}
                                         </p>
                                     </div>
-
                                     @php
                                         $reservations = $annonce->reservations->sortByDesc(fn($r) => optional($r->dateDebut)->date);
                                     @endphp
@@ -76,10 +72,17 @@
                                                         $end = optional($reservation->dateFin)->date;
                                                         $profileUrl = $reservation->idutilisateur ? route('user.profile', ['id' => $reservation->idutilisateur]) : null;
                                                         $isPast = $reservation->est_passee;
+                                                        $unreadCountAnnonce = $reservation->messagesNonLusPour(Auth::id());
                                                     @endphp
-                                                    <a @if($profileUrl) href="{{ $profileUrl }}" @endif class="bg-white/70 border border-gray-200 rounded-lg px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:border-orange-200 hover:shadow-sm transition {{ $isPast ? 'opacity-60 bg-gray-50' : '' }}">
+                                                    <div class="bg-white/70 border border-gray-200 rounded-lg px-3 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 hover:border-orange-200 hover:shadow-sm transition {{ $isPast ? 'opacity-60 bg-gray-50' : '' }}">
                                                         <div class="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                                                            <span>{{ $reservation->prenomclient }} {{ $reservation->nomclient }}</span>
+                                                            @if($profileUrl)
+                                                                <a href="{{ $profileUrl }}" class="hover:text-orange-600 transition">
+                                                                    {{ $reservation->prenomclient }} {{ $reservation->nomclient }}
+                                                                </a>
+                                                            @else
+                                                                <span>{{ $reservation->prenomclient }} {{ $reservation->nomclient }}</span>
+                                                            @endif
                                                             @if($isPast)
                                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-200 text-gray-700">
                                                                     Passée
@@ -89,24 +92,28 @@
                                                                     À venir
                                                                 </span>
                                                             @endif
-                                                            @if($profileUrl)
-                                                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-50 text-orange-700 border border-orange-100" title="Contacter ce client">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25v8.25A2.25 2.25 0 0118.75 18.75H5.25A2.25 2.25 0 013 16.5V8.25m18 0A2.25 2.25 0 0018.75 6H5.25A2.25 2.25 0 003 8.25m18 0v.243a2.25 2.25 0 01-1.07 1.91l-6.75 4.05a2.25 2.25 0 01-2.31 0l-6.75-4.05A2.25 2.25 0 013 8.493V8.25" />
-                                                                    </svg>
-                                                                </span>
-                                                            @endif
+                                                            <a href="{{ route('conversation.show', $reservation) }}" 
+                                                                class="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-50 text-orange-700 border border-orange-100 hover:bg-orange-100 transition" 
+                                                                title="Discussion avec le client">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                                                </svg>
+                                                                @if($unreadCountAnnonce > 0)
+                                                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                                                                        +{{ $unreadCountAnnonce }}
+                                                                    </span>
+                                                                @endif
+                                                            </a>
                                                         </div>
                                                         <div class="text-xs text-gray-600">
                                                             {{ $start ? $start->format('d/m/Y') : 'N/C' }} – {{ $end ? $end->format('d/m/Y') : 'N/C' }}
                                                         </div>
-                                                    </a>
+                                                    </div>
                                                 @endforeach
                                             </div>
                                         @endif
                                     </div>
 
-                                    <!-- Actions -->
                                     <div class="flex items-center gap-6 mt-4 pt-3 border-t border-gray-100 text-sm font-bold">
                                         <button class="text-gray-700 hover:text-orange-600 flex items-center gap-1 transition group">
                                             <svg class="w-4 h-4 text-gray-400 group-hover:text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>

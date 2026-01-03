@@ -100,6 +100,11 @@ Route::middleware([
         Route::get('/compte/mes-reservations', [ReservationController::class, 'mesReservations'])->name('user.mes-reservations');
         Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
 
+        Route::get('/conversation/{reservation}', [App\Http\Controllers\ConversationController::class, 'show'])->name('conversation.show');
+        Route::post('/conversation/{reservation}', [App\Http\Controllers\ConversationController::class, 'store'])->name('conversation.store');
+        Route::get('/api/conversation/{reservation}/unread', [App\Http\Controllers\ConversationController::class, 'countUnread'])->name('conversation.unread');
+        Route::get('/api/conversation/unread-all', [App\Http\Controllers\ConversationController::class, 'countAllUnread'])->name('conversation.unread.all');
+
         Route::get('/favorites', [UserAccountController::class, 'favorites'])->name('user.favorites');
         Route::post('/favorites/toggle', [UserAccountController::class, 'toggleFavorite'])->name('user.favorites.toggle');
         Route::post('/favorites/sync', [UserAccountController::class, 'syncFavorites'])->name('user.favorites.sync');
