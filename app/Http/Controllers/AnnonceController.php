@@ -39,7 +39,13 @@ class AnnonceController extends Controller
             'typehebergement',
             'avis',
             'adresse.ville',
-            'utilisateur',
+            'utilisateur' => function ($query) {
+                $query->withCount([
+                    'annoncesPubliees as annonces_en_ligne_count' => function ($subQuery) {
+                        $subQuery->where('estverifie', 1);
+                    },
+                ]);
+            },
             'heurearrivee',
             'heuredepart',
             'annonces.photos',
@@ -64,15 +70,12 @@ class AnnonceController extends Controller
             $isFavorite = Auth::user()->annoncesFavorisees()->where('favoriser.idannonce', $id)->exists();
         }
 
-        // Récupérer les dates réservées (uniquement les réservations en cours et futures)
         $reservedDates = [];
         $today = \Carbon\Carbon::today();
         
         foreach ($annonce->reservations as $reservation) {
-            // Vérifier que la réservation n'est pas passée (date de fin >= aujourd'hui)
             if ($reservation->dateFin && $reservation->dateFin->date) {
                 $endDate = \Carbon\Carbon::parse($reservation->dateFin->date);
-                // Griser les dates si la réservation n'est pas encore terminée
                 if ($endDate >= $today) {
                     if ($reservation->dateDebut && $reservation->dateDebut->date) {
                         $start = \Carbon\Carbon::parse($reservation->dateDebut->date);
@@ -143,16 +146,13 @@ class AnnonceController extends Controller
 
         try {
             $annonce = DB::transaction(function () use ($validated, $request) {
-                // Create or find Ville
                 $nomVilleSaisi = strtoupper($validated['ville']);
                 $codePostal    = $validated['codepostal'];
 
-                // Recherche de la ville existante
                 $ville = Ville::where('nomville', $nomVilleSaisi)
                     ->where('codepostal', $codePostal)
                     ->first();
 
-                // Si la ville n'existe pas, on interroge l'API Gouv pour la créer
                 if (!$ville) {
                     $communeData = null;
                     try {
@@ -177,12 +177,10 @@ class AnnonceController extends Controller
                         }
                     } catch (\Throwable $e) { $communeData = null; }
 
-                    // Variables pour la création
                     $codeRegionApi      = $communeData['codeRegion'] ?? 'INCONNU';
                     $codeDepartementApi = $communeData['codeDepartement'] ?? substr($codePostal, 0, 2);
                     $nomCommuneApi      = $communeData ? strtoupper($communeData['nom']) : $nomVilleSaisi;
 
-                    // Gestion DOM-TOM
                     if (!$communeData && in_array(substr($codePostal, 0, 2), ['97', '98'])) {
                         $codeDepartementApi = substr($codePostal, 0, 3);
                     }

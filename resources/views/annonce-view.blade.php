@@ -657,10 +657,6 @@
                                 * Veuillez sélectionner vos dates pour continuer
                             </p>
 
-                            <div class="bg-[#FEF9C3] text-[#854D0E] text-xs font-bold px-3 py-1.5 rounded-lg mb-6 w-fit inline-block">
-                                Disponibilités non confirmées
-                            </div>
-
                             @auth
                                 <a id="btnReserver" 
                                     href="#" 
@@ -693,7 +689,7 @@
                                         {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur' }}
                                     </span>
                                     <span class="text-sm text-slate-500">
-                                        {{ $annonce->utilisateur->annonces_count ?? 0 }} annonce(s)
+                                        {{ $annonce->utilisateur->annonces_en_ligne_count ?? 0 }} annonce(s)
                                     </span>
                                 </div>
                             </a>
