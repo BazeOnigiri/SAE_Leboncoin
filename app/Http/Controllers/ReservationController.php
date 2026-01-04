@@ -594,13 +594,24 @@ class ReservationController extends Controller
             abort(403, 'Vous n\'êtes pas autorisé à annuler cette réservation.');
         }
 
-        if ($reservation->transaction) {
-            $reservation->transaction->delete();
-        }
+        $user = Auth::user();
+        abort_if(!$user, 403);
 
-        $reservation->delete();
+        $reservation->loadMissing(['transaction']);
+
+        DB::transaction(function () use ($user, $reservation) {
+            if ($reservation->transaction) {
+                $refund = (float) ($reservation->transaction->montanttransaction ?? 0);
+                if ($refund > 0) {
+                    $user->increment('solde', $refund);
+                }
+                $reservation->transaction->delete();
+            }
+
+            $reservation->delete();
+        });
 
         return redirect()->route('user.mes-reservations')
-            ->with('success', 'La réservation a été annulée avec succès.');
+            ->with('success', 'La réservation a été annulée avec succès. Le remboursement a été ajouté à votre solde.');
     }
 }
