@@ -65,4 +65,32 @@ class Reservation extends Model
         }
         return false;
     }
+
+    public function resteAPayerSurPlace(?Annonce $annonce = null): float
+    {
+        $annonce = $annonce ?? $this->annonce;
+        if (!$annonce) {
+            return 0.0;
+        }
+
+        $startDate = $this->dateDebut?->date;
+        $endDate = $this->dateFin?->date;
+        if (!$startDate || !$endDate) {
+            return 0.0;
+        }
+
+        $dateDebut = Carbon::parse($startDate);
+        $dateFin = Carbon::parse($endDate);
+        $nbNuits = max(1, $dateDebut->diffInDays($dateFin));
+
+        $prixNuitee = (float) ($annonce->prixnuitee ?? 0);
+        $totalRent = $prixNuitee * $nbNuits;
+
+        $adultsCount = (int) ($this->adultes ?? $this->nombrevoyageur ?? 1);
+        $touristTax = 4.00 * $nbNuits * max(1, $adultsCount);
+
+        $reste = ($totalRent * 0.65) + $touristTax;
+
+        return max(0.0, round($reste, 2));
+    }
 }

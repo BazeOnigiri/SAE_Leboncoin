@@ -100,6 +100,9 @@
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                                 {{ $reservation->nombrevoyageur ?? $reservation->annonce->capacite ?? 1 }} voyageur{{ ($reservation->nombrevoyageur ?? 1) > 1 ? 's' : '' }}
                                             </span>
+                                            <span class="text-xs font-semibold text-gray-600">
+                                            Reste à payer sur place : {{ number_format($reservation->resteAPayerSurPlace(), 2, ',', ' ') }} €
+                                        </span>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-6 mt-4 pt-3 border-t border-gray-100 text-sm font-bold">
@@ -240,6 +243,9 @@
                                                 </span>
                                             @endif
                                         </a>
+                                        <span class="text-xs font-semibold text-gray-600 whitespace-nowrap">
+                                            Reste à payer sur place : {{ number_format($reservation->resteAPayerSurPlace(), 2, ',', ' ') }} €
+                                        </span>
                                         <button class="text-gray-700 hover:text-orange-600 flex items-center gap-1 transition group">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

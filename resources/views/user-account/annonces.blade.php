@@ -104,6 +104,9 @@
                                                                     </span>
                                                                 @endif
                                                             </a>
+                                                            <span class="text-[11px] font-semibold text-gray-600 whitespace-nowrap">
+                                                                Reste à payer sur place : {{ number_format($reservation->resteAPayerSurPlace($annonce), 2, ',', ' ') }} €
+                                                            </span>
                                                         </div>
                                                         <div class="text-xs text-gray-600">
                                                             {{ $start ? $start->format('d/m/Y') : 'N/C' }} – {{ $end ? $end->format('d/m/Y') : 'N/C' }}
