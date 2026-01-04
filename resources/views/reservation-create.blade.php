@@ -36,17 +36,7 @@
     <div class="bg-white min-h-screen pt-32 pb-12">
         <div class="max-w-6xl mx-auto px-6 md:px-12 xl:px-6">
 
-            <h1 class="text-3xl font-bold text-slate-900 mb-2">Votre réservation</h1>
-            
-            <div class="flex items-center gap-2 mb-8 text-sm text-slate-600">
-                <span>Vous bénéficiez de la</span>
-                <span class="flex items-center gap-1 font-bold text-[#EA580C]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                        <path fill-rule="evenodd" d="M10.339 2.237a.532.532 0 00-.678 0 11.947 11.947 0 01-7.078 2.75.5.5 0 00-.479.425A12.11 12.11 0 002 7c0 5.163 3.26 9.564 7.834 11.257a.48.48 0 00.332 0C14.74 16.564 18 12.163 18 7c0-.538-.035-1.067-.104-1.588a.5.5 0 00-.479-.425 11.947 11.947 0 01-7.078-2.75zm-2.5 6.75a.75.75 0 10-1.5 0 .75.75 0 001.5 0zm5.5 0h-2.5a.75.75 0 000 1.5h2.5a.75.75 0 000-1.5z" clip-rule="evenodd" />
-                    </svg>
-                    Protection Voyageur
-                </span>
-            </div>
+            <h1 class="text-3xl font-bold text-slate-900 mb-8">Votre réservation</h1>
 
             <form id="reservation-form" action="{{ route('reservation.store', ['id' => $annonce->idannonce]) }}" method="POST" data-price="{{ $annonce->prixnuitee }}" data-nights="{{ $nbNuits > 0 ? $nbNuits : 1 }}">
                 @csrf
@@ -212,29 +202,6 @@
                         </section>
 
                         <section class="bg-gray-50 p-6 rounded-xl">
-                            <h3 class="flex items-center gap-2 font-bold text-slate-800 mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-[#EA580C]">
-                                    <path fill-rule="evenodd" d="M10.339 2.237a.532.532 0 00-.678 0 11.947 11.947 0 01-7.078 2.75.5.5 0 00-.479.425A12.11 12.11 0 002 7c0 5.163 3.26 9.564 7.834 11.257a.48.48 0 00.332 0C14.74 16.564 18 12.163 18 7c0-.538-.035-1.067-.104-1.588a.5.5 0 00-.479-.425 11.947 11.947 0 01-7.078-2.75zm-2.5 6.75a.75.75 0 10-1.5 0 .75.75 0 001.5 0zm5.5 0h-2.5a.75.75 0 000 1.5h2.5a.75.75 0 000-1.5z" clip-rule="evenodd" />
-                                </svg>
-                                Protection Voyageur
-                            </h3>
-                            <p class="text-sm text-slate-600 mb-3">Grâce au paiement en ligne, vous bénéficiez de la protection voyageur :</p>
-                            <ul class="text-sm text-slate-600 space-y-2 mb-4">
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-slate-800 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span><strong>Annulez gratuitement</strong> jusqu'à 30 jours avant le début du séjour</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-slate-800 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span><strong>Aucun montant</strong> n'est débité avant l'acceptation de la réservation</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-slate-800 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    <span><strong>Assurance incluse</strong> en cas de problème à votre arrivée</span>
-                                </li>
-                            </ul>
-                            <a href="#" class="text-sm font-semibold underline text-slate-900 mb-6 block">En savoir plus →</a>
-
                             <div class="flex items-start gap-3 mb-6">
                                 <input id="cgv" type="checkbox" required class="mt-1 w-5 h-5 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
                                 <label for="cgv" class="text-sm text-slate-600">
@@ -264,12 +231,9 @@
                             <hr class="border-gray-200">
 
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-[#EA580C] text-white flex items-center justify-center text-sm font-bold">
-                                    {{ strtoupper(substr($annonce->utilisateur->pseudonyme ?? 'U', 0, 1)) }}
-                                </div>
-
-
-
+                                <img src="{{ $annonce->utilisateur->profile_photo_url }}" 
+                                    alt="{{ $annonce->utilisateur->pseudonyme }}" 
+                                    class="w-10 h-10 rounded-full object-cover">
 
                                 <a class="underline font-bold" href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}">
                                     {{ $annonce->utilisateur->pseudonyme ?? 'Utilisateur inconnu' }}
