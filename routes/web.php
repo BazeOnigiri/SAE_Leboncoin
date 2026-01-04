@@ -16,6 +16,7 @@ use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\BotManController;
 use App\Http\Controllers\ServiceInscriptionController;
 use App\Http\Controllers\PhoneVerificationController;
+use App\Http\Controllers\DirecteurPetiteAnnonceController;
 
 if (app()->environment('local')) {
     Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
@@ -169,3 +170,6 @@ Route::middleware([
 });
 
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
+
+Route::get('/directeur-petite-annonce/statistiques', [DirecteurPetiteAnnonceController::class, 'etatLocations'])
+    ->name('directeur.petite-annonce.statistiques');
