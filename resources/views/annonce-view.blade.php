@@ -726,9 +726,9 @@
 
                         <div class="flex items-center justify-between">
                             <a href="{{ route('user.profile', ['id' => $annonce->utilisateur->idutilisateur]) }}" class="flex items-center gap-3 group">
-                                <div class="w-12 h-12 rounded-full bg-[#C2410C] text-white flex items-center justify-center text-xl font-normal">
-                                    {{ strtoupper(substr($annonce->utilisateur->pseudonyme ?? 'U', 0, 1)) }}
-                                </div>
+                                <img src="{{ $annonce->utilisateur->profile_photo_url }}" 
+                                    alt="{{ $annonce->utilisateur->pseudonyme }}" 
+                                    class="w-12 h-12 rounded-full object-cover">
                                 
                                 <div class="flex flex-col">
                                     <span class="font-bold text-slate-900 group-hover:underline decoration-2">
