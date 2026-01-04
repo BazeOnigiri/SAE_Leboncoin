@@ -190,10 +190,6 @@
                             
                         <section class="pb-8">
                             <h2 class="text-xl font-bold text-slate-900 mb-2">Envoyer un message à {{ $annonce->utilisateur->pseudonyme ?? 'l\'hôte' }}</h2>
-                            
-                            <div class="bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded w-fit mb-4">
-                                Disponibilités non confirmées
-                            </div>
 
                             <div class="relative">
                                 <textarea name="message" rows="4" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-orange-500 focus:ring-orange-500 p-4 text-sm" placeholder="Dites quelques mots sur vous à votre hôte, votre heure d'arrivée et ce qui vous amène dans la région."></textarea>
@@ -250,7 +246,7 @@
                                 $serviceFee = $totalRent * 0.14;
                                 $touristTax = 4.00 * $nightsToCalculate * $totalPersons;
                                 $total = $totalRent + $serviceFee + $touristTax;
-                                $payNow = $serviceFee + ($totalRent * 0.35);
+                                $payNow = $serviceFee + ($totalRent * 0.35) + $touristTax;
                                 $payLater = $total - $payNow;
                             @endphp
 
@@ -420,7 +416,7 @@
                 const serviceFee = totalRent * 0.14;
                 const touristTax = 4.00 * nights * adults; 
                 const total = totalRent + serviceFee + touristTax;
-                const payNow = serviceFee + (totalRent * 0.35);
+                const payNow = serviceFee + (totalRent * 0.35) + touristTax;
                 const payLater = total - payNow;
 
                 const formatPrice = (value) => {
