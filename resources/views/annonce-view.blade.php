@@ -10,7 +10,13 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             width: auto !important;
             overflow: hidden;
-            z-index: 1000;
+            z-index: 9999 !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+        }
+
+        .sticky {
+            z-index: 10 !important;
         }
 
         .flatpickr-calendar.hasTime .flatpickr-time {
@@ -192,20 +198,26 @@
             flex: 1;
         }
 
-        .flatpickr-input {
-            background: white;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 10px 12px;
-            font-size: 14px;
-            color: #1f2937;
-            font-weight: 500;
+        .flatpickr-input,
+        #dateArriveeInput,
+        #dateDepartInput {
+            background: white !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.75rem !important;
+            padding: 0.5rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            line-height: 1.25rem !important;
+            color: #1f2937 !important;
+            font-weight: 500 !important;
+            width: 100% !important;
         }
 
-        .flatpickr-input:focus {
-            outline: none;
-            border-color: #EA580C;
-            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+        .flatpickr-input:focus,
+        #dateArriveeInput:focus,
+        #dateDepartInput:focus {
+            outline: none !important;
+            border-color: #EA580C !important;
+            box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.2) !important;
         }
 
         .flatpickr-monthDropdown-months {
