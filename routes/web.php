@@ -59,6 +59,14 @@ Route::middleware([
     Route::post('/reservation/creer/{id}', [ReservationController::class, 'store'])
         ->middleware(['auth', 'verified'])
         ->name('reservation.store');
+
+    Route::get('/reservation/stripe/success/{reservation}', [ReservationController::class, 'stripeSuccess'])
+        ->middleware(['auth', 'verified'])
+        ->name('reservation.stripe.success');
+
+    Route::get('/reservation/stripe/cancel/{reservation}', [ReservationController::class, 'stripeCancel'])
+        ->middleware(['auth', 'verified'])
+        ->name('reservation.stripe.cancel');
         
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])

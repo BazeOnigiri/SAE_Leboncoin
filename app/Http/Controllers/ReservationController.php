@@ -7,6 +7,8 @@ use App\Models\Reservation;
 use App\Models\Annonce;
 use App\Models\Message;
 use App\Models\Date;
+use App\Models\Transaction;
+use App\Models\CarteBancaire;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -85,24 +87,133 @@ class ReservationController extends Controller
         $reservation->save();
 
         if ($request->filled('message')) {
-            $today = Carbon::now();
-            $dateEntry = Date::firstOrCreate(
-                ['date' => $today->format('Y-m-d')]
-            );
+            $request->session()->put('reservation_message_' . $reservation->idreservation, $request->message);
+        }
 
+        $stripeSecret = config('services.stripe.secret');
+        abort_if(!$stripeSecret, 500, 'Stripe secret is not configured (STRIPE_SECRET)');
+
+        $nights = max(1, $dateDebut->diffInDays($dateFin));
+        $pricePerNight = (float) ($annonce->prixnuitee ?? 0);
+        $totalRent = $pricePerNight * $nights;
+        $serviceFee = $totalRent * 0.14;
+        $touristTax = 4.00 * $nights * ((int) $request->adults);
+
+        $deposit = $serviceFee + ($totalRent * 0.35);
+        $amountCents = (int) round($deposit * 100);
+        abort_if($amountCents < 50, 422, 'Montant de paiement invalide.');
+
+        $stripe = new \Stripe\StripeClient($stripeSecret);
+
+        $session = $stripe->checkout->sessions->create([
+            'mode' => 'payment',
+            'payment_method_types' => ['card'],
+            'customer_email' => Auth::user()?->email,
+            'line_items' => [[
+                'quantity' => 1,
+                'price_data' => [
+                    'currency' => 'eur',
+                    'unit_amount' => $amountCents,
+                    'product_data' => [
+                        'name' => 'Acompte réservation - ' . ($annonce->titreannonce ?? 'Annonce'),
+                        'description' => 'Du ' . $dateDebut->format('d/m/Y') . ' au ' . $dateFin->format('d/m/Y') . ' (' . $nights . ' nuits)',
+                    ],
+                ],
+            ]],
+            'metadata' => [
+                'reservation_id' => (string) $reservation->idreservation,
+                'annonce_id' => (string) $annonce->idannonce,
+                'user_id' => (string) Auth::id(),
+            ],
+            'success_url' => route('reservation.stripe.success', ['reservation' => $reservation->idreservation]) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('reservation.stripe.cancel', ['reservation' => $reservation->idreservation]),
+        ]);
+
+        $reservation->stripe_checkout_session_id = $session->id;
+        $reservation->stripe_payment_status = $session->payment_status ?? 'unpaid';
+        $reservation->save();
+
+        return redirect()->away($session->url);
+    }
+
+    public function stripeSuccess(Request $request, Reservation $reservation)
+    {
+        abort_if($reservation->idutilisateur !== Auth::id(), 403);
+
+        if ($reservation->transaction) {
+            return redirect()->route('user.mes-reservations')->with('success', 'Paiement déjà confirmé.');
+        }
+
+        $sessionId = $request->query('session_id');
+        abort_if(!$sessionId, 400, 'Missing session_id');
+
+        $stripeSecret = config('services.stripe.secret');
+        abort_if(!$stripeSecret, 500, 'Stripe secret is not configured (STRIPE_SECRET)');
+
+        $stripe = new \Stripe\StripeClient($stripeSecret);
+        $session = $stripe->checkout->sessions->retrieve($sessionId, []);
+
+        abort_if(($session->metadata->reservation_id ?? null) != (string) $reservation->idreservation, 400, 'Session mismatch');
+        abort_if(($session->metadata->user_id ?? null) != (string) Auth::id(), 403, 'Session user mismatch');
+
+        if (($session->payment_status ?? null) !== 'paid') {
+            $reservation->stripe_payment_status = $session->payment_status ?? 'unpaid';
+            $reservation->save();
+
+            return redirect()->route('user.mes-reservations')->with('error', 'Paiement non confirmé.');
+        }
+
+        $reservation->stripe_payment_status = 'paid';
+        $reservation->stripe_payment_intent_id = $session->payment_intent ?? null;
+        $reservation->stripe_checkout_session_id = $session->id;
+        $reservation->save();
+
+        $today = Carbon::now();
+        $dateEntry = Date::firstOrCreate(['date' => $today->format('Y-m-d')]);
+
+        $carte = CarteBancaire::create([
+            'idutilisateur' => Auth::id(),
+            'nomtitulaire' => null,
+            'prenomtitulaire' => null,
+            'numerocartebancaire' => null,
+            'dateexpiration' => null,
+            'numerocvv' => null,
+        ]);
+
+        $transaction = new Transaction();
+        $transaction->iddate = $dateEntry->iddate;
+        $transaction->idreservation = $reservation->idreservation;
+        $transaction->idcartebancaire = $carte->idcartebancaire;
+        $transaction->montanttransaction = ((int) ($session->amount_total ?? 0)) / 100;
+        $transaction->save();
+
+        $messageKey = 'reservation_message_' . $reservation->idreservation;
+        $messageText = $request->session()->pull($messageKey);
+        if (!empty($messageText)) {
             Message::create([
                 'idutilisateurexpediteur' => Auth::id(),
-                'idutilisateurreceveur' => $annonce->idutilisateur,
+                'idutilisateurreceveur' => $reservation->annonce->idutilisateur,
                 'iddate' => $dateEntry->iddate,
-                'contenumessage' => $request->message,
+                'contenumessage' => $messageText,
                 'idreservation' => $reservation->idreservation,
                 'lu' => false,
                 'created_at' => $today,
             ]);
         }
 
-        return redirect()->route('user.mes-reservations')
-            ->with('success', 'Votre demande de réservation a été envoyée avec succès !');
+        return redirect()->route('user.mes-reservations')->with('success', 'Paiement confirmé, réservation créée.');
+    }
+
+    public function stripeCancel(Request $request, Reservation $reservation)
+    {
+        abort_if($reservation->idutilisateur !== Auth::id(), 403);
+
+        if (!$reservation->transaction) {
+            $request->session()->forget('reservation_message_' . $reservation->idreservation);
+            $reservation->delete();
+        }
+
+        return redirect()->route('user.mes-reservations')->with('error', 'Paiement annulé.');
     }
 
     public function update(Request $request, Reservation $reservation)
