@@ -99,7 +99,7 @@ class ReservationController extends Controller
         $serviceFee = $totalRent * 0.14;
         $touristTax = 4.00 * $nights * ((int) $request->adults);
 
-        $deposit = $serviceFee + ($totalRent * 0.35);
+        $deposit = $serviceFee + ($totalRent * 0.35) + $touristTax;
         $amountCents = (int) round($deposit * 100);
         abort_if($amountCents < 50, 422, 'Montant de paiement invalide.');
 

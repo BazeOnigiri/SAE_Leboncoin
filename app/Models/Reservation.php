@@ -89,7 +89,7 @@ class Reservation extends Model
         $adultsCount = (int) ($this->adultes ?? $this->nombrevoyageur ?? 1);
         $touristTax = 4.00 * $nbNuits * max(1, $adultsCount);
 
-        $reste = ($totalRent * 0.65) + $touristTax;
+        $reste = ($totalRent * 0.65);
 
         return max(0.0, round($reste, 2));
     }
