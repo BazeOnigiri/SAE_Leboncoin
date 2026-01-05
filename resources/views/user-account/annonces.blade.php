@@ -89,21 +89,39 @@
                                                                 </span>
                                                             @else
                                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
-                                                                    À venir
+                                                                    En cours
                                                                 </span>
                                                             @endif
-                                                            <a href="{{ route('conversation.show', $reservation) }}" 
-                                                                class="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-50 text-orange-700 border border-orange-100 hover:bg-orange-100 transition" 
-                                                                title="Discussion avec le client">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                                                </svg>
-                                                                @if($unreadCountAnnonce > 0)
-                                                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                                                                        +{{ $unreadCountAnnonce }}
-                                                                    </span>
+                                                            <div class="flex items-center gap-2">
+                                                                {{-- Bouton de Discussion --}}
+                                                                <a href="{{ route('conversation.show', $reservation) }}" 
+                                                                    class="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-50 text-orange-700 border border-orange-100 hover:bg-orange-100 transition" 
+                                                                    title="Discussion avec le client">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                                                    </svg>
+                                                                    @if($unreadCountAnnonce > 0)
+                                                                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                                                                            +{{ $unreadCountAnnonce }}
+                                                                        </span>
+                                                                    @endif
+                                                                </a>
+
+                                                                {{-- Bouton Incident --}}
+                                                                @php
+                                                                    $incident = $reservation->incident;
+                                                                @endphp
+
+                                                                @if($incident && $incident->etape == 2 && !$incident->estclasse)
+                                                                    <a href="{{ route('incidents.justification', $reservation->idreservation) }}" 
+                                                                        class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-100 text-red-600 border border-red-200 hover:bg-red-500 hover:text-white transition animate-pulse" 
+                                                                        title="Incident : Justification requise">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                                        </svg>
+                                                                    </a>
                                                                 @endif
-                                                            </a>
+                                                            </div>
                                                             <span class="text-[11px] font-semibold text-gray-600 whitespace-nowrap">
                                                                 Reste à payer sur place : {{ number_format($reservation->resteAPayerSurPlace($annonce), 2, ',', ' ') }} €
                                                             </span>
@@ -206,7 +224,7 @@
                                                                 </span>
                                                             @else
                                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
-                                                                    À venir
+                                                                    En cours
                                                                 </span>
                                                             @endif
                                                             @if($profileUrl)

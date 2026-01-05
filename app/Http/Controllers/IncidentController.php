@@ -81,4 +81,40 @@ class IncidentController extends Controller
         $incident->update(['etape' => 2]);
         return back()->with('success', 'Demande d\'explications envoyée au propriétaire.');
     }
+
+    public function justificationForm(Reservation $reservation)
+    {
+        $incident = $reservation->incident;
+
+        if (!$incident || $incident->etape != 2) {
+            return redirect()->route('dashboard')->with('error', 'Cet incident ne nécessite pas de justification actuellement.');
+        }
+
+        if (Auth::id() !== $reservation->annonce->idutilisateur) {
+            abort(403, 'Vous n\'êtes pas autorisé à répondre à cet incident.');
+        }
+
+        return view('profile.incidents.justification', compact('reservation', 'incident'));
+    }
+
+    public function storeJustification(Request $request, Reservation $reservation)
+    {
+        $request->validate([
+            'explication' => 'required|string|min:10|max:5000',
+        ]);
+
+        $incident = $reservation->incident;
+
+        if (Auth::id() !== $reservation->annonce->idutilisateur || $incident->etape != 2) {
+            abort(403);
+        }
+
+        $incident->update([
+            'explicationproprietaire' => $request->explication,
+            'etape' => 3
+        ]);
+
+        return redirect()->route('user.annonces')
+            ->with('success', 'Votre explication a été transmise avec succès au service de modération.');
+    }
 }

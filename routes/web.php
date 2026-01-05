@@ -123,6 +123,9 @@ Route::middleware([
 
         Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
         Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
+
+        Route::get('/reservations/{reservation}/incident/justification', [IncidentController::class, 'justificationForm'])->name('incidents.justification');
+        Route::post('/reservations/{reservation}/incident/justification', [IncidentController::class, 'storeJustification'])->name('incidents.justification.store');
     });
 });
 

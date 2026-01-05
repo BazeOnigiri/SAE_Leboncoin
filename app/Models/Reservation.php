@@ -25,6 +25,10 @@ class Reservation extends Model
         'enfants',
         'bebes',
     ];
+
+    public function incident() {
+        return $this->hasOne(Incident::class, 'idreservation', 'idreservation');
+    }
     
     public function annonce() {
         return $this->belongsTo(Annonce::class, 'idannonce');

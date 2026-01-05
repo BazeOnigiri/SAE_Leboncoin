@@ -21,6 +21,7 @@ class Incident extends Model
         'iddate',
         'etape',
         'estclasse',
+        'explicationproprietaire',
     ];
 
     public function compensationsDemandees()
