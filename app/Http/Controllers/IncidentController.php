@@ -117,4 +117,15 @@ class IncidentController extends Controller
         return redirect()->route('user.annonces')
             ->with('success', 'Votre explication a été transmise avec succès au service de modération.');
     }
+
+    public function rembourser(Incident $incident)
+    {
+        $incident->update([
+            'etape' => 4,
+            'estrembourse' => true,
+            'estclasse' => true
+        ]);
+
+        return back()->with('success', 'Le processus de remboursement a été enclenché et l\'incident est maintenant clos.');
+    }
 }
