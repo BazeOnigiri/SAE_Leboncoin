@@ -21,6 +21,7 @@ class Incident extends Model
         'iddate',
         'etape',
         'estclasse',
+        'estrembourse',
         'explicationproprietaire',
     ];
 

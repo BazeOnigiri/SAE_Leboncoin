@@ -17,17 +17,25 @@
                     {{ $incident->user->pseudonyme ?? 'Anonyme' }}
                 </td>
                 <td class="px-6 py-4">
-                    @if($incident->estclasse)
+                    @if($incident->estrembourse)
                         <span class="px-2 py-1 bg-gray-200 text-gray-600 rounded text-xs font-bold uppercase">
-                            Classé
+                            Remboursé
+                        </span>
+                    @elseif($incident->estclasse)
+                        <span class="px-2 py-1 bg-gray-200 text-gray-600 rounded text-xs font-bold uppercase">
+                            Classé sans suite
                         </span>
                     @elseif($incident->etape == 1)
                         <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold uppercase">
-                            Vérification (1)
+                            [1] Analyse du signalement
                         </span>
                     @elseif($incident->etape == 2)
                         <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs font-bold uppercase">
-                            Propriétaire (2)
+                            [2] En attente de réponse du propriétaire
+                        </span>
+                    @elseif($incident->etape == 3)
+                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold uppercase">
+                            [3] Analyse des explications
                         </span>
                     @endif
                 </td>

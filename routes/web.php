@@ -178,6 +178,7 @@ Route::middleware([
             Route::get('/', [IncidentController::class, 'index'])->name('index');
             Route::post('/{incident}/valider', [IncidentController::class, 'validerVersEtape2'])->name('services.incidents.valider');
             Route::post('/{incident}/classer', [IncidentController::class, 'classerSansSuite'])->name('services.incidents.classer');
+            Route::post('/{incident}/rembourser', [IncidentController::class, 'rembourser'])->name('rembourser');
         });
 });
 

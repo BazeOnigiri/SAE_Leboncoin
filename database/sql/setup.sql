@@ -225,6 +225,7 @@ create table incident (
    descriptionincident     varchar(2000)        null,
    etape                   int4                 not null,
    estclasse               BOOLEAN              not null,
+   estrembourse            BOOLEAN              not null,
    explicationproprietaire varchar(2000)        null,
    constraint pk_incident primary key (idincident)
 );
@@ -802,7 +803,9 @@ ALTER TABLE recherche
 
 ALTER TABLE incident
    ALTER COLUMN etape SET DEFAULT 1,
-   ALTER COLUMN estclasse SET DEFAULT false;
+   ALTER COLUMN estclasse SET DEFAULT false,
+   ALTER COLUMN estrembourse SET DEFAULT false;
+
 
 /*===========================================================================================*/
 /*===========================================================================================*/
