@@ -131,6 +131,21 @@
                         </a>
                     @endcan
 
+                    @can('service.catalogue')
+                        <a href="{{ route('services.catalogue.index') }}"
+                            class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex items-start gap-4">
+                            <div class="w-10 h-10 flex-shrink-0 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-bold text-gray-900">Catalogue & Types</h2>
+                                <p class="text-gray-500 text-sm mt-1">Gérer les équipements et types de logements</p>
+                            </div>
+                        </a>
+                    @endcan
+
                     @can('annonce.status')
                         <a href="{{ route('services.annonces') }}"
                             class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex items-start gap-4">

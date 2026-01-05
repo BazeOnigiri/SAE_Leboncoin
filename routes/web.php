@@ -181,6 +181,15 @@ Route::middleware([
             Route::post('/{incident}/rembourser', [IncidentController::class, 'rembourser'])->name('rembourser');
             Route::post('/{incident}/valider-etape-4', [IncidentController::class, 'validerVersEtape4'])->name('services.incidents.valider4');
         });
+
+    Route::prefix('/services/catalogue')
+        ->as('services.catalogue.')
+        ->middleware('can:service.catalogue') // Nouvelle permission dédiée
+        ->group(function () {
+            Route::get('/', [ServicePetiteAnnonceController::class, 'catalogueIndex'])->name('index');
+            Route::post('/ajouter-equipement', [ServicePetiteAnnonceController::class, 'storeEquipement'])->name('add.equipement');
+            Route::post('/ajouter-hebergement', [ServicePetiteAnnonceController::class, 'storeHebergement'])->name('add.hebergement');
+        });
 });
 
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);

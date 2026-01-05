@@ -10,6 +10,11 @@ class TypeHebergement extends Model
     protected $primaryKey = 'idtypehebergement';
     public $timestamps = false;
 
+    protected $fillable = [
+    'nomtypehebergement', 
+    'idcategorie'
+    ];
+
     /* Un type d'hebergement a beaucoup ou pas de ... */
 
     public function annonces()

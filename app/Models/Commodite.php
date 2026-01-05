@@ -10,6 +10,8 @@ class Commodite extends Model
     protected $primaryKey = 'idcommodite';
     public $timestamps = false;
 
+    protected $fillable = ['nomcommodite', 'idcategorie'];
+
     /**
      * Une commodité appartient à une catégorie.
      */
