@@ -99,7 +99,6 @@
 
     <script>
         function openIncidentModal(data) {
-            // Remplissage des données de base
             document.getElementById('modal-user').innerText = data.user;
             document.getElementById('modal-date').innerText = data.date;
             document.getElementById('modal-motif').innerText = data.motif;
@@ -109,36 +108,43 @@
             const footer = document.getElementById('modal-footer');
             const btnActionText = document.getElementById('btn-action-text');
             const formActionPrincipale = document.getElementById('form-action-principale');
-            const formClasser = document.getElementById('form-classer');
+            const formLeftAction = document.getElementById('form-classer');
+            const btnLeftText = formLeftAction.querySelector('button');
 
-            // Reset visuel
             proprioSection.classList.add('hidden');
             footer.classList.remove('hidden', 'flex');
             btnActionText.classList.remove('bg-blue-600', 'bg-green-600', 'hover:bg-blue-700', 'hover:bg-green-700');
 
-            // Affichage explication propriétaire (si étape 3)
             if (data.etape >= 3 && data.explication) {
                 proprioSection.classList.remove('hidden');
                 document.getElementById('modal-explication-proprio').innerText = data.explication;
             }
 
-            // Logique des boutons selon l'état
             if (data.estclasse) {
                 footer.classList.add('hidden');
-            } else if (data.etape == 1) {
+            } 
+            else if (data.etape == 1) {
                 footer.classList.add('flex');
-                btnActionText.innerText = "Demander explication";
+                
+                btnLeftText.innerText = "Classer sans suite";
+                formLeftAction.action = `/services/incidents/${data.id}/classer`;
+                
+                btnActionText.innerText = "Demander explication proprio";
                 btnActionText.classList.add('bg-blue-600', 'hover:bg-blue-700');
                 formActionPrincipale.action = `/services/incidents/${data.id}/valider`;
-                formClasser.action = `/services/incidents/${data.id}/classer`;
-            } else if (data.etape == 3) {
+            } 
+            else if (data.etape == 3) {
                 footer.classList.add('flex');
+                
+                btnLeftText.innerText = "Refuser le remboursement";
+                formLeftAction.action = `/services/incidents/${data.id}/valider-etape-4`;
+                
                 btnActionText.innerText = "Enclencher Remboursement";
                 btnActionText.classList.add('bg-green-600', 'hover:bg-green-700');
                 formActionPrincipale.action = `/services/incidents/${data.id}/rembourser`;
-                formClasser.action = `/services/incidents/${data.id}/classer`;
-            } else {
-                footer.classList.add('hidden'); // Etape 2 : attente action propriétaire
+            } 
+            else {
+                footer.classList.add('hidden');
             }
 
             document.getElementById('incidentModal').classList.remove('hidden');

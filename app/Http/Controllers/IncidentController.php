@@ -128,4 +128,57 @@ class IncidentController extends Controller
 
         return back()->with('success', 'Le processus de remboursement a été enclenché et l\'incident est maintenant clos.');
     }
+
+    public function validerVersEtape4(Incident $incident)
+    {
+        if ($incident->estclasse || $incident->etape != 3) {
+            return back()->with('error', 'Action impossible pour cet incident.');
+        }
+
+        $incident->update([
+            'etape' => 4
+        ]);
+
+        return back()->with('success', 'Réponse transmise au locataire. Le remboursement a été refusé.');
+    }
+
+    public function suivi(Reservation $reservation)
+    {
+        $incident = $reservation->incident;
+        if (!$incident || $incident->idutilisateur != Auth::id()) abort(403);
+        
+        return view('profile.incidents.suivi', compact('reservation', 'incident'));
+    }
+
+    public function contester(Reservation $reservation)
+    {
+        $incident = $reservation->incident;
+
+        if (!$incident) {
+            abort(403, "Incident introuvable.");
+        }
+
+        if ($incident->idutilisateur != Auth::id()) {
+            abort(403, "Vous n'êtes pas l'auteur de ce signalement.");
+        }
+
+        if ($incident->etape != 4) {
+            return redirect()->back()->with('error', "L'incident n'est pas dans un état permettant la contestation.");
+        }
+
+        $incident->update(['etape' => 5]);
+
+        return redirect()->route('user.mes-reservations')->with('success', 'Votre contestation a été prise en compte.');
+    }
+
+    public function cloturer(Reservation $reservation)
+    {
+        $incident = $reservation->incident;
+
+        if ($incident->etape < 4) abort(403);
+
+        $incident->update(['etape' => 6, 'estclasse' => true]);
+
+        return redirect()->route('user.mes-reservations')->with('success', 'L\'incident est désormais clos.');
+    }
 }

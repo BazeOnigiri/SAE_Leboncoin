@@ -70,11 +70,11 @@ Route::middleware([
         ->name('reservation.stripe.cancel');
         
     Route::middleware(['auth', 'verified'])->group(function () {
-        Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])
-            ->name('incidents.create');
-
-        Route::post('/reservations/{reservation}/incident', [IncidentController::class, 'store'])
-            ->name('incidents.store');
+        Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])->name('incidents.create');
+        Route::post('/reservations/{reservation}/incident', [IncidentController::class, 'store'])->name('incidents.store');
+        Route::get('/reservations/{reservation}/incident/suivi', [IncidentController::class, 'suivi'])->name('incidents.suivi');
+        Route::post('/reservations/{reservation}/incident/contester', [IncidentController::class, 'contester'])->name('incidents.contester');
+        Route::post('/reservations/{reservation}/incident/cloturer', [IncidentController::class, 'cloturer'])->name('incidents.cloturer');
     });
 });
 
@@ -179,6 +179,7 @@ Route::middleware([
             Route::post('/{incident}/valider', [IncidentController::class, 'validerVersEtape2'])->name('services.incidents.valider');
             Route::post('/{incident}/classer', [IncidentController::class, 'classerSansSuite'])->name('services.incidents.classer');
             Route::post('/{incident}/rembourser', [IncidentController::class, 'rembourser'])->name('rembourser');
+            Route::post('/{incident}/valider-etape-4', [IncidentController::class, 'validerVersEtape4'])->name('services.incidents.valider4');
         });
 });
 
