@@ -314,12 +314,12 @@ INSERT INTO ville (iddepartement, codepostal, nomville, taxedesejour) VALUES
 
 -- Île-de-France (Region 8) - Commence à l'ID 48
 (48, '75001', 'Paris', 2.80),
-(50, '78000', 'Versailles', 2.20),      -- Yvelines est le 3ème inséré en IDF (48, 49, 50)
-(49, '77300', 'Fontainebleau', 1.90),   -- Seine-et-Marne est le 2ème (49)
-(51, '91000', 'Évry', 1.70),            -- Essonne (51)
-(52, '92000', 'Nanterre', 2.00),        -- Hauts-de-Seine (52)
-(54, '94000', 'Créteil', 1.70),         -- Val-de-Marne (54)
-(55, '95000', 'Pontoise', 1.60),        -- Val-d'Oise (55)
+(50, '78000', 'Versailles', 2.20),   
+(49, '77300', 'Fontainebleau', 1.90),
+(51, '91000', 'Évry', 1.70),      
+(52, '92000', 'Nanterre', 2.00),    
+(54, '94000', 'Créteil', 1.70),     
+(55, '95000', 'Pontoise', 1.60),     
 
 -- Auvergne-Rhône-Alpes (Region 1) - IDs 1 à 12
 (10, '69001', 'Lyon', 2.30),
