@@ -310,6 +310,7 @@
                         const departInput = document.getElementById('dateDepartInput');
                         const btn = document.getElementById('btnReserver');
                         const warning = document.getElementById('dateWarning');
+                        const minimumNights = parseInt(document.getElementById('minimumNights').value);
 
                         if (arriveeInput.value) {
                             departInput.min = arriveeInput.value;
@@ -319,6 +320,23 @@
                         }
 
                         if (arriveeInput.value && departInput.value) {
+                            // Parse les dates
+                            const [dayA, monthA, yearA] = arriveeInput.value.split('/');
+                            const [dayD, monthD, yearD] = departInput.value.split('/');
+                            const dateArrivee = new Date(yearA, monthA - 1, dayA);
+                            const dateDepart = new Date(yearD, monthD - 1, dayD);
+                            
+                            // Calcul du nombre de nuits
+                            const nights = Math.round((dateDepart - dateArrivee) / (1000 * 60 * 60 * 24));
+                            
+                            if (nights < minimumNights) {
+                                btn.removeAttribute('href');
+                                btn.classList.add('bg-gray-300', 'cursor-not-allowed', 'pointer-events-none', 'shadow-none');
+                                btn.classList.remove('bg-[#EA580C]', 'hover:bg-[#C2410C]', 'shadow-sm', 'cursor-pointer');
+                                warning.textContent = `⚠️ Minimum de ${minimumNights} nuit${minimumNights > 1 ? 's' : ''} requises. Vous avez sélectionné ${nights} nuit${nights > 1 ? 's' : ''}.`;
+                                warning.style.display = 'block';
+                                return;
+                            }
 
                             let baseUrl = "";
                             @auth
@@ -650,12 +668,18 @@
                         </div>
 
                         <input type="hidden" id="pricePerNight" value="{{ $annonce->prixnuitee }}">
+                        <input type="hidden" id="minimumNights" value="{{ $annonce->minimumnuitee ?? 1 }}">
 
 
 
 
 
-                        <p class="text-sm font-bold text-slate-800 mb-2">Sélectionnez vos dates de séjour :</p>
+                        <p class="text-sm font-bold text-slate-800 mb-2">
+                            Sélectionnez vos dates de séjour :
+                            <span class="text-xs font-normal text-orange-600 ml-2">
+                                (Minimum : {{ $annonce->minimumnuitee ?? 1 }} nuit{{ $annonce->minimumnuitee != 1 ? 's' : '' }})
+                            </span>
+                        </p>
 
                             <div class="flex items-center gap-2 mb-2">
                                 <div class="flex-1">
@@ -856,6 +880,7 @@
             }
 
             const nights = Math.max(0, Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)));
+            const minimumNights = parseInt(document.getElementById('minimumNights').value);
             const pricePerNight = parseFloat(document.getElementById('pricePerNight').value);
             const total = nights * pricePerNight;
             
@@ -879,6 +904,29 @@
                         rangePicker.close();
                     };
                 }
+            }
+            
+            const minimumNights = parseInt(document.getElementById('minimumNights').value);
+            const existingHeader = instance.calendarContainer?.querySelector('.minimum-nights-header');
+            if (existingHeader) {
+                existingHeader.remove();
+            }
+            
+            if (instance?.calendarContainer) {
+                const header = document.createElement('div');
+                header.className = 'minimum-nights-header';
+                header.style.cssText = `
+                    padding: 14px 16px;
+                    background: #EA580C;
+                    text-align: center;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: white;
+                    border-radius: 12px 12px 0 0;
+                    letter-spacing: 0.3px;
+                `;
+                header.innerHTML = `Minimum requis: <strong>${minimumNights} nuit${minimumNights > 1 ? 's' : ''}</strong>`;
+                instance.calendarContainer.insertBefore(header, instance.calendarContainer.firstChild);
             }
         }
 
@@ -911,6 +959,9 @@
                 }
                 if (selectedDates.length === 2) {
                     const [start, end] = selectedDates;
+                    const minimumNights = parseInt(document.getElementById('minimumNights').value);
+                    const nights = Math.max(0, Math.round((end - start) / (1000 * 60 * 60 * 24)));
+                    
                     if (hasReservedDatesInRange(start, end)) {
                         rangePicker.clear();
                         document.getElementById('dateDepartInput').value = '';
@@ -923,6 +974,20 @@
                         updateReservationLink();
                         return;
                     }
+                    
+                    if (nights < minimumNights) {
+                        rangePicker.clear();
+                        document.getElementById('dateDepartInput').value = '';
+                        const warning = document.getElementById('dateWarning');
+                        if (warning) {
+                            warning.textContent = `⚠️ Minimum de ${minimumNights} nuit${minimumNights > 1 ? 's' : ''} requises. Vous avez sélectionné ${nights} nuit${nights > 1 ? 's' : ''}.`;
+                            warning.style.display = 'block';
+                        }
+                        updateDateSummary(null, null);
+                        updateReservationLink();
+                        return;
+                    }
+                    
                     document.getElementById('dateDepartInput').value = instance.formatDate(end, 'd/m/Y');
                     updateDateSummary(start, end);
                     const warning = document.getElementById('dateWarning');
