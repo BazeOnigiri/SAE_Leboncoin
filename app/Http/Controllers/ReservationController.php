@@ -9,6 +9,8 @@ use App\Models\Message;
 use App\Models\Date;
 use App\Models\Transaction;
 use App\Models\CarteBancaire;
+use App\Models\Incident;
+use App\Models\Photo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -597,7 +599,7 @@ class ReservationController extends Controller
         $user = Auth::user();
         abort_if(!$user, 403);
 
-        $reservation->loadMissing(['transaction']);
+        $reservation->loadMissing(['transaction', 'incident']);
 
         DB::transaction(function () use ($user, $reservation) {
             if ($reservation->transaction) {
@@ -607,6 +609,18 @@ class ReservationController extends Controller
                 }
                 $reservation->transaction->delete();
             }
+
+            if ($reservation->incident) {
+                $incident = $reservation->incident;
+
+                $incident->compensationsDemandees()->detach();
+
+                Photo::where('idincident', $incident->idincident)->delete();
+
+                $incident->delete();
+            }
+
+            DB::table('inclure')->where('idreservation', $reservation->idreservation)->delete();
 
             $reservation->delete();
         });
