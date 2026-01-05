@@ -9,7 +9,7 @@
             title="Rapport état des locations" 
             width="100%" 
             height="700" 
-            src="https://app.powerbi.com/view?r=eyJrIjoiNTM3ZTViZGQtOTFmOC00ZDY1LWJjZDctOGU4ZjQ0OGUxZWUwIiwidCI6ImUyMWU5NzgzLWQwYTAtNDhmOC04NTBlLTBiMDgxYjQ2ZDc4OCIsImMiOjh9"
+            src="https://app.powerbi.com/view?r=eyJrIjoiNDY2MzMxNDktMDhhMy00YTVkLThjY2ItYzgzOTZkNzY0YTg4IiwidCI6ImUyMWU5NzgzLWQwYTAtNDhmOC04NTBlLTBiMDgxYjQ2ZDc4OCIsImMiOjh9"
             frameborder="0" 
             allowFullScreen="true">
         </iframe>
