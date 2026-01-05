@@ -1,8 +1,7 @@
 <div class="h-full flex flex-col">
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <h2 class="text-xl font-bold text-slate-900">Tous les filtres</h2>
-        <button onclick="closeFilters()" class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors"
-                @click="sidebarOpen = false" 
+        <button @click="sidebarOpen = false" 
                 class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
                 <span class=" font-bold">X</span>
         </button>
