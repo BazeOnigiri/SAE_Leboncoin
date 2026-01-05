@@ -30,7 +30,7 @@
                     @click="activeTab = 'upcoming'"
                     :class="{ 'border-orange-600 text-orange-600': activeTab === 'upcoming', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== 'upcoming' }"
                     class="px-6 py-3 border-b-2 font-bold transition-colors duration-200 focus:outline-none">
-                    À venir ({{ $reservationsAVenir->count() }})
+                    En cours ({{ $reservationsAVenir->count() }})
                 </button>
                 <button 
                     @click="activeTab = 'history'"

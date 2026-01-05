@@ -52,4 +52,33 @@ class IncidentController extends Controller
         return redirect()->route('user.mes-reservations')
                          ->with('success', 'Votre incident a été signalé avec succès. Vous pouvez le suivre depuis votre page de réservations.');
     }
+
+    public function index()
+    {
+        $allIncidents = Incident::with(['dateRecord', 'user', 'reservation'])->orderBy('idincident', 'desc')->get();
+
+        $incidentsEnCours = $allIncidents->where('estclasse', false);
+        $incidentsClasses = $allIncidents->where('estclasse', true);
+
+        return view('services.incidents.index', compact('incidentsEnCours', 'incidentsClasses'));
+    }
+
+    public function classerSansSuite(Incident $incident)
+    {
+        $incident->update([
+            'estclasse' => true,
+        ]);
+
+        return back()->with('success', 'L\'incident a été classé sans suite avec succès.');
+    }
+
+    public function validerVersEtape2(Incident $incident)
+    {
+        if ($incident->estclasse) {
+            return back()->with('error', 'Impossible de valider un incident déjà classé.');
+        }
+
+        $incident->update(['etape' => 2]);
+        return back()->with('success', 'Demande d\'explications envoyée au propriétaire.');
+    }
 }

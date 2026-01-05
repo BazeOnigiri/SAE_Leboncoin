@@ -217,12 +217,15 @@ create table heure (
 /* Table : incident                                             */
 /*==============================================================*/
 create table incident (
-   idincident           serial               not null,
-   idutilisateur        int4                 not null,
-   idreservation       int4                 not null,
-   iddate               int4                 not null,
-   motifincident        varchar(100)         null,
-   descriptionincident  varchar(2000)        null,
+   idincident              serial               not null,
+   idutilisateur           int4                 not null,
+   idreservation           int4                 not null,
+   iddate                  int4                 not null,
+   motifincident           varchar(100)         null,
+   descriptionincident     varchar(2000)        null,
+   etape                   int4                 not null,
+   estclasse               BOOLEAN              not null,
+   explicationproprietaire varchar(2000)        null,
    constraint pk_incident primary key (idincident)
 );
 
@@ -796,6 +799,10 @@ ALTER TABLE utilisateur
 
 ALTER TABLE recherche
    ALTER COLUMN paiementenligne SET DEFAULT false;
+
+ALTER TABLE incident
+   ALTER COLUMN etape SET DEFAULT 1,
+   ALTER COLUMN estclasse SET DEFAULT false;
 
 /*===========================================================================================*/
 /*===========================================================================================*/

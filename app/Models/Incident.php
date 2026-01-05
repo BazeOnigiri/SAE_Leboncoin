@@ -9,27 +9,27 @@ class Incident extends Model
 {
     use HasFactory;
 
-    protected $table = 'incident'; // Nom de la table
-    protected $primaryKey = 'idincident'; // Nom de la clé primaire
-    public $timestamps = false; // Pas de created_at/updated_at par défaut dans votre schéma
+    protected $table = 'incident';
+    protected $primaryKey = 'idincident';
+    public $timestamps = false;
 
-    // Champs que vous pouvez remplir massivement
     protected $fillable = [
         'idutilisateur',
         'idreservation',
         'motifincident',
         'descriptionincident',
-        'iddate', // Assurez-vous d'avoir une logique pour cette colonne ou retirez-la
+        'iddate',
+        'etape',
+        'estclasse',
     ];
 
-    // Relation avec les compensations demandées (Table 'demander')
     public function compensationsDemandees()
     {
         return $this->belongsToMany(
             Compensation::class, 
-            'demander', // Nom de la table pivot
-            'idincident', // Clé étrangère locale dans la table pivot
-            'idcompensation' // Clé étrangère liée dans la table pivot
+            'demander',
+            'idincident',
+            'idcompensation'
         );
     }
 
@@ -41,5 +41,10 @@ class Incident extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'idutilisateur');
+    }
+
+    public function dateRecord()
+    {
+        return $this->belongsTo(Date::class, 'iddate', 'iddate');
     }
 }

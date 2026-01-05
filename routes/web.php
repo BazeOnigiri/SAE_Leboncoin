@@ -167,6 +167,15 @@ Route::middleware([
         ->group(function () {
             Route::get('/', [ServiceInscriptionController::class, 'index'])->name('index');
         });
+
+    Route::prefix('/services/incidents')
+        ->as('services.incidents.')
+        ->middleware('can:service.incidents')
+        ->group(function () {
+            Route::get('/', [IncidentController::class, 'index'])->name('index');
+            Route::post('/{incident}/valider', [IncidentController::class, 'validerVersEtape2'])->name('services.incidents.valider');
+            Route::post('/{incident}/classer', [IncidentController::class, 'classerSansSuite'])->name('services.incidents.classer');
+        });
 });
 
 Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
