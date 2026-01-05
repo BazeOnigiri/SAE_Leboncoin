@@ -15,7 +15,7 @@
             @endif
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8" x-data="{
-                // Variables pour la recherche d'adresse
+                    // Variables pour la recherche d'adresse
                 query: '',
                 suggestions: [],
                 showSuggestions: false,
@@ -149,7 +149,7 @@
 
                         <div class="mb-6">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Date de naissance</label>
-                            <input type="date" name="date_naissance" required max="{{ now()->subYears(18)->toDateString() }}" value="{{ old('date_naissance', optional(optional($user->particulier)->dateNaissance)->date) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                            <input type="date" name="date_naissance" required max="{{ now()->subYears(18)->toDateString() }}" value="{{ old('date_naissance', optional($user->particulier->dateNaissance)->date?->format('Y-m-d')) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
                             @error('date_naissance') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
 
