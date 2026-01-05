@@ -169,6 +169,7 @@
                     id="photos"
                     x-ref="input"
                     accept="image/*"
+                    required
                     multiple
                     @change="addFiles($event)"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500"

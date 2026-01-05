@@ -124,8 +124,8 @@ class AnnonceController extends Controller
         $validated = $request->validate([
             'titre' => ['required', 'string', 'max:50'],
             'description' => ['required', 'string', 'max:4000'],
-            'photos' => ['nullable', 'array'],
-            'photos.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'photos' => ['required', 'array', 'min:1'],
+            'photos.*' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'capacite' => ['required', 'integer', 'min:1', 'max:100'],
             'nbchambres' => ['required', 'integer', 'min:0', 'max:100'],
             'typebien' => ['required', 'integer', 'exists:typehebergement,idtypehebergement'],
