@@ -1,4 +1,6 @@
 import './bootstrap';
+import './help-system';
+
 const overlay = document.getElementById('filter-overlay');
 const panel = document.getElementById('filter-panel');
 const header = document.getElementById('main-header');

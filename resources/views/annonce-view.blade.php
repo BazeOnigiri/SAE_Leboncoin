@@ -479,7 +479,8 @@
                                         'Accept': 'application/json'
                                     },
                                     body: JSON.stringify({ idannonce: {{ $annonce->idannonce }} })
-                                }).then(() => loading = false).catch(() => { isFavorite = !isFavorite; loading = false; })
+                                }).then(() => loading = false).catch(() => { isFavorite = !isFavorite; loading = false; });
+                                window.HelpSystem.pointTo('#header-favorites-link', '<strong>C\'est dans la poche !</strong><br>Retrouvez vos favoris en haut.');
                             " class="bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition relative flex items-center justify-center w-12 h-12 flex-shrink-0 group">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
                                     class="w-6 h-6 transition-colors duration-300"
@@ -516,7 +517,7 @@
                                 this.isFavorite = favorites.includes({{ $annonce->idannonce }});
                             }
                         }">
-                            <button @click="toggle()" class="bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition relative flex items-center justify-center w-12 h-12 flex-shrink-0 group">
+                            <button @click="toggle(); window.HelpSystem.pointTo('#header-favorites-link', '<strong>C\'est dans la poche !</strong><br>Retrouvez vos favoris en haut.');" class="bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition relative flex items-center justify-center w-12 h-12 flex-shrink-0 group">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
                                     class="w-6 h-6 transition-colors duration-300"
                                     :class="isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400 group-hover:text-red-500'">

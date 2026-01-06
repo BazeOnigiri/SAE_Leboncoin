@@ -65,7 +65,7 @@
             </a>
 
             @if($isSuperAdminOrNoRoles)
-                <a href="{{ route('annonce.create') }}"
+                <a href="{{ route('annonce.create') }}" id="header-create-annonce-btn"
                     class="hidden md:flex items-center gap-2 bg-[#ea580c] hover:bg-[#c2410c] text-white transition-colors  font-bold py-2.5 px-5 rounded-xl  shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-6 h-6 text-white">
@@ -92,7 +92,7 @@
                 </div>
 
                 <nav class="flex items-center gap-6 text-gray-700 shrink-0">
-                    <a href="{{ route('user.searches') }}" class="relative hidden lg:flex flex-col items-center gap-1 group">
+                    <a href="{{ route('user.searches') }}" id="header-searches-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -103,7 +103,7 @@
                         <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
 
-                    <a href="{{ route('user.favorites') }}" class="relative hidden lg:flex flex-col items-center gap-1 group">
+                    <a href="{{ route('user.favorites') }}" id="header-favorites-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -138,7 +138,7 @@
                 @endauth
 
                 @guest
-                    <a href="{{ route('auth.check') }}" class="relative flex flex-col items-center gap-1 group">
+                    <a href="{{ route('auth.check') }}" id="header-login-link" class="relative flex flex-col items-center gap-1 group">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -150,6 +150,39 @@
                     </a>
                 @endguest
             </nav>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                   const loginLink = document.getElementById('header-login-link');
+                   if (loginLink) {
+                       setTimeout(() => {
+                           // Use startSequence to easily add a timer if desired, or just show.
+                           // User didn't explicitly ask for a timer here, but it's good practice for "unsolicited" popups.
+                           window.HelpSystem.startSequence([
+                               {
+                                   element: '#header-login-link',
+                                   content: '<strong>Connectez-vous !</strong><br>Accédez à votre compte ici.',
+                                   event: 'timer:5000'
+                               }
+                           ]);
+                       }, 1500);
+                   }
+
+                   // Trigger for 'Déposer une annonce'
+                   const createBtn = document.getElementById('header-create-annonce-btn');
+                   if (createBtn) {
+                       setTimeout(() => {
+                           window.HelpSystem.startSequence([
+                               {
+                                   element: '#header-create-annonce-btn',
+                                   content: '<strong>Vendez simplement !</strong><br>Déposez votre annonce gratuitement en quelques clics.',
+                                   event: 'timer:5000'
+                               }
+                           ]);
+                       }, 7000); // Wait for login bubble to finish (1.5s delay + 5s duration + buffer)
+                   }
+                });
+            </script>
 
         </div>
     </header>

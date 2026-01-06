@@ -32,7 +32,7 @@
     <div class="flex flex-col lg:flex-row gap-6 relative">
 
         <div class="w-full {{ $hasSearch ? 'lg:w-2/3' : '' }}">
-            <button wire:click="saveSearch" class="bg-[#ea580c] hover:bg-[#c2410c] text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 mb-6">
+            <button id="save-search-btn" wire:click="saveSearch" class="bg-[#ea580c] hover:bg-[#c2410c] text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                 </svg>
@@ -80,7 +80,8 @@
                                             'Accept': 'application/json'
                                         },
                                         body: JSON.stringify({ idannonce: {{ $annonce->idannonce }} })
-                                    }).then(() => loading = false).catch(() => { isFavorite = !isFavorite; loading = false; })
+                                    }).then(() => loading = false).catch(() => { isFavorite = !isFavorite; loading = false; });
+                                    window.HelpSystem.pointTo('#header-favorites-link', '<strong>C\'est dans la poche !</strong><br>Retrouvez vos favoris en haut.');
                                 " class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white transition relative">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
                                         class="w-5 h-5 transition-colors duration-300"
@@ -117,7 +118,7 @@
                                     this.isFavorite = favorites.includes({{ $annonce->idannonce }});
                                 }
                             }" class="absolute top-2 right-2 z-20">
-                                <button @click.prevent="toggle()" class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white transition relative">
+                                <button @click.prevent="toggle(); window.HelpSystem.pointTo('#header-favorites-link', '<strong>C\'est dans la poche !</strong><br>Retrouvez vos favoris en haut.');" class="bg-white/80 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white transition relative">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" 
                                         class="w-5 h-5 transition-colors duration-300"
                                         :class="isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'">
@@ -280,4 +281,23 @@
         });
     </script>
     @endscript
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start the tour!
+            setTimeout(() => {
+                window.HelpSystem.startSequence([
+                    { 
+                        element: '#save-search-btn', 
+                        content: '<strong>Astuce !</strong><br>Cliquez ici pour sauvegarder cette recherche.', 
+                        event: 'click' 
+                    },
+                    { 
+                        element: '#header-searches-link', 
+                        content: '<strong>C\'est noté !</strong><br>Retrouvez vos recherches sauvegardées ici.', 
+                        event: 'timer:4000' 
+                    }
+                ]);
+            }, 1000); // Small delay to let UI settle
+        });
+    </script>
 </div>
