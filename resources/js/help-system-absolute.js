@@ -149,33 +149,99 @@ export class AbsoluteHelpSystem {
 
 
     initDemo() {
-        // Simple check to see if we are on a page that needs the demo
-        // We can check for a specific element unique to the list page, e.g., the save search button or filter panel
-        const saveSearchBtn = document.body.innerText.includes('Sauvegarder la recherche'); 
-        // Or better, just check if we are on the right URL mechanism or just run it if elements exist.
-        
-        // Let's rely on finding the specific elements we want to point to relative to:
-        // But since we use absolute coordinates, we just need to know if we are on the "List" page.
-        // We can assume if "Sauvegarder la recherche" text is present/visible, we show it?
-        // Or check URL?
-        
-        // For now, let's just wait 1s and trigger if we aren't in a specific 'no-help' state
+        // Only run this sequence on the homepage
+        if (window.location.pathname !== '/' && window.location.pathname !== '/home') {
+            return;
+        }
+
         setTimeout(() => {
-             console.log('--- AbsoluteHelpSystem: Auto-initiating Demo Sequence ---');
-            this.startSequence([
-                {
-                    x: 22, y: 8, 
-                    position: 'absolute', // Scrolls with page as requested
-                    content: '<strong>C\'est parti !</strong><br>Cliquez sur "Déposer une annonce" pour vendre vos biens.',
+            console.log('--- AbsoluteHelpSystem: Building Dynamic Sequence ---');
+            
+            const steps = [];
+
+            // 1. Barre de recherche (Main Body - Location Search)
+            steps.push({
+                x: 25, y: 28, 
+                position: 'absolute',
+                content: '<strong>Barre de recherche</strong><br>Trouvez rapidement ce que vous cherchez par ville ou région.',
+                width: 300
+            });
+
+            // 2. Filtres (Index Page - Filters Bar)
+            steps.push({
+                x: 60, y: 28, 
+                position: 'absolute',
+                content: '<strong>Filtres</strong><br>Affinez votre recherche par prix, dates, etc.',
+                width: 300
+            });
+
+            // 3. Sauvegarder la recherche (Content)
+            steps.push({
+                x: 22, y: 42, 
+                position: 'absolute',
+                content: '<strong>Sauvegarder la recherche</strong><br>Cliquez ici pour être notifié des nouvelles annonces !',
+                width: 350
+            });
+
+            // 4. Mes recherches (Nav)
+            steps.push({
+                x: 55, y: 4, 
+                position: 'fixed',
+                content: '<strong>Mes recherches</strong><br>Retrouvez ici toutes vos alertes et recherches sauvegardées.',
+                width: 300
+            });
+
+            // 5. Favoris (Nav)
+            steps.push({
+                x: 64, y: 4, 
+                position: 'fixed',
+                content: '<strong>Favoris</strong><br>Retrouvez ici tous vos coups de cœur sauvegardés.',
+                width: 300
+            });
+
+            // 6. Auth (Login or Profile)
+            // We check if "Se connecter" link exists (guest)
+            const loginLink = document.getElementById('header-login-link');
+            
+            if (loginLink) {
+                // Not Connected
+                steps.push({
+                    x: 72, y: 4, 
+                    position: 'fixed',
+                    content: '<strong>Se connecter</strong><br>Connectez-vous pour accéder à toutes les fonctionnalités.',
                     width: 300
-                },
-                { 
-                    x: 22, y: 42, 
-                    position: 'absolute', // Scrolls with content
-                    content: '<strong>Sauvegarder la recherche</strong><br>Cliquez ici pour être notifié des nouvelles annonces !',
-                    width: 350
-                }
-            ]);
+                });
+            } else {
+                // Connected (Profile picture area)
+                steps.push({
+                    x: 72, y: 4, 
+                    position: 'fixed',
+                    content: '<strong>Mon Compte</strong><br>Gérez votre profil et vos annonces ici.',
+                    width: 300
+                });
+            }
+
+            // 7. Déposer une annonce (Connected only)
+            const createBtn = document.getElementById('header-create-annonce-btn');
+            if (createBtn) {
+                steps.push({
+                    x: 22, y: 4, 
+                    position: 'fixed',
+                    content: '<strong>Déposer une annonce</strong><br>Vendez vos biens en quelques clics.',
+                    width: 300
+                });
+            }
+
+            // 8. BotMan (Bottom Right)
+            steps.push({
+                x: 72, y: 82, 
+                position: 'fixed',
+                content: '<strong>Besoin d\'aide ?</strong><br>Discutez avec notre assistant virtuel BotMan en bas à droite.',
+                width: 300
+            });
+
+            this.startSequence(steps);
+
         }, 2000);
     }
 }
