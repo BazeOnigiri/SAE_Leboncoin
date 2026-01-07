@@ -5,6 +5,26 @@ export class AbsoluteHelpSystem {
         this.currentSequence = null;
         this.currentIndex = 0;
         this.overlay = null;
+        this.handleClickOutside = this.handleClickOutside.bind(this);
+    }
+
+    // ... (show method updates)
+
+    handleClickOutside(event) {
+        if (this.activeBubble && !this.activeBubble.contains(event.target)) {
+            // Check if the click target is not part of the bubble structure
+            this.stop();
+        }
+    }
+
+    // ...
+
+    removeBubble() {
+        if (this.activeBubble) {
+            this.activeBubble.remove();
+            this.activeBubble = null;
+            document.removeEventListener('click', this.handleClickOutside);
+        }
     }
 
     /**
@@ -85,6 +105,11 @@ export class AbsoluteHelpSystem {
 
         document.body.appendChild(bubble);
         this.activeBubble = bubble;
+
+        // Add click outside listener with a slight delay to avoid immediate trigger
+        setTimeout(() => {
+            document.addEventListener('click', this.handleClickOutside);
+        }, 100);
     }
 
     /**
@@ -134,10 +159,19 @@ export class AbsoluteHelpSystem {
         }
     }
 
+    handleClickOutside(event) {
+        if (this.activeBubble && !this.activeBubble.contains(event.target)) {
+             // Avoid closing if clicking on navigation elements that might be re-rendering
+             // But simplest is: if outside bubble, close.
+            this.stop();
+        }
+    }
+
     removeBubble() {
         if (this.activeBubble) {
             this.activeBubble.remove();
             this.activeBubble = null;
+            document.removeEventListener('click', this.handleClickOutside);
         }
     }
 
