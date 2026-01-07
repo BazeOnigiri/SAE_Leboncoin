@@ -208,8 +208,8 @@ export class AbsoluteHelpSystem {
     }
 
     // Helper: Prevent bubble from overflowing right screen edge
-    getSafeX(xPct) {
-        const bubbleWidth = 300; // px
+    getSafeX(xPct, targetWidth = 300) {
+        const bubbleWidth = targetWidth; // px
         const margin = 20; // px
         // What % is (Width + Margin)?
         const reservedPct = ((bubbleWidth + margin) / window.innerWidth) * 100;
