@@ -153,38 +153,7 @@
                 @endguest
             </nav>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                   const loginLink = document.getElementById('header-login-link');
-                   if (loginLink) {
-                       setTimeout(() => {
-                           // Use startSequence to easily add a timer if desired, or just show.
-                           // User didn't explicitly ask for a timer here, but it's good practice for "unsolicited" popups.
-                           window.HelpSystem.startSequence([
-                               {
-                                   element: '#header-login-link',
-                                   content: '<strong>Connectez-vous !</strong><br>Accédez à votre compte ici.',
-                                   event: 'timer:5000'
-                               }
-                           ]);
-                       }, 1500);
-                   }
 
-                   // Trigger for 'Déposer une annonce'
-                   const createBtn = document.getElementById('header-create-annonce-btn');
-                   if (createBtn) {
-                       setTimeout(() => {
-                           window.HelpSystem.startSequence([
-                               {
-                                   element: '#header-create-annonce-btn',
-                                   content: '<strong>Vendez simplement !</strong><br>Déposez votre annonce gratuitement en quelques clics.',
-                                   event: 'timer:5000'
-                               }
-                           ]);
-                       }, 7000); // Wait for login bubble to finish (1.5s delay + 5s duration + buffer)
-                   }
-                });
-            </script>
 
         </div>
     </header>

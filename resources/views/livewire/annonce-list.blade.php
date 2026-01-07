@@ -200,6 +200,7 @@
 
     </div>
 
+
     @script
     <script>
         let map;
@@ -281,23 +282,6 @@
         });
     </script>
     @endscript
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Start the tour!
-            setTimeout(() => {
-                window.HelpSystem.startSequence([
-                    { 
-                        element: '#save-search-btn', 
-                        content: '<strong>Astuce !</strong><br>Cliquez ici pour sauvegarder cette recherche.', 
-                        event: 'click' 
-                    },
-                    { 
-                        element: '#header-searches-link', 
-                        content: '<strong>C\'est noté !</strong><br>Retrouvez vos recherches sauvegardées ici.', 
-                        event: 'timer:4000' 
-                    }
-                ]);
-            }, 1000); // Small delay to let UI settle
-        });
-    </script>
+
+
 </div>
