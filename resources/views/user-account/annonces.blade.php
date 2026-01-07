@@ -32,7 +32,7 @@
                                 
                                 <div class="w-full sm:w-48 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                                     @if($annonce->photos->isNotEmpty())
-                                        <img src="{{ $annonce->photos->first()->lienphoto }}" class="w-full h-full object-cover">
+                                        <img src="{{ $annonce->photos->first()->lienphoto }}" alt="{{ $annonce->titreannonce }} - Photo principale" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">Sans photo</div>
                                     @endif
@@ -172,7 +172,7 @@
                             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col sm:flex-row gap-4 hover:shadow-md transition relative group">
                                 <div class="w-full sm:w-48 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                                     @if($annonce->photos->isNotEmpty())
-                                        <img src="{{ $annonce->photos->first()->lienphoto }}" class="w-full h-full object-cover">
+                                        <img src="{{ $annonce->photos->first()->lienphoto }}" alt="{{ $annonce->titreannonce }} - Photo principale" class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">Sans photo</div>
                                     @endif

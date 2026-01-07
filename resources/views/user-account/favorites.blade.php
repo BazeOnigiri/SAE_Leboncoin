@@ -26,7 +26,7 @@
                             
                             <div class="relative h-48 bg-gray-100">
                                 @if($annonce->photos->isNotEmpty())
-                                    <img src="{{ $annonce->photos->first()->lienphoto }}" class="w-full h-full object-cover">
+                                    <img src="{{ $annonce->photos->first()->lienphoto }}" alt="{{ $annonce->titreannonce }} - Photo principale" class="w-full h-full object-cover">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">Sans photo</div>
                                 @endif

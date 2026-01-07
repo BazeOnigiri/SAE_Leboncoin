@@ -252,7 +252,7 @@
                         class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scrollbar-hide">
                         @foreach ($annonce->photos ?? [] as $photo)
                             <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
-                                <img src="{{ $photo->lienphoto }}" loading="lazy" class="w-full h-full object-cover">
+                                <img src="{{ $photo->lienphoto }}" alt="{{ $annonce->titreannonce }} - Photo {{ $loop->iteration }}" loading="lazy" class="w-full h-full object-cover">
                             </div>
                         @endforeach
                     </div>
