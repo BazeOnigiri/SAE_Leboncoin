@@ -188,10 +188,37 @@ export class AbsoluteHelpSystem {
             this.initHome();
         } else if (path === '/dashboard') {
             this.initDashboard();
+        } else if (path.includes('/deposer-une-annonce')) {
+            this.initCreateAnnonce();
+        } else if (path.includes('/recherche')) {
+            this.initMesRecherches();
         }
     }
 
+    // Helper: Calculate absolute position % from element
+    getAbsolutePos(el) {
+        const rect = el.getBoundingClientRect();
+        // Center of element
+        const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+        // Top
+        const y = ((rect.top + window.scrollY) / window.innerHeight) * 100;
+        // Bottom
+        const yBottom = ((rect.bottom + window.scrollY) / window.innerHeight) * 100;
+        return { x, y, yBottom };
+    }
+
+    // Helper: Prevent bubble from overflowing right screen edge
+    getSafeX(xPct) {
+        const bubbleWidth = 300; // px
+        const margin = 20; // px
+        // What % is (Width + Margin)?
+        const reservedPct = ((bubbleWidth + margin) / window.innerWidth) * 100;
+        const maxPct = 100 - reservedPct;
+        return xPct > maxPct ? maxPct : xPct;
+    }
+
     initHome() {
+        // ... (existing initHome code, unchanged) ...
         setTimeout(() => {
             console.log('--- AbsoluteHelpSystem: Building Home Sequence ---');
             const steps = [];
@@ -279,39 +306,16 @@ export class AbsoluteHelpSystem {
 
     initDashboard() {
         setTimeout(() => {
-            console.log('--- AbsoluteHelpSystem: Building Dynamic Dashboard Sequence ---');
+            console.log('--- AbsoluteHelpSystem: Building Dashboard Sequence ---');
             const steps = [];
 
-            // Helper to find absolute position from element
-            const getPos = (el) => {
-                const rect = el.getBoundingClientRect();
-                // Center of element
-                const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-                // Top
-                const y = ((rect.top + window.scrollY) / window.innerHeight) * 100;
-                // Bottom
-                const yBottom = ((rect.bottom + window.scrollY) / window.innerHeight) * 100;
-                return { x, y, yBottom };
-            };
-
-            // Helper to prevent right overflow
-            const getSafeX = (xPct) => {
-                const bubbleWidth = 300; // px
-                const margin = 20; // px
-                // What % is (Width + Margin)?
-                const reservedPct = ((bubbleWidth + margin) / window.innerWidth) * 100;
-                const maxPct = 100 - reservedPct;
-                return xPct > maxPct ? maxPct : xPct;
-            };
-
             // 1. Identity (Avatar area)
-            // Look for the big avatar container w-24 h-24
             const avatarEl = document.querySelector('.w-24.h-24');
             if (avatarEl) {
-                const pos = getPos(avatarEl);
+                const pos = this.getAbsolutePos(avatarEl);
                 steps.push({
-                    x: getSafeX(pos.x), // Remove offset, stick to safe X
-                    y: pos.yBottom + 2, // Move BELOW the avatar to avoid right-side squeeze
+                    x: this.getSafeX(pos.x),
+                    y: pos.yBottom + 2, 
                     position: 'absolute',
                     content: '<strong>Votre Profil</strong><br>Retrouvez ici votre profil public (Nom, Avatar et évaluation).',
                     width: 300
@@ -319,15 +323,14 @@ export class AbsoluteHelpSystem {
             }
 
             // 2. Porte-monnaie
-            // Search for "Porte-monnaie" text
             const links = Array.from(document.querySelectorAll('h2, span, div'));
             const walletEl = links.find(el => el.innerText && el.innerText.trim() === 'Porte-monnaie');
             if (walletEl) {
-                const card = walletEl.closest('.rounded-xl'); // The container card
+                const card = walletEl.closest('.rounded-xl'); 
                 if (card) {
-                    const pos = getPos(card);
+                    const pos = this.getAbsolutePos(card);
                     steps.push({
-                        x: getSafeX(pos.x), // Use generic safe clamp
+                        x: this.getSafeX(pos.x), 
                         y: pos.yBottom + 2, 
                         position: 'absolute',
                         content: '<strong>Porte-monnaie</strong><br>Consultez votre solde disponible et vos transactions en cours.',
@@ -336,16 +339,16 @@ export class AbsoluteHelpSystem {
                 }
             }
 
-            // Helper for Grid Cards
+            // Grid Cards
             const addCardStep = (title, content) => {
                 const headers = Array.from(document.querySelectorAll('h2'));
                 const header = headers.find(h => h.innerText && h.innerText.trim() === title);
                 if (header) {
-                    const card = header.closest('a') || header.closest('.rounded-xl'); // Usually the card is an <a> tag
+                    const card = header.closest('a') || header.closest('.rounded-xl');
                     if (card) {
-                        const pos = getPos(card);
+                        const pos = this.getAbsolutePos(card);
                         steps.push({
-                            x: getSafeX(pos.x), // Use generic safe clamp
+                            x: this.getSafeX(pos.x),
                             y: pos.yBottom + 2, 
                             position: 'absolute',
                             content: `<strong>${title}</strong><br>${content}`,
@@ -364,6 +367,65 @@ export class AbsoluteHelpSystem {
             this.startSequence(steps);
         }, 1500);
     }
+
+    initCreateAnnonce() {
+         setTimeout(() => {
+            console.log('--- AbsoluteHelpSystem: Building Create Annonce Sequence ---');
+            const steps = [];
+            
+            // Helper to add step from selector
+            const addStep = (selector, title, text, offsetY = 2) => {
+                const el = document.querySelector(selector);
+                if (el) {
+                    const pos = this.getAbsolutePos(el);
+                    steps.push({
+                        x: this.getSafeX(pos.x),
+                        y: pos.yBottom + offsetY,
+                        position: 'absolute',
+                        content: `<strong>${title}</strong><br>${text}`,
+                        width: 300
+                    });
+                }
+            };
+
+            // 3. Localisation (Search input - x-model="query")
+            // Only keeping this one as it explains the Auto-Complete functionality
+            addStep('input[x-model="query"]', 'Autocomplétion Adresse', 'Commencez par saisir l\'adresse et <strong>cliquez sur une suggestion</strong> pour remplir automatiquement la ville et le code postal.');
+
+            this.startSequence(steps);
+
+         }, 1500);
+    }
+    
+    initMesRecherches() {
+        setTimeout(() => {
+           console.log('--- AbsoluteHelpSystem: Building Mes Recherches Sequence ---');
+           const steps = [];
+
+           // Look for the "Voir" button
+           const links = Array.from(document.querySelectorAll('a'));
+           // Find the first link that says exactly "Voir"
+           const voirBtn = links.find(el => el.innerText && el.innerText.trim() === 'Voir');
+
+           if (voirBtn) {
+               const pos = this.getAbsolutePos(voirBtn);
+               
+               // Target the whole card for better context or just the button?
+               // User asked for "bouton voir".
+               // Let's target the button but maybe position slightly left if it's too far right
+               
+               steps.push({
+                   x: this.getSafeX(pos.x - 5), // Slightly shift left to center bubble relative to button
+                   y: pos.yBottom + 2,
+                   position: 'absolute',
+                   content: '<strong>Relancer la recherche</strong><br>Cliquez sur "Voir" pour relancer cette recherche avec tous vos critères sauvegardés.',
+                   width: 300
+               });
+           }
+           
+           this.startSequence(steps);
+        }, 1500);
+   }
 }
 
 window.AbsoluteHelpSystem = new AbsoluteHelpSystem();
