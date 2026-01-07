@@ -360,7 +360,7 @@ export class AbsoluteHelpSystem {
 
             addCardStep('Annonces', 'Gérez vos annonces : modification, suppression ou mise en avant.');
             addCardStep('Réservations', 'Retrouvez l\'historique de vos séjours et locations.');
-            addCardStep('Profil', 'Mettez à jour vos informations publiques.');
+            addCardStep('Profil', 'Visualiser votre profil public');
             addCardStep('Paramètres', 'Modifiez vos informations privées (email, téléphone, adresse).');
             addCardStep('Connexion et sécurité', 'Gérez votre mot de passe et la sécurité de votre compte.');
 
