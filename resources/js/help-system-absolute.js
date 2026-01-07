@@ -182,15 +182,18 @@ export class AbsoluteHelpSystem {
     }
 
 
-    initDemo() {
-        // Only run this sequence on the homepage
-        if (window.location.pathname !== '/' && window.location.pathname !== '/home') {
-            return;
+    init() {
+        const path = window.location.pathname;
+        if (path === '/' || path === '/home') {
+            this.initHome();
+        } else if (path === '/dashboard') {
+            this.initDashboard();
         }
+    }
 
+    initHome() {
         setTimeout(() => {
-            console.log('--- AbsoluteHelpSystem: Building Dynamic Sequence ---');
-            
+            console.log('--- AbsoluteHelpSystem: Building Home Sequence ---');
             const steps = [];
 
             // 1. Barre de recherche (Main Body - Location Search)
@@ -234,11 +237,8 @@ export class AbsoluteHelpSystem {
             });
 
             // 6. Auth (Login or Profile)
-            // We check if "Se connecter" link exists (guest)
             const loginLink = document.getElementById('header-login-link');
-            
             if (loginLink) {
-                // Not Connected
                 steps.push({
                     x: 72, y: 4, 
                     position: 'fixed',
@@ -246,7 +246,6 @@ export class AbsoluteHelpSystem {
                     width: 300
                 });
             } else {
-                // Connected (Profile picture area)
                 steps.push({
                     x: 72, y: 4, 
                     position: 'fixed',
@@ -275,15 +274,102 @@ export class AbsoluteHelpSystem {
             });
 
             this.startSequence(steps);
+        }, 1500);
+    }
 
-        }, 2000);
+    initDashboard() {
+        setTimeout(() => {
+            console.log('--- AbsoluteHelpSystem: Building Dynamic Dashboard Sequence ---');
+            const steps = [];
+
+            // Helper to find absolute position from element
+            const getPos = (el) => {
+                const rect = el.getBoundingClientRect();
+                // Center of element
+                const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+                // Top
+                const y = ((rect.top + window.scrollY) / window.innerHeight) * 100;
+                // Bottom
+                const yBottom = ((rect.bottom + window.scrollY) / window.innerHeight) * 100;
+                return { x, y, yBottom };
+            };
+
+            // Helper to prevent right overflow
+            const getSafeX = (xPct) => {
+                const bubbleWidth = 300; // px
+                const margin = 20; // px
+                // What % is (Width + Margin)?
+                const reservedPct = ((bubbleWidth + margin) / window.innerWidth) * 100;
+                const maxPct = 100 - reservedPct;
+                return xPct > maxPct ? maxPct : xPct;
+            };
+
+            // 1. Identity (Avatar area)
+            // Look for the big avatar container w-24 h-24
+            const avatarEl = document.querySelector('.w-24.h-24');
+            if (avatarEl) {
+                const pos = getPos(avatarEl);
+                steps.push({
+                    x: getSafeX(pos.x), // Remove offset, stick to safe X
+                    y: pos.yBottom + 2, // Move BELOW the avatar to avoid right-side squeeze
+                    position: 'absolute',
+                    content: '<strong>Votre Profil</strong><br>Retrouvez ici votre profil public (Nom, Avatar et évaluation).',
+                    width: 300
+                });
+            }
+
+            // 2. Porte-monnaie
+            // Search for "Porte-monnaie" text
+            const links = Array.from(document.querySelectorAll('h2, span, div'));
+            const walletEl = links.find(el => el.innerText && el.innerText.trim() === 'Porte-monnaie');
+            if (walletEl) {
+                const card = walletEl.closest('.rounded-xl'); // The container card
+                if (card) {
+                    const pos = getPos(card);
+                    steps.push({
+                        x: getSafeX(pos.x), // Use generic safe clamp
+                        y: pos.yBottom + 2, 
+                        position: 'absolute',
+                        content: '<strong>Porte-monnaie</strong><br>Consultez votre solde disponible et vos transactions en cours.',
+                        width: 300
+                    });
+                }
+            }
+
+            // Helper for Grid Cards
+            const addCardStep = (title, content) => {
+                const headers = Array.from(document.querySelectorAll('h2'));
+                const header = headers.find(h => h.innerText && h.innerText.trim() === title);
+                if (header) {
+                    const card = header.closest('a') || header.closest('.rounded-xl'); // Usually the card is an <a> tag
+                    if (card) {
+                        const pos = getPos(card);
+                        steps.push({
+                            x: getSafeX(pos.x), // Use generic safe clamp
+                            y: pos.yBottom + 2, 
+                            position: 'absolute',
+                            content: `<strong>${title}</strong><br>${content}`,
+                            width: 300
+                        });
+                    }
+                }
+            };
+
+            addCardStep('Annonces', 'Gérez vos annonces : modification, suppression ou mise en avant.');
+            addCardStep('Réservations', 'Retrouvez l\'historique de vos séjours et locations.');
+            addCardStep('Profil', 'Mettez à jour vos informations publiques.');
+            addCardStep('Paramètres', 'Modifiez vos informations privées (email, téléphone, adresse).');
+            addCardStep('Connexion et sécurité', 'Gérez votre mot de passe et la sécurité de votre compte.');
+
+            this.startSequence(steps);
+        }, 1500);
     }
 }
 
 window.AbsoluteHelpSystem = new AbsoluteHelpSystem();
 // Auto-start validation
 if (document.readyState === 'complete') {
-    window.AbsoluteHelpSystem.initDemo();
+    window.AbsoluteHelpSystem.init();
 } else {
-    window.addEventListener('load', () => window.AbsoluteHelpSystem.initDemo());
+    window.addEventListener('load', () => window.AbsoluteHelpSystem.init());
 }
