@@ -77,21 +77,6 @@
                     <span>Déposer une annonce</span>
                 </a>
 
-                <div class="hidden lg:flex flex-grow max-w-xl mx-4 relative">
-                    <form action=""
-                        class="w-full flex bg-gray-bg rounded-xl overflow-hidden bg-gray-100 group focus-within:ring-2 ring-orange-lbc/50 transition-all">
-                        <input type="text" placeholder="Rechercher sur leboncoin"
-                            class="w-full bg-transparent border-none outline-none px-4 py-2.5 text-gray-700 placeholder-gray-500">
-                        <button type="submit"
-                            class="bg-[#ea580c] hover:bg-[#c2410c] text-white m-1 rounded-[15px] w-10 h-10 flex items-center justify-center transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
-                                stroke="currentColor" class="w-5 h-5 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                            </svg>
-                        </button>
-                    </form>
-                </div>
 
                 <nav class="flex items-center gap-6 text-gray-700 shrink-0">
                     <a href="{{ route('user.searches') }}" id="header-searches-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
@@ -116,16 +101,7 @@
                         <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
 
-                    <a href="#" class="relative hidden lg:flex flex-col items-center gap-1 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                        </svg>
-                        <span class="text-xs font-medium group-hover:text-black transition-colors">Messages</span>
-
-                        <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
-                    </a>
+                    
             @else
                 <nav>
             @endif
