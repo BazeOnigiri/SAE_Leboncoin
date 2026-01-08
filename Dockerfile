@@ -23,6 +23,8 @@ RUN rm -rf package-lock.json node_modules && npm install && npm run build
 # Laravel permissions
 RUN chmod -R 775 storage bootstrap/cache
 
+RUN php artisan geo:cache
+
 EXPOSE 9000
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=9000"]
