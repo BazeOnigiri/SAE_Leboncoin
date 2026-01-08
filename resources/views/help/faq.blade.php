@@ -136,7 +136,7 @@
                             </div>
                             <div id="faq-annonce-duree" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Combien de temps mon annonce reste-t-elle en ligne ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Votre annonce reste en ligne pendant 60 jours. Vous recevrez un email avant son expiration pour la renouveler gratuitement.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Votre annonce reste en ligne tant que vous ne la désactivez pas. Pensez à mettre à jour votre calendrier de disponibilité régulièrement.</p>
                             </div>
                         </div>
                     </div>
@@ -199,20 +199,20 @@
                     <div x-show="open" x-collapse style="display: none;">
                         <div class="px-6 pb-6 space-y-4">
                            <div id="faq-paiement-securise" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Comment fonctionne le paiement sécurisé ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">L'acheteur paie en ligne sur notre plateforme. L'argent est bloqué jusqu'à ce que la transaction soit finalisée (livraison ou remise en main propre confirmée). Cela protège les deux parties.</p>
+                                <h4 class="font-semibold text-gray-900 mb-2">Comment fonctionne le paiement ?</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">Lors de la réservation, vous payez un acompte comprenant 35% du loyer, les frais de service (14%) et la taxe de séjour (4€/nuit/adulte). Le solde est à régler directement auprès de l'hôte à votre arrivée.</p>
                             </div>
                              <div id="faq-paiement-frais" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Quels sont les frais de service ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Des frais de protection acheteur s'appliquent sur chaque transaction sécurisée. Ils couvrent l'assistance en cas de litige et la sécurisation du paiement.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Les frais de service s'élèvent à 14% du montant total du loyer. Ils couvrent le fonctionnement de la plateforme, l'assistance sécurisée et la gestion des paiements.</p>
                             </div>
                             <div id="faq-reservation-suivi" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment suivre ma réservation ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Retrouvez toutes vos réservations en cours dans "Mon compte" > "Mes réservations". Vous y verrez l'état d'avancement et pourrez contacter le vendeur.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Retrouvez toutes vos réservations dans "Mon compte" > "Mes réservations". Vous y verrez le statut (confirmé, terminé) et pourrez échanger avec l'hôte.</p>
                             </div>
                              <div id="faq-avis" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment laisser un avis ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Une fois la transaction terminée, vous recevrez un email vous invitant à noter le vendeur. Votre avis sera visible sur son profil public.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Après votre séjour, vous recevrez un email pour laisser une note et un commentaire sur le logement. Cela aide la communauté à choisir en toute confiance.</p>
                             </div>
                         </div>
                     </div>
@@ -239,48 +239,16 @@
                     <div x-show="open" x-collapse style="display: none;">
                         <div class="px-6 pb-6 space-y-4">
                            <div id="faq-securite-arnaque" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Comment reconnaître une tentative de fraude ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Méfiez-vous des vendeurs demandant des paiements hors plateforme (Western Union, coupons, etc.) ou communiquant uniquement par email personnel. Ne donnez jamais vos identifiants bancaires.</p>
+                                <h4 class="font-semibold text-gray-900 mb-2">Paiement hors plateforme</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">Il est interdit de demander ou d'accepter un paiement (acompte entier) en dehors du site. Seul le solde restant est à régler sur place. Tout paiement d'acompte hors site annulera nos garanties.</p>
                             </div>
                             <div id="faq-securite-signalement" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Comment signaler un utilisateur ou une annonce ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Sur chaque page d'annonce ou de profil, vous trouverez un bouton "Signaler". Nos équipes modèrent les contenus signalés 7j/7.</p>
+                                <h4 class="font-semibold text-gray-900 mb-2">Comment signaler un logement ?</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">Sur chaque page d'annonce, vous trouverez un bouton "Signaler" si le contenu vous semble inapproprié ou frauduleux.</p>
                             </div>
                             <div id="faq-securite-verif" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Vérification d'identité</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Pour plus de sécurité, certains vendeurs ont un badge "Identité vérifiée". Cela signifie qu'ils ont transmis leur pièce d'identité à notre service de modération.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                 <!-- Section 6: Livraison -->
-                <div x-data="{ open: false }" 
-                     x-init="if(location.hash && $el.querySelector(location.hash)) open = true"
-                     @hashchange.window="if(location.hash && $el.querySelector(location.hash)) open = true"
-                     class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="livraison">
-                    <button @click="open = !open" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
-                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-                                </svg>
-                            </div>
-                            <h3 class="text-lg font-bold text-gray-900">Livraison</h3>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 transform transition-transform duration-200" :class="{'rotate-180': open}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                    <div x-show="open" x-collapse style="display: none;">
-                        <div class="px-6 pb-6 space-y-4">
-                           <div id="faq-livraison-modes" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Quels sont les modes de livraison disponibles ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Nous travaillons avec plusieurs transporteurs (Mondial Relay, Colissimo, etc.). Le choix dépend du poids de l'objet et des préférences du vendeur.</p>
-                            </div>
-                            <div id="faq-livraison-frais" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Qui paie les frais de port ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Les frais de port sont généralement à la charge de l'acheteur et sont payés lors de la commande.</p>
+                                <h4 class="font-semibold text-gray-900 mb-2">Vérification des hôtes</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">Pour déposer une annonce, chaque hôte doit obligatoirement faire vérifier son identité en nous transmettant une pièce officielle (CNI). C'est un gage de sécurité pour tous.</p>
                             </div>
                         </div>
                     </div>
