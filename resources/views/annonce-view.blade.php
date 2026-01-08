@@ -252,7 +252,14 @@
                         class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scrollbar-hide">
                         @foreach ($annonce->photos ?? [] as $photo)
                             <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
-                                <img src="{{ $photo->lienphoto }}" loading="lazy" class="w-full h-full object-cover">
+                                <img src="{{ $photo->lienphoto }}" 
+                                     alt="{{ $annonce->titreannonce }} - Photo {{ $loop->iteration }}" 
+                                     @if($loop->first)
+                                         fetchpriority="high"
+                                     @else
+                                         loading="lazy"
+                                     @endif
+                                     class="w-full h-full object-cover">
                             </div>
                         @endforeach
                     </div>
@@ -480,7 +487,6 @@
                                     },
                                     body: JSON.stringify({ idannonce: {{ $annonce->idannonce }} })
                                 }).then(() => loading = false).catch(() => { isFavorite = !isFavorite; loading = false; });
-                                window.HelpSystem.pointTo('#header-favorites-link', '<strong>C\'est dans la poche !</strong><br>Retrouvez vos favoris en haut.');
                             " class="bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition relative flex items-center justify-center w-12 h-12 flex-shrink-0 group">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
                                     class="w-6 h-6 transition-colors duration-300"
@@ -517,7 +523,7 @@
                                 this.isFavorite = favorites.includes({{ $annonce->idannonce }});
                             }
                         }">
-                            <button @click="toggle(); window.HelpSystem.pointTo('#header-favorites-link', '<strong>C\'est dans la poche !</strong><br>Retrouvez vos favoris en haut.');" class="bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition relative flex items-center justify-center w-12 h-12 flex-shrink-0 group">
+                            <button @click="toggle();" class="bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition relative flex items-center justify-center w-12 h-12 flex-shrink-0 group">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
                                     class="w-6 h-6 transition-colors duration-300"
                                     :class="isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400 group-hover:text-red-500'">
@@ -794,7 +800,19 @@
 
         <div class="my-8">
             <div class="flex justify-between items-center mb-6 px-1">
-                <h2 class="text-2xl font-black text-slate-800">Ces annonces peuvent vous intéresser</h2>
+                <h2 class="text-2xl font-black text-slate-800 flex items-center">
+                    Ces annonces peuvent vous intéresser
+                    <button onclick="
+                        const rect = this.getBoundingClientRect();
+                        const yPct = ((rect.top + window.scrollY) / window.innerHeight) * 100;
+                        const xPct = (rect.right / window.innerWidth) * 100 + 1;
+                        if(window.AbsoluteHelpSystem) window.AbsoluteHelpSystem.show(xPct, yPct, '<strong>Astuce</strong><br>Maintenir la touche Maj appuyé et scroll pour voir plus', { position: 'absolute', width: 280 });
+                    " class="ml-2 text-gray-400 hover:text-orange-600 transition-colors focus:outline-none" title="Plus d'infos">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
+                    </button>
+                </h2>
                 <a href="#" class="text-slate-800 font-semibold hover:underline flex items-center">
                     Voir plus d'annonces <span class="ml-1">→</span>
                 </a>
@@ -806,7 +824,8 @@
                         class="snap-start flex-shrink-0 w-72 block bg-white border border-gray-100 rounded-2xl hover:shadow-lg transition-shadow duration-300">
                         <div class="relative">
                             <img src="{{ $annonce->photos->first()->lienphoto ?? 'https://via.placeholder.com/300' }}"
-                                alt="{{ $annonce->titreannonce }}" class="w-full h-52 object-cover rounded-t-2xl">
+                                alt="{{ $annonce->titreannonce }}" class="w-full h-52 object-cover rounded-t-2xl"
+                                loading="lazy">
                             <button class="absolute top-3 right-3 bg-white p-2 rounded-full shadow-sm hover:scale-110 transition">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />

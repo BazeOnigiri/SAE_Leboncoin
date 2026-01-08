@@ -18,8 +18,10 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places" async defer></script>
+
+    <meta name="description" content="Découvrez des annonces immobilières et de location de vacances sur Leboncoin.">
 
     @livewireStyles
 
@@ -75,21 +77,6 @@
                     <span>Déposer une annonce</span>
                 </a>
 
-                <div class="hidden lg:flex flex-grow max-w-xl mx-4 relative">
-                    <form action=""
-                        class="w-full flex bg-gray-bg rounded-xl overflow-hidden bg-gray-100 group focus-within:ring-2 ring-orange-lbc/50 transition-all">
-                        <input type="text" placeholder="Rechercher sur leboncoin"
-                            class="w-full bg-transparent border-none outline-none px-4 py-2.5 text-gray-700 placeholder-gray-500">
-                        <button type="submit"
-                            class="bg-[#ea580c] hover:bg-[#c2410c] text-white m-1 rounded-[15px] w-10 h-10 flex items-center justify-center transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
-                                stroke="currentColor" class="w-5 h-5 text-white">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                            </svg>
-                        </button>
-                    </form>
-                </div>
 
                 <nav class="flex items-center gap-6 text-gray-700 shrink-0">
                     <a href="{{ route('user.searches') }}" id="header-searches-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
@@ -114,22 +101,13 @@
                         <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
 
-                    <a href="#" class="relative hidden lg:flex flex-col items-center gap-1 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                        </svg>
-                        <span class="text-xs font-medium group-hover:text-black transition-colors">Messages</span>
-
-                        <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
-                    </a>
+                    
             @else
                 <nav>
             @endif
 
                 @auth
-                    <a href="{{ route('dashboard') }}" class="relative hidden lg:flex flex-col items-center gap-1 group">
+                    <a href="{{ route('dashboard') }}" id="header-user-dashboard-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
                         <img class="rounded-full h-6 z-6" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->prenomutilisateur }}">
                         <span class="text-xs font-medium group-hover:text-black transition-colors">{{ auth()->user()->pseudonyme }}</span>
 
@@ -151,38 +129,7 @@
                 @endguest
             </nav>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                   const loginLink = document.getElementById('header-login-link');
-                   if (loginLink) {
-                       setTimeout(() => {
-                           // Use startSequence to easily add a timer if desired, or just show.
-                           // User didn't explicitly ask for a timer here, but it's good practice for "unsolicited" popups.
-                           window.HelpSystem.startSequence([
-                               {
-                                   element: '#header-login-link',
-                                   content: '<strong>Connectez-vous !</strong><br>Accédez à votre compte ici.',
-                                   event: 'timer:5000'
-                               }
-                           ]);
-                       }, 1500);
-                   }
 
-                   // Trigger for 'Déposer une annonce'
-                   const createBtn = document.getElementById('header-create-annonce-btn');
-                   if (createBtn) {
-                       setTimeout(() => {
-                           window.HelpSystem.startSequence([
-                               {
-                                   element: '#header-create-annonce-btn',
-                                   content: '<strong>Vendez simplement !</strong><br>Déposez votre annonce gratuitement en quelques clics.',
-                                   event: 'timer:5000'
-                               }
-                           ]);
-                       }, 7000); // Wait for login bubble to finish (1.5s delay + 5s duration + buffer)
-                   }
-                });
-            </script>
 
         </div>
     </header>

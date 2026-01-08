@@ -252,7 +252,22 @@
 
                             <div class="p-4 bg-white rounded-lg shadow-lg">
 
-    <h3 class="font-bold text-lg text-slate-900 mb-6">Récapitulatif du paiement</h3>
+    <div class="flex items-center gap-2 mb-6">
+        <h3 class="font-bold text-lg text-slate-900">Récapitulatif du paiement</h3>
+        <button type="button" onclick="
+            const rect = this.getBoundingClientRect();
+            const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+            const y = (rect.bottom / window.innerHeight) * 100;
+            if (window.AbsoluteHelpSystem) {
+                const safeX = window.AbsoluteHelpSystem.getSafeX(x - 5, 350);
+                window.AbsoluteHelpSystem.show(safeX, y + 1, 'Ce paiement nous sert à garantir votre réservation. Il inclut un acompte pour la location, les frais de service et la taxe de séjour. Retrouvez le détail de nos conditions d\'annulation ici.', { width: 350, position: 'fixed' });
+            }
+        " class="text-gray-400 hover:text-orange-600 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+        </button>
+    </div>
 
     @if($nbNuits == 0)
         <div class="bg-red-100 text-red-700 px-4 py-3 rounded text-sm mb-6">
@@ -296,9 +311,7 @@
         </div>
     </div>
 
-    <p class="text-xs text-gray-500 mt-6 leading-relaxed">
-        Ce paiement nous sert à garantir votre réservation. Il inclut un acompte pour la location, les frais de service et la taxe de séjour. Retrouvez le détail de nos conditions d'annulation ici.
-    </p>
+
 
 </div>
 

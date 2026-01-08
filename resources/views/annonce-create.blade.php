@@ -71,7 +71,7 @@
 
             <h3 class="text-lg font-semibold mt-4 mb-2">Informations générales</h3>
             <div>
-                <label for="titre" class="block text-sm font-medium text-gray-700">Quel est le titre de l'annonce ?</label>
+                <label for="titre" class="block text-sm font-medium text-gray-700">Quel est le titre de l'annonce ? *</label>
                 <input type="text" name="titre" id="titre" required value="{{ old('titre') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                 @error('titre') 
@@ -80,7 +80,7 @@
             </div>
 
             <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description *</label>
                 <textarea name="description" id="description" rows="4" required
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">{{ old('description') }}</textarea>
                 @error('description') 
@@ -162,7 +162,7 @@
 
             <h3 class="text-lg font-semibold mt-6 mb-2">Photos</h3>
             <div x-data="imageUploader()">
-                <label for="photos" class="block text-sm font-medium text-gray-700">Déposez vos photos</label>
+                <label for="photos" class="block text-sm font-medium text-gray-700">Déposez vos photos *</label>
                 <input
                     type="file"
                     name="photos[]"
@@ -197,7 +197,7 @@
             </div>
 
             <div>
-                <label for="capacite" class="block text-sm font-medium text-gray-700">Quelle est la capacité totale du bien ?</label>
+                <label for="capacite" class="block text-sm font-medium text-gray-700">Quelle est la capacité totale du bien ? *</label>
                 <input type="number" name="capacite" id="capacite" min="1" step="1" required value="{{ old('capacite') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                 @error('capacite') 
@@ -206,7 +206,7 @@
             </div>
 
             <div>
-                <label for="nbchambres" class="block text-sm font-medium text-gray-700">Rentrer le nombre de chambres du bien</label>
+                <label for="nbchambres" class="block text-sm font-medium text-gray-700">Rentrer le nombre de chambres du bien *</label>
                 <input type="number" name="nbchambres" id="nbchambres" min="0" step="1" required value="{{ old('nbchambres') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                 @error('nbchambres') 
@@ -215,7 +215,7 @@
             </div>
             
             <div>
-                <label for="typebien" class="block text-sm font-medium text-gray-700">Choisissez une votre type de bien</label>
+                <label for="typebien" class="block text-sm font-medium text-gray-700">Choisissez votre type de bien *</label>
                 <select name="typebien" id="typebien" required
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                     <option value="">-- Sélectionner un type de bien --</option>
@@ -231,7 +231,7 @@
             <h3 class="text-lg font-semibold mt-6 mb-2">Horaires</h3>
             <div class=" flex">
                 <div class="mr-4 w-60">
-                    <label for="heuredepart" class="block text-sm font-medium text-gray-700">Heure de départ</label>
+                    <label for="heuredepart" class="block text-sm font-medium text-gray-700">Heure de départ *</label>
                     <input type="time" name="heuredepart" id="heuredepart" required value="{{ old('heuredepart') }}"
                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                     @error('heuredepart') 
@@ -240,7 +240,7 @@
                 </div>
 
                 <div class="w-60">
-                    <label for="heurearrivee" class="block text-sm font-medium text-gray-700">Heure d'arrivée</label>
+                    <label for="heurearrivee" class="block text-sm font-medium text-gray-700">Heure d'arrivée *</label>
                     <input type="time" name="heurearrivee" id="heurearrivee" required value="{{ old('heurearrivee') }}"
                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                     @error('heurearrivee') 
@@ -285,7 +285,7 @@
 
             <h3 class="text-lg font-semibold mt-6 mb-2">Tarifs</h3>
             <div>
-                <label for="prixnuitee" class="block text-sm font-medium text-gray-700">Prix par nuitée (€)</label>
+                <label for="prixnuitee" class="block text-sm font-medium text-gray-700">Prix par nuitée (€) *</label>
                 <input type="number" name="prixnuitee" id="prixnuitee" min="0" step="0.01" required value="{{ old('prixnuitee') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                 @error('prixnuitee') 
@@ -294,7 +294,7 @@
             </div>
 
             <div>
-                <label for="pourcentageacompte" class="block text-sm font-medium text-gray-700">Pourcentage d'acompte (%)</label>
+                <label for="pourcentageacompte" class="block text-sm font-medium text-gray-700">Pourcentage d'acompte (%) *</label>
                 <input type="number" name="pourcentageacompte" id="pourcentageacompte" min="0" max="100" step="1" required value="{{ old('pourcentageacompte') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                 <p class="text-xs text-gray-500 mt-1">L'acompte sera calculé sur le prix de la nuitée lors de la réservation</p>
@@ -304,7 +304,7 @@
             </div>
 
             <div>
-                <label for="minimumnuitee" class="block text-sm font-medium text-gray-700">Nombre minimum de nuitées</label>
+                <label for="minimumnuitee" class="block text-sm font-medium text-gray-700">Nombre minimum de nuitées *</label>
                 <input type="number" name="minimumnuitee" id="minimumnuitee" min="1" step="1" required value="{{ old('minimumnuitee') }}"
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                 @error('minimumnuitee') 
@@ -314,7 +314,7 @@
             
             <h3 class="text-lg font-semibold mt-6 mb-2">Règles</h3>
             <div>
-                <label for="possibilitefumeur" class="block text-sm font-medium text-gray-700">Fumeur autorisé</label>
+                <label for="possibilitefumeur" class="block text-sm font-medium text-gray-700">Fumeur autorisé *</label>
                 <select name="possibilitefumeur" id="possibilitefumeur" required
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                     <option value="">-- Sélectionner une option --</option>
@@ -327,7 +327,7 @@
             </div>
 
             <div>
-                <label for="possibiliteanimaux" class="block text-sm font-medium text-gray-700">Animaux autorisés</label>
+                <label for="possibiliteanimaux" class="block text-sm font-medium text-gray-700">Animaux autorisés *</label>
                 <select name="possibiliteanimaux" id="possibiliteanimaux" required
                     class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-orange-500 focus:border-orange-500">
                     <option value="">-- Sélectionner une option --</option>

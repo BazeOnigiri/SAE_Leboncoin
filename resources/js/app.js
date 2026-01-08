@@ -1,5 +1,7 @@
+console.log('--- APP.JS LOADED ---');
 import './bootstrap';
-import './help-system';
+import './help-system-absolute';
+
 
 const overlay = document.getElementById('filter-overlay');
 const panel = document.getElementById('filter-panel');

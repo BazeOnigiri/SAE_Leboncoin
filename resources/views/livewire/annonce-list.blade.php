@@ -53,7 +53,7 @@
                             <div id="carousel{{ $annonce->idannonce }}" class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scroll r-hide">
                                 @foreach ($annonce->photos ?? [] as $photo)
                                     <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
-                                        <img src="{{ $photo->lienphoto }}" loading="lazy" class="w-full h-full object-cover">
+                                        <img src="{{ $photo->lienphoto }}" alt="{{ $annonce->titreannonce }} - Photo {{ $loop->iteration }}" loading="lazy" class="w-full h-full object-cover">
                                     </div>
                                 @endforeach
                             </div>
@@ -200,6 +200,7 @@
 
     </div>
 
+
     @script
     <script>
         let map;
@@ -258,7 +259,7 @@
 
                     let popupContent = `
                         <div class="text-center min-w-[150px]">
-                            ${marker.img ? `<img src="${marker.img}" class="w-full h-24 object-cover rounded mb-2">` : ''}
+                            ${marker.img ? `<img src="${marker.img}" alt="${marker.title}" class="w-full h-24 object-cover rounded mb-2">` : ''}
                             <b class="text-sm block mb-1">${marker.title}</b>
                             <span class="font-bold text-white bg-orange-600 px-2 py-1 rounded text-xs">${marker.price} €</span>
                         </div>
@@ -281,23 +282,6 @@
         });
     </script>
     @endscript
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Start the tour!
-            setTimeout(() => {
-                window.HelpSystem.startSequence([
-                    { 
-                        element: '#save-search-btn', 
-                        content: '<strong>Astuce !</strong><br>Cliquez ici pour sauvegarder cette recherche.', 
-                        event: 'click' 
-                    },
-                    { 
-                        element: '#header-searches-link', 
-                        content: '<strong>C\'est noté !</strong><br>Retrouvez vos recherches sauvegardées ici.', 
-                        event: 'timer:4000' 
-                    }
-                ]);
-            }, 1000); // Small delay to let UI settle
-        });
-    </script>
+
+
 </div>
