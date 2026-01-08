@@ -36,19 +36,25 @@ export class AbsoluteHelpSystem {
      */
     show(x, y, content, options = {}) {
         console.log('AbsoluteHelpSystem.show called', { x, y, content });
-        this.removeBubble();
+        // Create and Display Bubble
+        this.removeBubble(); // Ensure previous bubble is removed
+        this.activeBubble = document.createElement('div');
+        const bubble = this.activeBubble;
         
-        const bubble = document.createElement('div');
-        // Explicit inline styles to guarantee visibility
-        const width = options.width || 300;
-
+        // Store current options for updates
+        this.currentOptions = options;
+        this.currentX = x;
+        this.currentY = y;
+        
+        bubble.className = "bg-white p-6 rounded-xl shadow-2xl border border-orange-100 z-[9999] text-sm text-gray-700 animate-in fade-in zoom-in duration-300";
         bubble.style.position = options.position || 'fixed';
         bubble.style.zIndex = '999999';
         bubble.style.backgroundColor = '#ffffff'; // White background
         bubble.style.border = '2px solid #ea580c'; // Orange border
         bubble.style.borderRadius = '12px';
-        bubble.style.padding = '16px';
-        bubble.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+        bubble.style.padding = '16px'; // Keep padding for consistency with className
+        bubble.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'; // Keep shadow for consistency
+        const width = options.width || 300; // Define width here
         bubble.style.width = width + 'px';
         bubble.style.left = x + '%';
         
@@ -174,7 +180,7 @@ export class AbsoluteHelpSystem {
         }
 
         document.body.appendChild(bubble);
-        this.activeBubble = bubble;
+        // this.activeBubble = bubble; // Already set above
 
         setTimeout(() => {
             document.addEventListener('click', this.handleClickOutside);
@@ -191,26 +197,161 @@ export class AbsoluteHelpSystem {
         
         this.currentSequence = steps;
         this.currentIndex = 0;
+        
+        // Handle resize to update positions smoothly
+        // Remove existing listeners if any
+        if (this.handleResize) {
+            window.removeEventListener('resize', this.handleResize);
+            window.removeEventListener('scroll', this.handleResize);
+            this.handleResize = null;
+        }
+
+        this.handleResize = () => {
+             if (this.currentSequence && this.activeBubble) {
+                 this.updatePosition();
+             }
+        };
+        window.addEventListener('resize', this.handleResize);
+        window.addEventListener('scroll', this.handleResize); // Also handle scroll for absolute items
+        
         this.renderStep();
+    }
+
+    // New: Update position without re-rendering DOM
+    updatePosition() {
+        if (!this.currentSequence || !this.activeBubble) return;
+        
+        const step = this.currentSequence[this.currentIndex];
+        let x = step.x;
+        let y = step.y;
+        let targetX = step.targetX;
+        let placement = step.placement || 'bottom';
+        let width = step.width || 300;
+
+        // Recalculate if element exists
+        if (step.element && document.body.contains(step.element)) {
+             const pos = this.getAbsolutePos(step.element);
+             
+             if (step.smartPlacement) {
+                 placement = (pos.y < 25) ? 'bottom' : 'top';
+             }
+
+             if (placement === 'top') {
+                 y = pos.y;
+             } else {
+                 y = pos.yBottom;
+             }
+             
+             x = this.getSafeX(pos.x, width);
+             targetX = pos.x;
+        }
+        
+        // Apply updates to activeBubble style
+        const bubble = this.activeBubble;
+        bubble.style.left = x + '%';
+        bubble.style.top = (window.innerHeight * (y / 100)) + 'px';
+        
+        // Update Transform/Margin based on new placement/gap
+        const gap = step.gap !== undefined ? step.gap : 15;
+        if (placement === 'top') {
+            bubble.style.transform = `translateY(calc(-100% - ${gap}px))`;
+            bubble.style.marginTop = '0px';
+        } else {
+             bubble.style.transform = 'none';
+             bubble.style.marginTop = `${gap}px`; 
+        }
+        
+        // Update Arrow
+        const arrow = bubble.querySelector('.absolute.w-4.h-4');
+        if (arrow) {
+            // Recalc arrow position
+            let arrowLeft = '50%';
+            if (step.arrowPosition) {
+                arrowLeft = step.arrowPosition;
+            } else if (targetX !== undefined) {
+                 const diffPct = targetX - x;
+                 const diffPx = (diffPct / 100) * document.documentElement.clientWidth;
+                 const minX = 10; 
+                 const maxX = width - 10;
+                 let safeArrowX = Math.max(minX, Math.min(diffPx, maxX));
+                 if (step.arrowOffset) {
+                     safeArrowX += step.arrowOffset;
+                 }
+                 arrowLeft = safeArrowX + 'px';
+            }
+            arrow.style.left = arrowLeft;
+            
+            // Start basic arrow style reset
+            arrow.className = `absolute w-4 h-4 bg-white border-l border-t border-orange-100 transform rotate-45`;
+            
+            // Adjust based on placement
+            if (placement === 'top') {
+                 arrow.style.bottom = '-9px'; // reduced slightly to overlap border? no standard -8px usually
+                 arrow.style.bottom = '-8px';
+                 arrow.style.top = 'auto';
+                 arrow.classList.remove('border-l', 'border-t');
+                 arrow.classList.add('border-r', 'border-b'); // Points down
+            } else {
+                 arrow.style.top = '-8px';
+                 arrow.style.bottom = 'auto';
+                 arrow.classList.remove('border-r', 'border-b');
+                 arrow.classList.add('border-l', 'border-t'); // Points up
+            }
+        }
     }
 
     renderStep() {
         if (!this.currentSequence) return;
 
         const step = this.currentSequence[this.currentIndex];
-        this.show(step.x, step.y, step.content, {
+        
+        // Dynamic Position Calculation
+        let x = step.x;
+        let y = step.y;
+        let targetX = step.targetX;
+        let placement = step.placement || 'bottom';
+        let width = step.width || 300;
+
+        // If step has an element reference, recalculate position now (Responsive!)
+        if (step.element && document.body.contains(step.element)) {
+             const pos = this.getAbsolutePos(step.element);
+             
+             // Dashboard Smart Placement Logic Check
+             if (step.smartPlacement) {
+                 // Re-evaluate smart placement
+                 placement = (pos.y < 25) ? 'bottom' : 'top';
+             }
+
+             // Recalculate Y based on placement
+             // Note: init functions previously used pos.y for top and pos.yBottom for bottom.
+             // We apply that logic here dynamically.
+             if (placement === 'top') {
+                 y = pos.y;
+             } else {
+                 y = pos.yBottom;
+             }
+             
+             // Recalculate X
+             // If we had a manual tweak for 'Mes recherches' etc (x-5), we assume safeX handles it?
+             // Actually init functions applied getSafeX(pos.x, 300).
+             // We should do it here.
+             x = this.getSafeX(pos.x, width);
+             targetX = pos.x;
+        }
+
+        this.show(x, y, step.content, {
             sequence: true,
             step: this.currentIndex + 1,
             total: this.currentSequence.length,
             hasPrev: this.currentIndex > 0,
             isLast: this.currentIndex === this.currentSequence.length - 1,
             position: step.position || 'fixed',
-            placement: step.placement || 'bottom', // Pass placement
-            width: step.width,
-            targetX: step.targetX, // Pass targetX for arrow positioning
-            arrowPosition: step.arrowPosition, // Manual override
-            arrowOffset: step.arrowOffset, // Manual offset
-            gap: step.gap // Manual gap
+            placement: placement, 
+            width: width,
+            targetX: targetX, 
+            arrowPosition: step.arrowPosition, 
+            arrowOffset: step.arrowOffset, 
+            gap: step.gap 
         });
     }
 
@@ -355,7 +496,8 @@ export class AbsoluteHelpSystem {
                     placement: 'top',
                     content: '<strong>Barre de recherche</strong><br>Trouvez rapidement ce que vous cherchez par ville ou région.',
                     width: 300,
-                    gap: 2 // Collées
+                    gap: 2, // Collées
+                    element: target // Store element for resize
                  });
             }
 
@@ -372,8 +514,8 @@ export class AbsoluteHelpSystem {
                     placement: 'top',
                     content: '<strong>Filtres</strong><br>Affinez votre recherche par prix, dates, etc.',
                     width: 300,
-                    arrowPosition: '70%', // Centre-droit
-                    gap: 2 // Collées
+                    gap: 2, // Collées
+                    element: filterBtn
                  });
              }
 
@@ -384,12 +526,10 @@ export class AbsoluteHelpSystem {
                  steps.push({
                     x: this.getSafeX(pos.x, 350),
                     y: pos.y, 
-                    position: 'absolute',
-                    placement: 'top',
                     content: '<strong>Sauvegarder la recherche</strong><br>Cliquez ici pour être notifié des nouvelles annonces !',
                     width: 350,
-                    arrowPosition: '20%', // Gauche
-                    gap: 2 // Collées
+                    gap: 2, // Collées
+                    element: saveBtn
                  });
              }
 
@@ -406,7 +546,8 @@ export class AbsoluteHelpSystem {
                     content: '<strong>Mes recherches</strong><br>Retrouvez ici toutes vos alertes et recherches sauvegardées.',
                     width: 300,
                     arrowOffset: -12, // Shift left
-                    gap: 2
+                    gap: 2,
+                    element: searchLink
                  });
             }
 
@@ -423,7 +564,8 @@ export class AbsoluteHelpSystem {
                     content: '<strong>Favoris</strong><br>Retrouvez ici tous vos coups de cœur sauvegardés.',
                     width: 300,
                     arrowOffset: -12, // Shift left
-                    gap: 2
+                    gap: 2,
+                    element: favLink
                  });
             }
 
@@ -440,7 +582,8 @@ export class AbsoluteHelpSystem {
                     content: '<strong>Se connecter</strong><br>Connectez-vous pour accéder à toutes les fonctionnalités.',
                     width: 300,
                     arrowOffset: -12, // Shift left
-                    gap: 2
+                    gap: 2,
+                    element: loginLink
                 });
             }
 
@@ -457,7 +600,8 @@ export class AbsoluteHelpSystem {
                     content: '<strong>Tableau de bord</strong><br>Accédez à votre espace personnel pour gérer vos annonces et votre profil.',
                     width: 300,
                     arrowOffset: -12, // Shift left
-                    gap: 2
+                    gap: 2,
+                    element: dashboardLink
                  });
             }
 
@@ -472,20 +616,37 @@ export class AbsoluteHelpSystem {
                     placement: 'bottom',
                     content: '<strong>Déposer une annonce</strong><br>Vendez vos biens en quelques clics.',
                     width: 300,
-                    arrowPosition: '15%' // Fleche à gauche
+                    arrowPosition: '15%', // Fleche à gauche
+                    element: createBtn
                  });
             }
 
-            // 8. BotMan (Bottom Right -> Above)
-            // It's at bottom right, so "Above" is key.
-            steps.push({
-                x: 72, y: 92, 
-                position: 'fixed',
-                placement: 'top', 
-                content: '<strong>Besoin d\'aide ?</strong><br>Discutez avec notre assistant virtuel BotMan en bas à droite.',
-                width: 300,
-                arrowPosition: '90%' // Droite
-            });
+            // 8. BotMan via #chatbot-toggle
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            if (chatbotToggle) {
+                const pos = this.getAbsolutePos(chatbotToggle);
+                steps.push({
+                    x: this.getSafeX(pos.x - 10, 300), // Shift slightly left of center
+                    y: pos.y, // Top
+                    position: 'fixed',
+                    placement: 'top', 
+                    content: '<strong>Besoin d\'aide ?</strong><br>Discutez avec <strong>Llama</strong>, notre assistant virtuel intelligent.',
+                    width: 300,
+                    arrowPosition: '90%', // Droite
+                    element: chatbotToggle,
+                    gap: 10
+                });
+            } else {
+                 // Fallback if not found (mostly for verification)
+                 steps.push({
+                    x: 72, y: 92, 
+                    position: 'fixed',
+                    placement: 'top', 
+                    content: '<strong>Besoin d\'aide ?</strong><br>Discutez avec <strong>Llama</strong>, notre assistant virtuel intelligent.',
+                    width: 300,
+                    arrowPosition: '90%'
+                 });
+            }
 
             this.startSequence(steps);
         }, 1500);
@@ -515,7 +676,9 @@ export class AbsoluteHelpSystem {
                     placement: place,
                     content: '<strong>Votre Profil</strong><br>Retrouvez ici votre profil public (Nom, Avatar et évaluation).',
                     width: 300,
-                    gap: 2 // Collées
+                    gap: 2, // Collées
+                    element: avatarEl,
+                    smartPlacement: true
                 });
             }
 
@@ -534,7 +697,9 @@ export class AbsoluteHelpSystem {
                         placement: place,
                         content: '<strong>Porte-monnaie</strong><br>Consultez votre solde disponible et vos transactions en cours.',
                         width: 300,
-                        gap: 2 // Collées
+                        gap: 2, // Collées
+                        element: card, // Use card logic
+                        smartPlacement: true
                     });
                 }
             }
@@ -555,7 +720,9 @@ export class AbsoluteHelpSystem {
                             placement: place,
                             content: `<strong>${title}</strong><br>${content}`,
                             width: 300,
-                            gap: 2 // Collées
+                            gap: 2, // Collées
+                            element: card,
+                            smartPlacement: true
                         });
                     }
                 }
@@ -588,7 +755,8 @@ export class AbsoluteHelpSystem {
                         position: 'absolute',
                         placement: 'top',
                         content: `<strong>${title}</strong><br>${text}`,
-                        width: 300
+                        width: 300,
+                        element: el // Store element for resize
                     });
                 }
             };
@@ -620,7 +788,8 @@ export class AbsoluteHelpSystem {
                    position: 'absolute',
                    placement: 'top',
                    content: '<strong>Relancer la recherche</strong><br>Cliquez sur "Voir" pour relancer cette recherche avec tous vos critères sauvegardés.',
-                   width: 300
+                   width: 300,
+                   element: voirBtn // Store element for resize
                });
            }
            
