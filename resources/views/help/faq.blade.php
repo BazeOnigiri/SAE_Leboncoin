@@ -19,32 +19,32 @@
                 
                 <ul class="space-y-4">
                     <li>
-                        <a href="#compte" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
+                        <a href="#faq-compte-creation" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
                             › Comment créer un compte ?
                         </a>
                     </li>
                     <li>
-                        <a href="#annonce" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
+                        <a href="#faq-annonce-depot" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
                             › Comment déposer une annonce ?
                         </a>
                     </li>
                     <li>
-                        <a href="#paiement" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
+                        <a href="#faq-paiement-frais" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
                             › Quels sont les frais de service ?
                         </a>
                     </li>
                     <li>
-                        <a href="#securite" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
+                        <a href="#faq-securite-arnaque" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
                             › Comment signaler une arnaque ?
                         </a>
                     </li>
                     <li>
-                        <a href="#reservation" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
+                        <a href="#faq-reservation-suivi" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
                             › Comment suivre ma réservation ?
                         </a>
                     </li>
                      <li>
-                        <a href="#compte" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
+                        <a href="#faq-compte-mdp" class="block text-gray-600 hover:text-orange-600 hover:translate-x-1 transition-all">
                             › J'ai oublié mon mot de passe
                         </a>
                     </li>
@@ -55,7 +55,10 @@
             <div class="lg:col-span-2 space-y-6">
                 
                 <!-- Section 1: Mon Compte -->
-                <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="compte">
+                <div x-data="{ open: false }" 
+                     x-init="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     @hashchange.window="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="compte">
                     <button @click="open = !open" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
@@ -71,23 +74,23 @@
                     </button>
                     <div x-show="open" x-collapse style="display: none;">
                         <div class="px-6 pb-6 space-y-4">
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-compte-creation" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment créer un compte ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Cliquez sur "Se connecter" en haut à droite, puis suivez les instructions pour créer un compte. Vous aurez besoin d'une adresse email valide et de définir un mot de passe sécurisé.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-compte-mdp" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">J'ai oublié mon mot de passe</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Sur la page de connexion, cliquez sur "Mot de passe oublié". Entrez votre email pour recevoir un lien de réinitialisation.</p>
                             </div>
-                             <div class="pt-4 border-t border-gray-100">
+                             <div id="faq-compte-modif" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment modifier mes informations personnelles ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Rendez-vous dans votre tableau de bord, section "Profil" ou "Paramètres" pour modifier votre nom, email ou photo de profil.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-compte-suppression" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment supprimer mon compte ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Pour supprimer votre compte et toutes vos données, rendez-vous dans "Paramètres" > "Sécurité" et cliquez sur "Supprimer mon compte". Attention, cette action est irréversible.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-compte-notif" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Gérer mes notifications</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Vous pouvez choisir quels emails ou notifications recevoir depuis la section "Paramètres" de votre compte.</p>
                             </div>
@@ -96,7 +99,10 @@
                 </div>
 
                 <!-- Section 2: Annonces -->
-                <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="annonce">
+                <div x-data="{ open: false }" 
+                     x-init="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     @hashchange.window="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="annonce">
                     <button @click="open = !open" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
@@ -112,23 +118,23 @@
                     </button>
                     <div x-show="open" x-collapse style="display: none;">
                         <div class="px-6 pb-6 space-y-4">
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-annonce-depot" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment déposer une annonce ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Connectez-vous et cliquez sur le bouton "Déposer une annonce" en haut de page. Remplissez le formulaire avec un titre précis, une description détaillée et ajoutez des photos attractives.</p>
                             </div>
-                             <div class="pt-4 border-t border-gray-100">
+                             <div id="faq-annonce-modif" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Modifier ou supprimer une annonce</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Depuis votre tableau de bord, cliquez sur "Mes annonces". Vous pourrez alors éditer le contenu ou supprimer l'annonce si le bien est vendu.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-annonce-refus" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Mon annonce a été refusée, pourquoi ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Une annonce peut être refusée si elle ne respecte pas nos conditions générales d'utilisation (produit interdit, photos inappropriées, description trompeuse). Vérifiez l'email reçu pour le motif précis.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-annonce-prix" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Combien coûte le dépôt d'une annonce ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Le dépôt d'annonce est gratuit pour les particuliers. Des options de mise en avant payantes peuvent vous être proposées pour augmenter la visibilité de votre bien.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-annonce-duree" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Combien de temps mon annonce reste-t-elle en ligne ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Votre annonce reste en ligne pendant 60 jours. Vous recevrez un email avant son expiration pour la renouveler gratuitement.</p>
                             </div>
@@ -137,7 +143,10 @@
                 </div>
 
                 <!-- Section 3: Messagerie & Protection -->
-                <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="messagerie">
+                <div x-data="{ open: false }" 
+                     x-init="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     @hashchange.window="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="messagerie">
                     <button @click="open = !open" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
@@ -153,15 +162,15 @@
                     </button>
                     <div x-show="open" x-collapse style="display: none;">
                         <div class="px-6 pb-6 space-y-4">
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-messagerie-envoi" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment envoyer un message ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Sur la page de l'annonce, cliquez sur "Envoyer un message". Une conversation sécurisée s'ouvrira alors avec le vendeur.</p>
                             </div>
-                             <div class="pt-4 border-t border-gray-100">
+                             <div id="faq-messagerie-pj" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Puis-je envoyer des pièces jointes ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Oui, vous pouvez envoyer des photos ou des documents PDF via la messagerie sécurisée.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-messagerie-bloquer" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment bloquer un utilisateur ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Si un utilisateur vous importune, ouvrez la conversation et cliquez sur les options (trois points) puis "Bloquer l'utilisateur".</p>
                             </div>
@@ -170,7 +179,10 @@
                 </div>
 
                 <!-- Section 4: Réservations & Paiements -->
-                <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="reservation">
+                <div x-data="{ open: false }" 
+                     x-init="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     @hashchange.window="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="reservation">
                     <button @click="open = !open" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
                          <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
@@ -186,15 +198,19 @@
                     </button>
                     <div x-show="open" x-collapse style="display: none;">
                         <div class="px-6 pb-6 space-y-4">
-                           <div class="pt-4 border-t border-gray-100">
+                           <div id="faq-paiement-securise" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment fonctionne le paiement sécurisé ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">L'acheteur paie en ligne sur notre plateforme. L'argent est bloqué jusqu'à ce que la transaction soit finalisée (livraison ou remise en main propre confirmée). Cela protège les deux parties.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                             <div id="faq-paiement-frais" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
+                                <h4 class="font-semibold text-gray-900 mb-2">Quels sont les frais de service ?</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">Des frais de protection acheteur s'appliquent sur chaque transaction sécurisée. Ils couvrent l'assistance en cas de litige et la sécurisation du paiement.</p>
+                            </div>
+                            <div id="faq-reservation-suivi" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment suivre ma réservation ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Retrouvez toutes vos réservations en cours dans "Mon compte" > "Mes réservations". Vous y verrez l'état d'avancement et pourrez contacter le vendeur.</p>
                             </div>
-                             <div class="pt-4 border-t border-gray-100">
+                             <div id="faq-avis" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment laisser un avis ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Une fois la transaction terminée, vous recevrez un email vous invitant à noter le vendeur. Votre avis sera visible sur son profil public.</p>
                             </div>
@@ -203,7 +219,10 @@
                 </div>
 
                 <!-- Section 5: Sécurité -->
-                <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="securite">
+                <div x-data="{ open: false }" 
+                     x-init="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     @hashchange.window="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="securite">
                     <button @click="open = !open" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
                          <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
@@ -219,15 +238,15 @@
                     </button>
                     <div x-show="open" x-collapse style="display: none;">
                         <div class="px-6 pb-6 space-y-4">
-                           <div class="pt-4 border-t border-gray-100">
+                           <div id="faq-securite-arnaque" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment reconnaître une tentative de fraude ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Méfiez-vous des vendeurs demandant des paiements hors plateforme (Western Union, coupons, etc.) ou communiquant uniquement par email personnel. Ne donnez jamais vos identifiants bancaires.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-securite-signalement" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment signaler un utilisateur ou une annonce ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Sur chaque page d'annonce ou de profil, vous trouverez un bouton "Signaler". Nos équipes modèrent les contenus signalés 7j/7.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-securite-verif" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Vérification d'identité</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Pour plus de sécurité, certains vendeurs ont un badge "Identité vérifiée". Cela signifie qu'ils ont transmis leur pièce d'identité à notre service de modération.</p>
                             </div>
@@ -236,7 +255,10 @@
                 </div>
 
                  <!-- Section 6: Livraison -->
-                <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="livraison">
+                <div x-data="{ open: false }" 
+                     x-init="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     @hashchange.window="if(location.hash && $el.querySelector(location.hash)) open = true"
+                     class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="livraison">
                     <button @click="open = !open" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
                          <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
@@ -252,11 +274,11 @@
                     </button>
                     <div x-show="open" x-collapse style="display: none;">
                         <div class="px-6 pb-6 space-y-4">
-                           <div class="pt-4 border-t border-gray-100">
+                           <div id="faq-livraison-modes" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Quels sont les modes de livraison disponibles ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Nous travaillons avec plusieurs transporteurs (Mondial Relay, Colissimo, etc.). Le choix dépend du poids de l'objet et des préférences du vendeur.</p>
                             </div>
-                            <div class="pt-4 border-t border-gray-100">
+                            <div id="faq-livraison-frais" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Qui paie les frais de port ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Les frais de port sont généralement à la charge de l'acheteur et sont payés lors de la commande.</p>
                             </div>
