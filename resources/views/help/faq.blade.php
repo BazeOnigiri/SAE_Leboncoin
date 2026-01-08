@@ -84,16 +84,13 @@
                             </div>
                              <div id="faq-compte-modif" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment modifier mes informations personnelles ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Rendez-vous dans votre tableau de bord, section "Profil" ou "Paramètres" pour modifier votre nom, email ou photo de profil.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Rendez-vous dans votre tableau de bord, section "Profil" pour modifier votre nom, email ou photo de profil.</p>
                             </div>
                             <div id="faq-compte-suppression" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment supprimer mon compte ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Pour supprimer votre compte et toutes vos données, rendez-vous dans "Paramètres" > "Sécurité" et cliquez sur "Supprimer mon compte". Attention, cette action est irréversible.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Pour supprimer votre compte et toutes vos données, rendez-vous dans votre tableau de bord et cliquez sur "Supprimer mon compte". Attention, cette action est irréversible.</p>
                             </div>
-                            <div id="faq-compte-notif" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Gérer mes notifications</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Vous pouvez choisir quels emails ou notifications recevoir depuis la section "Paramètres" de votre compte.</p>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -132,7 +129,7 @@
                             </div>
                             <div id="faq-annonce-prix" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Combien coûte le dépôt d'une annonce ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Le dépôt d'annonce est gratuit pour les particuliers. Des options de mise en avant payantes peuvent vous être proposées pour augmenter la visibilité de votre bien.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Le dépôt d'annonce est totalement gratuit pour les particuliers.</p>
                             </div>
                             <div id="faq-annonce-duree" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Combien de temps mon annonce reste-t-elle en ligne ?</h4>
@@ -168,12 +165,9 @@
                             </div>
                              <div id="faq-messagerie-pj" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Puis-je envoyer des pièces jointes ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Oui, vous pouvez envoyer des photos ou des documents PDF via la messagerie sécurisée.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Non, l'envoi de pièces jointes n'est pas disponible pour le moment via la messagerie sécurisée.</p>
                             </div>
-                            <div id="faq-messagerie-bloquer" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Comment bloquer un utilisateur ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Si un utilisateur vous importune, ouvrez la conversation et cliquez sur les options (trois points) puis "Bloquer l'utilisateur".</p>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -200,20 +194,17 @@
                         <div class="px-6 pb-6 space-y-4">
                            <div id="faq-paiement-securise" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment fonctionne le paiement ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Lors de la réservation, vous payez un acompte comprenant 35% du loyer, les frais de service (14%) et la taxe de séjour (4€/nuit/adulte). Le solde est à régler directement auprès de l'hôte à votre arrivée.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Lors de la réservation, vous payez un acompte comprenant 35% du loyer, les frais de service (10%) et la taxe de séjour (4€/nuit/adulte). Le solde est à régler directement auprès de l'hôte à votre arrivée.</p>
                             </div>
                              <div id="faq-paiement-frais" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Quels sont les frais de service ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Les frais de service s'élèvent à 14% du montant total du loyer. Ils couvrent le fonctionnement de la plateforme, l'assistance sécurisée et la gestion des paiements.</p>
+                                <p class="text-gray-600 text-sm leading-relaxed">Les frais de service s'élèvent à 10% du montant total du loyer. Ils couvrent le fonctionnement de la plateforme, l'assistance sécurisée et la gestion des paiements.</p>
                             </div>
                             <div id="faq-reservation-suivi" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
                                 <h4 class="font-semibold text-gray-900 mb-2">Comment suivre ma réservation ?</h4>
                                 <p class="text-gray-600 text-sm leading-relaxed">Retrouvez toutes vos réservations dans "Mon compte" > "Mes réservations". Vous y verrez le statut (confirmé, terminé) et pourrez échanger avec l'hôte.</p>
                             </div>
-                             <div id="faq-avis" class="pt-4 border-t border-gray-100 target:bg-orange-50 target:p-4 target:rounded-lg transition-all scroll-mt-32">
-                                <h4 class="font-semibold text-gray-900 mb-2">Comment laisser un avis ?</h4>
-                                <p class="text-gray-600 text-sm leading-relaxed">Après votre séjour, vous recevrez un email pour laisser une note et un commentaire sur le logement. Cela aide la communauté à choisir en toute confiance.</p>
-                            </div>
+
                         </div>
                     </div>
                 </div>
