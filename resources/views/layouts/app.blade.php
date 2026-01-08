@@ -390,20 +390,132 @@
     </script>
     @endauth
 
-     <script>
-        var botmanWidget = {
-            frameEndpoint: '/botman/chat',
-            introMessage: "Bienvenue ! Je suis votre assistant Leboncoin. Comment puis-je vous aider ?",
-            chatServer: '/botman',
-            mainColor: '#ec5a13',
-            bubbleBackground: '#ec5a13',
-            // bubbleAvatarUrl: '<URL>',
-            title: 'Assistant Leboncoin',
-            headerTextColor: '#ffffffff',
-            placeholderText: 'Écrivez votre message ici...',
-        };
-    </script>
-    <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
+    <div id="chatbot-container" class="fixed bottom-4 right-4 z-50">
+        <button id="chatbot-toggle" class="bg-orange-500 hover:bg-orange-600 text-white rounded-full p-4 shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+        </button>
+
+        <div id="chatbot-window" class="hidden bg-white rounded-lg shadow-xl w-80 h-96 flex flex-col">
+            <div class="bg-orange-500 text-white p-3 rounded-t-lg flex justify-between items-center">
+                <span class="font-bold">Assistant Leboncoin</span>
+                <button id="chatbot-close" class="text-white hover:text-gray-200">✕</button>
+            </div>
+
+            <div id="chatbot-messages" class="flex-1 p-3 overflow-y-auto space-y-2">
+                <div class="bg-gray-100 p-2 rounded-lg text-sm">
+                Bonjour ! Comment puis-je vous aider ? 
+                </div>
+            </div>
+
+            <div class="p-3 border-t">
+                <div class="flex gap-2">
+                    <input type="text" id="chatbot-input" placeholder="Votre message..." class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <button id="chatbot-send" class="bg-orange-500 text-white px-3 py-2 rounded-lg hover:bg-orange-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  const toggleBtn   = document.querySelector('#chatbot-toggle');
+  const chatWindow  = document.querySelector('#chatbot-window');
+  const closeBtn    = document.querySelector('#chatbot-close');
+  const input       = document.querySelector('#chatbot-input');
+  const sendBtn     = document.querySelector('#chatbot-send');
+  const messages    = document.querySelector('#chatbot-messages');
+  const csrfToken   = document.querySelector('meta[name="csrf-token"]')?.content;
+
+  const addMessage = (text, type = 'bot') => {
+    const div = document.createElement('div');
+    div.classList.add(
+      'p-2',
+      'rounded-lg',
+      'text-sm'
+    );
+
+    if (type === 'user') {
+      div.classList.add('bg-orange-100', 'ml-8');
+    } else {
+      div.classList.add('bg-gray-100');
+    }
+
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  };
+
+  const showTyping = () => {
+    const div = document.createElement('div');
+    div.classList.add('bg-gray-100', 'p-2', 'rounded-lg', 'text-sm', 'text-gray-500');
+    div.dataset.typing = 'true';
+    div.textContent = "En train d'écrire...";
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  };
+
+  const removeTyping = () => {
+    messages.querySelector('[data-typing="true"]')?.remove();
+  };
+
+  toggleBtn.addEventListener('click', () => {
+    chatWindow.classList.toggle('hidden');
+    toggleBtn.classList.toggle('hidden');
+    input.focus();
+  });
+
+  closeBtn.addEventListener('click', () => {
+    chatWindow.classList.add('hidden');
+    toggleBtn.classList.remove('hidden');
+  });
+
+  const sendMessage = async () => {
+    const message = input.value.trim();
+    if (!message) return;
+
+    addMessage(message, 'user');
+    input.value = '';
+    showTyping();
+
+    try {
+      const response = await fetch('/chatbot-ai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {})
+        },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await response.json();
+      removeTyping();
+
+      addMessage(
+        data.reply ?? "Désolé, je n'ai pas compris. Pouvez-vous reformuler ?",
+        'bot'
+      );
+
+    } catch (error) {
+      removeTyping();
+      addMessage("Erreur de connexion au serveur.", 'bot');
+    }
+  };
+
+  sendBtn.addEventListener('click', sendMessage);
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+</script>
+
 </body>
 
 </html>

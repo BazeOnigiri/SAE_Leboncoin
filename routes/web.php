@@ -13,7 +13,7 @@ use App\Http\Controllers\ServicePetiteAnnonceController;
 use App\Http\Controllers\DevController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\IncidentController;
-use App\Http\Controllers\BotManController;
+use App\Http\Controllers\ChatBotAIController;
 use App\Http\Controllers\ServiceInscriptionController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\DirecteurPetiteAnnonceController;
@@ -192,7 +192,7 @@ Route::middleware([
         });
 });
 
-Route::match(['get', 'post'], '/botman', [BotManController::class, 'handle']);
+Route::post('/chatbot-ai', [ChatBotAIController::class, 'handle']);
 
 Route::get('/directeur-petite-annonce/statistiques', [DirecteurPetiteAnnonceController::class, 'etatLocations'])
     ->name('directeur.petite-annonce.statistiques');
