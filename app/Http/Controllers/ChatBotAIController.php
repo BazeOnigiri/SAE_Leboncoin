@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Annonce;
 
 class ChatBotAIController extends Controller
 {
@@ -26,13 +25,8 @@ class ChatBotAIController extends Controller
             $userContext = "L'utilisateur n'est pas connecté.";
         }
 
-        $nbAnnonces = Annonce::count();
-
         $knowledgeBase = "
         === BASE DE CONNAISSANCES DU SITE LEBONCOIN LOCATIONS ===
-
-        STATISTIQUES :
-        - Nombre d'annonces en ligne : {$nbAnnonces}
 
         INSCRIPTION / CONNEXION :
         - Pour créer un compte : Cliquer sur 'Se connecter' → Entrer son e-mail → Compléter le formulaire (profil, adresse, mot de passe) → Valider et vérifier e-mail et téléphone
@@ -41,21 +35,34 @@ class ChatBotAIController extends Controller
         - Mot de passe oublié : Connexion → Mot de passe oublié → Recevoir lien par e-mail → Suivre instructions
 
         MON ESPACE COMPTE :
-        - Vue générale avec photo de profil, nom, note moyenne et nombre d'avis
-        - Porte-monnaie : affiche le solde disponible en euros (gains des locations)
+        - Vue générale avec photo de profil, nom, note moyenne (sur 5) et nombre d'avis
+        - Porte-monnaie : Solde disponible en euros (en haut à droite, encadré orange)
         - Sections disponibles :
           * Annonces : Gérer mes annonces déposées
-          * Transactions : Suivre mes achats et mes ventes
           * Réservations : Voir mes séjours (en cours et historique)
-          * Profil : Modifier mon profil public
-          * Paramètres : Infos privées (e-mail, téléphone, adresse)
-          * Connexion et sécurité : Sécurité du compte (mot de passe, 2FA)
-          * Factures : Télécharger mes factures
-          * CNI : Vérifier mon identité
-
-        NAVIGATION HEADER :
-        - Mes recherches : Accessible en haut de page (icône cloche) - voir ses recherches sauvegardées
-        - Favoris : Accessible en haut de page (icône cœur) - voir ses annonces favorites
+          * Profil : Modifier mon profil public (nom, photo)
+          * Paramètres : Infos privées (e-mail, téléphone, adresse, notifications)
+          * Connexion et sécurité : Mot de passe, 2FA, supprimer compte
+        - Bouton 'Me déconnecter' en bas de la page
+            
+            
+        NAVIGATION HEADER (en haut de page) :
+        - Logo Leboncoin : retour à l'accueil
+        - Bouton 'Déposer une annonce' (orange)
+        - Aide : Page d'aide avec FAQ et questions fréquentes
+        - Mes recherches : Voir ses recherches sauvegardées (icône cloche)
+        - Favoris : Voir ses annonces favorites (icône cœur)
+        - Profil utilisateur : Accès à Mon compte (photo de profil ou icône utilisateur)
+            
+        PAGE D'AIDE :
+        - Accès : Cliquer sur 'Aide' dans le header
+        - Questions fréquentes listées à gauche :
+          * Comment créer un compte ?
+          * Comment déposer une annonce ?
+          * Quels sont les frais de service ?
+          * Comment signaler une arnaque ?
+          * Comment suivre ma réservation ?
+          * J'ai oublié mon mot de passe
 
         DÉPOSER UNE ANNONCE :
         - Étapes : Se connecter → Cliquer sur 'Déposer une annonce' → Remplir titre, description, prix par nuit, capacité, chambres, règles (animaux, fumeur) → Ajouter photos → Valider
@@ -102,6 +109,11 @@ class ChatBotAIController extends Controller
         - Total à payer
         - À payer maintenant : acompte (environ 45% du total)
         - Reste à payer sur place : le solde restant
+        - Moyens de paiement : Carte bancaire (Visa, MasterCard, American Express, etc.) et elle peut être enregistrée pour de futurs paiements
+
+        FRAIS DE SERVICE :
+        - Commission du site ajoutée au montant de la location
+        - Détail visible dans le récapitulatif de paiement
 
         MES VOYAGES / RÉSERVATIONS :
         - Accès : Mon compte → Réservations
@@ -119,6 +131,10 @@ class ChatBotAIController extends Controller
           * Détails : voir le détail complet
           * Signaler un incident : en cas de problème
           * Annuler : annuler la réservation (si disponible)
+
+        FRAIS DE SERVICE :
+        - Commission du site ajoutée au montant de la location
+        - Détail visible dans le récapitulatif de paiement
 
         RECHERCHER UNE ANNONCE :
         - Utiliser la barre de recherche (ville, département ou région)
@@ -157,7 +173,6 @@ class ChatBotAIController extends Controller
         - Acompte à payer immédiatement (environ 45% du total)
         - Reste à payer sur place au propriétaire
         - Le paiement inclut : acompte location + frais de service + taxe de séjour
-        - Confirmation envoyée par e-mail
 
         PORTE-MONNAIE / SOLDE :
         - Visible sur la page Mon compte (encadré orange en haut à droite)
@@ -165,7 +180,6 @@ class ChatBotAIController extends Controller
 
         AVIS / NOTES :
         - Chaque annonce affiche sa note moyenne (sur 5) et le nombre d'avis
-        - Pour laisser un avis : avoir effectué un séjour → Mon compte → Réservations → Historique → Laisser un avis
 
         MESSAGERIE :
         - Contacter un propriétaire : depuis une annonce ou depuis une réservation (bouton 'Message')
@@ -174,11 +188,7 @@ class ChatBotAIController extends Controller
         VÉRIFICATIONS :
         - E-mail : Vérifier son e-mail après inscription
         - Téléphone (SMS) : Recevoir un code et le valider
-        - CNI : Mon compte → CNI → Déposer les documents
-
-        TRANSACTIONS :
-        - Accès : Mon compte → Transactions
-        - Suivre ses achats et ses ventes
+        - CNI : demander au moment de déposer une annonce si pas déjà fait
 
         INCIDENTS / LITIGES :
         - Signaler un incident : Mon compte → Réservations → Sélectionner la réservation → Cliquer sur 'Signaler un incident'
@@ -189,13 +199,10 @@ class ChatBotAIController extends Controller
         - Les conditions de remboursement dépendent de l'annonce
 
         PROBLÈMES TECHNIQUES :
-        - Vérifier connexion internet, rafraîchir la page (F5), vider le cache
+        - Rafraîchir la page (F5)
+        - Vider le cache du navigateur
         - Essayer un autre navigateur
-        - Contacter le support si le problème persiste
-
-        SUPPORT :
-        - Formulaire de contact en bas de page
-        - Décrire le problème et ajouter une capture d'écran si possible
+        - Cliquez sur la page Aide
         ";
 
 
@@ -209,7 +216,8 @@ class ChatBotAIController extends Controller
         3. Si l'utilisateur n'est pas connecté et veut réserver/déposer une annonce, dis-lui de se connecter d'abord.
         4. Si la question n'est pas liée au site, réponds poliment que tu ne peux aider que sur les sujets du site.
         5. N'invente jamais d'informations qui ne sont pas dans la base de connaissances.
-        6. Sois chaleureux et utilise des emojis avec modération (1-2 max par réponse).";
+        6. Sois chaleureux et utilise des emojis avec modération (1-2 max par réponse).
+        7. Si on demande de l'aide générale, mentionne la page 'Aide' accessible dans le header.";
 
         try {
             $response = Http::withoutVerifying()
