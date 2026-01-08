@@ -56,15 +56,110 @@
 <body class="bg-[#f8f9fb] font-sans text-gray-900 antialiased">
     <header id="main-header"
         class="w-full border-b border-gray-200 bg-white py-3 sticky top-0 z-40 left-0 transition-shadow duration-200">
-        <div class="mx-auto h-16 flex items-center justify-between gap-4 max-w-6xl px-6 md:px-12 xl:px-6">
+        <div class="mx-auto h-16 flex items-center justify-between gap-4 max-w-6xl px-6 md:px-12 xl:px-6" x-data="{ mobileMenuOpen: false }">
 
-            <a href="{{ $isSuperAdminOrNoRoles ? '/' : '/dashboard' }}" class="flex-shrink-0">
-                <img 
-                    src="/assets/Leboncoin_logo.svg" 
-                    alt="Logo leboncoin" 
-                    class="h-8 w-auto object-contain" 
-                />
-            </a>
+            <div class="flex items-center gap-4">
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 -ml-2 text-gray-600 hover:text-orange-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+
+                <a href="{{ $isSuperAdminOrNoRoles ? '/' : '/dashboard' }}" class="flex-shrink-0">
+                    <img 
+                        src="/assets/Leboncoin_logo.svg" 
+                        alt="Logo leboncoin" 
+                        class="h-8 w-auto object-contain" 
+                    />
+                </a>
+            </div>
+
+            <!-- Mobile Menu Overlay -->
+            <div x-show="mobileMenuOpen" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 z-50 bg-black/50 md:hidden"
+                 @click="mobileMenuOpen = false"
+                 style="display: none;">
+            </div>
+
+            <!-- Mobile Menu Panel -->
+            <div x-show="mobileMenuOpen"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="-translate-x-full"
+                 x-transition:enter-end="translate-x-0"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="translate-x-0"
+                 x-transition:leave-end="-translate-x-full"
+                 class="fixed inset-y-0 left-0 z-50 w-4/5 max-w-sm bg-white shadow-xl overflow-y-auto md:hidden"
+                 style="display: none;">
+                
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <img src="/assets/Leboncoin_logo.svg" alt="Logo" class="h-8 w-auto">
+                        <button @click="mobileMenuOpen = false" class="p-2 -mr-2 text-gray-500 hover:text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="space-y-6">
+                        @auth
+                            <div class="flex items-center gap-3 p-3 bg-orange-50 rounded-xl border border-orange-100">
+                                <img class="h-10 w-10 rounded-full object-cover" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->prenomutilisateur }}">
+                                <div>
+                                    <p class="font-bold text-gray-900">{{ auth()->user()->pseudonyme }}</p>
+                                    <a href="{{ route('dashboard') }}" class="text-sm text-orange-600 font-medium hover:underline">Mon tableau de bord</a>
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ route('auth.check') }}" class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                    </svg>
+                                </div>
+                                <span class="font-bold text-gray-900">Se connecter</span>
+                            </a>
+                        @endauth
+
+                        @if($isSuperAdminOrNoRoles)
+                            <hr class="border-gray-100">
+                            
+                            <nav class="space-y-4">
+                                <a href="{{ route('annonce.create') }}" class="flex items-center gap-3 text-gray-700 font-medium hover:text-orange-600 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Déposer une annonce
+                                </a>
+
+                                <a href="{{ route('user.searches') }}" class="flex items-center gap-3 text-gray-700 font-medium hover:text-orange-600 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                    </svg>
+                                    Mes recherches
+                                </a>
+
+                                <a href="{{ route('user.favorites') }}" class="flex items-center gap-3 text-gray-700 font-medium hover:text-orange-600 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                    </svg>
+                                    Favoris
+                                </a>
+                            </nav>
+                        @endif
+                        
+
+                    </div>
+                </div>
+            </div>
 
             @if($isSuperAdminOrNoRoles)
                 <a href="{{ route('annonce.create') }}" id="header-create-annonce-btn"
@@ -79,7 +174,7 @@
 
 
                 <nav class="flex items-center gap-6 text-gray-700 shrink-0">
-                    <a href="{{ route('user.searches') }}" id="header-searches-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
+                    <a href="{{ route('user.searches') }}" id="header-searches-link" class="relative hidden md:flex flex-col items-center gap-1 group">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -90,7 +185,9 @@
                         <span class="absolute -bottom-3 left-1/2 w-0 h-[3px] -translate-x-1/2 bg-orange-600 transition-all duration-300 group-hover:w-full"></span>
                     </a>
 
-                    <a href="{{ route('user.favorites') }}" id="header-favorites-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
+                    </a>
+
+                    <a href="{{ route('user.favorites') }}" id="header-favorites-link" class="relative hidden md:flex flex-col items-center gap-1 group">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                             stroke="currentColor" class="w-6 h-6 group-hover:text-black transition-colors">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -107,7 +204,7 @@
             @endif
 
                 @auth
-                    <a href="{{ route('dashboard') }}" id="header-user-dashboard-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
+                    <a href="{{ route('dashboard') }}" id="header-user-dashboard-link" class="relative hidden md:flex flex-col items-center gap-1 group">
                         <img class="rounded-full h-6 z-6" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->prenomutilisateur }}">
                         <span class="text-xs font-medium group-hover:text-black transition-colors">{{ auth()->user()->pseudonyme }}</span>
 
