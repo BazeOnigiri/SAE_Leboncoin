@@ -481,100 +481,95 @@
             </div>
         </div>
     </div>
-</div>
-<script>
-  const toggleBtn   = document.querySelector('#chatbot-toggle');
-  const chatWindow  = document.querySelector('#chatbot-window');
-  const closeBtn    = document.querySelector('#chatbot-close');
-  const input       = document.querySelector('#chatbot-input');
-  const sendBtn     = document.querySelector('#chatbot-send');
-  const messages    = document.querySelector('#chatbot-messages');
-  const csrfToken   = document.querySelector('meta[name="csrf-token"]')?.content;
+    <script>
+    const toggleBtn   = document.querySelector('#chatbot-toggle');
+    const chatWindow  = document.querySelector('#chatbot-window');
+    const closeBtn    = document.querySelector('#chatbot-close');
+    const input       = document.querySelector('#chatbot-input');
+    const sendBtn     = document.querySelector('#chatbot-send');
+    const messages    = document.querySelector('#chatbot-messages');
+    const csrfToken   = document.querySelector('meta[name="csrf-token"]')?.content;
 
-  const addMessage = (text, type = 'bot') => {
-    const div = document.createElement('div');
-    div.classList.add(
-      'p-2',
-      'rounded-lg',
-      'text-sm'
-    );
+    const addMessage = (text, type = 'bot') => {
+        const div = document.createElement('div');
+        div.classList.add('p-2','rounded-lg','text-sm');
 
-    if (type === 'user') {
-      div.classList.add('bg-orange-100', 'ml-8');
-    } else {
-      div.classList.add('bg-gray-100');
-    }
+        if (type === 'user') {
+            div.classList.add('bg-orange-100', 'ml-8');
+        } else {
+            div.classList.add('bg-gray-100');
+        }
 
-    div.textContent = text;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-  };
+        div.textContent = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    };
 
-  const showTyping = () => {
-    const div = document.createElement('div');
-    div.classList.add('bg-gray-100', 'p-2', 'rounded-lg', 'text-sm', 'text-gray-500');
-    div.dataset.typing = 'true';
-    div.textContent = "En train d'écrire...";
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-  };
+    const showTyping = () => {
+        const div = document.createElement('div');
+        div.classList.add('bg-gray-100', 'p-2', 'rounded-lg', 'text-sm', 'text-gray-500');
+        div.dataset.typing = 'true';
+        div.textContent = "En train d'écrire...";
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    };
 
-  const removeTyping = () => {
-    messages.querySelector('[data-typing="true"]')?.remove();
-  };
+    const removeTyping = () => {
+        messages.querySelector('[data-typing="true"]')?.remove();
+    };
 
-  toggleBtn.addEventListener('click', () => {
-    chatWindow.classList.toggle('hidden');
-    toggleBtn.classList.toggle('hidden');
-    input.focus();
-  });
+    toggleBtn.addEventListener('click', () => {
+        chatWindow.classList.toggle('hidden');
+        toggleBtn.classList.toggle('hidden');
+        input.focus();
+    });
 
-  closeBtn.addEventListener('click', () => {
-    chatWindow.classList.add('hidden');
-    toggleBtn.classList.remove('hidden');
-  });
+    closeBtn.addEventListener('click', () => {
+        chatWindow.classList.add('hidden');
+        toggleBtn.classList.remove('hidden');
+    });
 
-  const sendMessage = async () => {
-    const message = input.value.trim();
-    if (!message) return;
+    const sendMessage = async () => {
+        const message = input.value.trim();
+        if (!message) return;
 
-    addMessage(message, 'user');
-    input.value = '';
-    showTyping();
+        addMessage(message, 'user');
+        input.value = '';
+        showTyping();
 
-    try {
-      const response = await fetch('/chatbot-ai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {})
-        },
-        body: JSON.stringify({ message })
-      });
+        try {
+            const response = await fetch('/chatbot-ai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {})
+                },
+                body: JSON.stringify({ message })
+            });
 
-      const data = await response.json();
-      removeTyping();
+            const data = await response.json();
+            removeTyping();
 
-      addMessage(
-        data.reply ?? "Désolé, je n'ai pas compris. Pouvez-vous reformuler ?",
-        'bot'
-      );
+            addMessage(
+                data.reply ?? "Désolé, je n'ai pas compris. Pouvez-vous reformuler ?",
+                'bot'
+            );
 
-    } catch (error) {
-      removeTyping();
-      addMessage("Erreur de connexion au serveur.", 'bot');
-    }
-  };
+        } catch (error) {
+            removeTyping();
+            addMessage("Erreur de connexion au serveur.", 'bot');
+        }
+    };
+    sendBtn.addEventListener('click', sendMessage);
 
-  sendBtn.addEventListener('click', sendMessage);
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      sendMessage();
-    }
-  });
-</script>
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendMessage();
+        }
+        });
+    
+    </script>
 
 </body>
 
