@@ -44,8 +44,8 @@ class ChatBotAIController extends Controller
           * Paramètres : Infos privées (e-mail, téléphone, adresse, notifications)
           * Connexion et sécurité : Mot de passe, 2FA, supprimer compte
         - Bouton 'Me déconnecter' en bas de la page
-            
-            
+
+
         NAVIGATION HEADER (en haut de page) :
         - Logo Leboncoin : retour à l'accueil
         - Bouton 'Déposer une annonce' (orange)
@@ -53,7 +53,7 @@ class ChatBotAIController extends Controller
         - Mes recherches : Voir ses recherches sauvegardées (icône cloche)
         - Favoris : Voir ses annonces favorites (icône cœur)
         - Profil utilisateur : Accès à Mon compte (photo de profil ou icône utilisateur)
-            
+
         PAGE D'AIDE :
         - Accès : Cliquer sur 'Aide' dans le header
         - Questions fréquentes listées à gauche :
@@ -110,10 +110,6 @@ class ChatBotAIController extends Controller
         - À payer maintenant : acompte (environ 45% du total)
         - Reste à payer sur place : le solde restant
         - Moyens de paiement : Carte bancaire (Visa, MasterCard, American Express, etc.) et elle peut être enregistrée pour de futurs paiements
-
-        FRAIS DE SERVICE :
-        - Commission du site ajoutée au montant de la location
-        - Détail visible dans le récapitulatif de paiement
 
         MES VOYAGES / RÉSERVATIONS :
         - Accès : Mon compte → Réservations
