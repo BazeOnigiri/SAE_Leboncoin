@@ -107,7 +107,7 @@
             @endif
 
                 @auth
-                    <a href="{{ route('dashboard') }}" class="relative hidden lg:flex flex-col items-center gap-1 group">
+                    <a href="{{ route('dashboard') }}" id="header-user-dashboard-link" class="relative hidden lg:flex flex-col items-center gap-1 group">
                         <img class="rounded-full h-6 z-6" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->prenomutilisateur }}">
                         <span class="text-xs font-medium group-hover:text-black transition-colors">{{ auth()->user()->pseudonyme }}</span>
 

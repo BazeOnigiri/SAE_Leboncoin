@@ -99,7 +99,7 @@
                     </svg>
                 </button>
 
-                <button @click="sidebarOpen = true"
+                <button @click="sidebarOpen = true" id="filter-btn"
                     class="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-[15px] shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-5 h-5 text-slate-600">
