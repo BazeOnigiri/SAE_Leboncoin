@@ -30,6 +30,10 @@ if (app()->environment('local')) {
 Route::get('/annonce/{id}', [AnnonceController::class, 'view'])->name('annonce.view');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
 
+Route::get('/aide', function () {
+    return view('help.faq');
+})->name('help.faq');
+
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')
     ->name('auth.check');
