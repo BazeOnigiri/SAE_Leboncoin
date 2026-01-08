@@ -49,13 +49,6 @@
                         </a>
                     </li>
                 </ul>
-
-                 <div class="mt-8 pt-6 border-t border-gray-100">
-                    <p class="text-sm text-gray-500 mb-4">Vous ne trouvez pas votre réponse ?</p>
-                    <a href="#" class="block w-full text-center bg-orange-50 text-orange-700 font-semibold py-3 rounded-xl hover:bg-orange-100 transition-colors">
-                        Contacter le support
-                    </a>
-                </div>
             </div>
 
             <!-- Main Content: Accordions -->
