@@ -16,7 +16,7 @@ class ConnexionController extends Controller
     public function checkEmail(Request $request)
     {
         $validated = $request->validate([
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:utilisateur,email'],
         ], [
             'email.required' => "L'adresse e-mail est obligatoire pour continuer.",
             'email.email'    => "Le format de l'adresse e-mail n'est pas valide (ex: nom@domaine.com).",

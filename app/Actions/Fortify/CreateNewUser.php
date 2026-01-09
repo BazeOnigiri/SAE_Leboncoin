@@ -52,7 +52,7 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'role'           => ['required', Rule::in(['particulier', 'professionnel'])],
-            'email'          => ['required', 'string', 'email', 'max:255', 'unique:utilisateur,email'],
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:utilisateur,email'],
             'password'       => $this->passwordRules(),
             'pseudo'         => ['required', 'string', 'max:50'],
             'telephone'      => ['required', 'regex:/^0[1-9][0-9]{8}$/', 'unique:utilisateur,telephoneutilisateur'],
