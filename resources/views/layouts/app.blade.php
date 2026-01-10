@@ -457,6 +457,7 @@
                 &copy; {{ date('Y') }} Leboncoin. Tous droits réservés.
             </div>
             <div class="flex gap-6">
+                <a href="{{ route('privacy.policy') }}" class="hover:text-orange-600 hover:underline">Données personnelles</a>
                 <a href="{{ route('cookies.policy') }}" class="hover:text-orange-600 hover:underline">Politique de cookies</a>
                 <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-cookie-settings'))" class="hover:text-orange-600 hover:underline">
                     Gestion des cookies

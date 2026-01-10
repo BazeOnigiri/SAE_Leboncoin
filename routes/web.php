@@ -18,6 +18,7 @@ use App\Http\Controllers\ServiceInscriptionController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\DirecteurPetiteAnnonceController;
 use App\Http\Controllers\CookieController;
+use App\Http\Controllers\PrivacyController;
 
 if (app()->environment('local')) {
     Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
@@ -36,6 +37,7 @@ Route::get('/aide', function () {
 })->name('help.faq');
 
 Route::get('/cookies', [CookieController::class, 'policy'])->name('cookies.policy');
+Route::get('/donnees-personnelles', [PrivacyController::class, 'policy'])->name('privacy.policy');
 
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')
