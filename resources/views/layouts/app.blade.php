@@ -250,7 +250,7 @@
     @yield('content')
     {{ $slot ?? '' }}
     @stack('modals')
-{{-- 
+
     @if(app()->environment('local'))
         @php
             $devAccounts = [
@@ -415,7 +415,7 @@
                 });
             })();
         </script>
-    @endif --}}
+    @endif
 
     @stack('scripts')
 
