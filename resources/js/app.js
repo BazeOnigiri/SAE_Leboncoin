@@ -1,5 +1,6 @@
 console.log('--- APP.JS LOADED ---');
 import './bootstrap';
+import './cookies';
 import './help-system-absolute';
 
 

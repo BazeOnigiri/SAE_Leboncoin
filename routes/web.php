@@ -17,6 +17,7 @@ use App\Http\Controllers\ChatBotAIController;
 use App\Http\Controllers\ServiceInscriptionController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\DirecteurPetiteAnnonceController;
+use App\Http\Controllers\CookieController;
 
 if (app()->environment('local')) {
     Route::post('/dev/login-as', [DevController::class, 'loginAs'])->name('dev.login-as');
@@ -33,6 +34,8 @@ Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
 Route::get('/aide', function () {
     return view('help.faq');
 })->name('help.faq');
+
+Route::get('/cookies', [CookieController::class, 'policy'])->name('cookies.policy');
 
 Route::get('/connexion', [ConnexionController::class, 'showEmailForm'])
     ->middleware('guest')

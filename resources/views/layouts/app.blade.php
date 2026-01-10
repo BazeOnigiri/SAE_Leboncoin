@@ -19,7 +19,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places" async defer></script>
+    <!-- Google Maps (Managed) -->
+    <script data-src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places" data-managed="google-maps" type="text/plain"></script>
 
     <meta name="description" content="Découvrez des annonces immobilières et de location de vacances sur Leboncoin.">
 
@@ -450,7 +451,21 @@
     </script>
     @endauth
 
-    <div id="chatbot-container" class="fixed bottom-4 right-4 z-50">
+    <footer class="bg-gray-100 border-t border-gray-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+            <div>
+                &copy; {{ date('Y') }} Leboncoin. Tous droits réservés.
+            </div>
+            <div class="flex gap-6">
+                <a href="{{ route('cookies.policy') }}" class="hover:text-orange-600 hover:underline">Politique de cookies</a>
+                <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-cookie-settings'))" class="hover:text-orange-600 hover:underline">
+                    Gestion des cookies
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <div id="chatbot-container" class="fixed bottom-4 right-4 z-50" style="display: none;">
         <button id="chatbot-toggle" class="bg-orange-500 hover:bg-orange-600 text-white rounded-full p-4 shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -571,6 +586,8 @@
     
     </script>
 
+    <x-cookie-banner />
+    <x-cookie-settings />
 </body>
 
 </html>
