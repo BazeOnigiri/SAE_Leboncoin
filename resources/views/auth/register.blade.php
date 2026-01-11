@@ -371,12 +371,19 @@
                         </div>
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4 space-y-3">
                         <label class="flex items-start gap-2 cursor-pointer">
                             <input type="checkbox" name="terms" required class="mt-1 rounded border-gray-300 text-orange-600 focus:ring-orange-600">
                             <span class="text-sm text-gray-600">
-                                J'accepte les <a href="#" class="underline hover:text-orange-700">Conditions Générales d'Utilisation</a>
-                                et la <a href="#" class="underline hover:text-orange-700">Politique de Confidentialité</a>.
+                                J'accepte les <a href="#" class="text-orange-600 hover:underline">Conditions Générales d'Utilisation</a>
+                                et la <a href="{{ route('privacy.policy') }}" class="text-orange-600 hover:underline">Politique de Confidentialité</a>. *
+                            </span>
+                        </label>
+
+                        <label class="flex items-start gap-2 cursor-pointer">
+                            <input type="checkbox" name="newsletter" value="1" {{ old('newsletter') ? 'checked' : '' }} class="mt-1 rounded border-gray-300 text-orange-600 focus:ring-orange-600">
+                            <span class="text-sm text-gray-600">
+                                J'accepte de recevoir les "Bons Plans" et actualités de Le Bon Coin par email. (Vous pourrez vous désinscrire à tout moment).
                             </span>
                         </label>
                     </div>
@@ -388,6 +395,10 @@
                             Créer mon compte
                         </button>
                     </div>
+
+                    <p class="text-xs text-gray-500 text-center">
+                        * Champs obligatoires. Les données collectées sont traitées par Le Bon Coin pour gérer votre compte. Pour exercer vos droits, consultez notre <a href="{{ route('privacy.policy') }}" class="underline hover:text-orange-700">politique de confidentialité</a>.
+                    </p>
 
                     {{-- MODALE CHOIX VILLE --}}
                     <div x-show="showCityModal" x-cloak class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
