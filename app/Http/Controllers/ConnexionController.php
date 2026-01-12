@@ -16,10 +16,11 @@ class ConnexionController extends Controller
     public function checkEmail(Request $request)
     {
         $validated = $request->validate([
-            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:utilisateur,email'],
+            'email' => ['required', 'string', 'email:rfc', 'max:255', 'regex:/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/'],
         ], [
             'email.required' => "L'adresse e-mail est obligatoire pour continuer.",
             'email.email'    => "Le format de l'adresse e-mail n'est pas valide (ex: nom@domaine.com).",
+            'email.regex'    => "Le format de l'adresse e-mail n'est pas valide (ex: nom@domaine.com).",
             'email.max'      => "L'adresse e-mail est trop longue (max 255 caractères).",
         ]);
         
