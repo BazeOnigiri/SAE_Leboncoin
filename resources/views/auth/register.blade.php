@@ -383,7 +383,7 @@
                         <label class="flex items-start gap-2 cursor-pointer">
                             <input type="checkbox" name="newsletter" value="1" {{ old('newsletter') ? 'checked' : '' }} class="mt-1 rounded border-gray-300 text-orange-600 focus:ring-orange-600">
                             <span class="text-sm text-gray-600">
-                                J'accepte de recevoir les "Bons Plans" et actualités de Le Bon Coin par email. (Vous pourrez vous désinscrire à tout moment).
+                                J'accepte de recevoir les "Bons Plans" et actualités de Leboncoin par email. (Vous pourrez vous désinscrire à tout moment).
                             </span>
                         </label>
                     </div>
@@ -397,7 +397,7 @@
                     </div>
 
                     <p class="text-xs text-gray-500 text-center">
-                        * Champs obligatoires. Les données collectées sont traitées par Le Bon Coin pour gérer votre compte. Pour exercer vos droits, consultez notre <a href="{{ route('privacy.policy') }}" class="underline hover:text-orange-700">politique de confidentialité</a>.
+                        * Champs obligatoires. Les données collectées sont traitées par Leboncoin pour gérer votre compte. Pour exercer vos droits, consultez notre <a href="{{ route('privacy.policy') }}" class="underline hover:text-orange-700">politique de confidentialité</a>. <a href="{{ route('cookies.policy') }}" class="underline hover:text-orange-700">politique de cookies</a>
                     </p>
 
                     {{-- MODALE CHOIX VILLE --}}
