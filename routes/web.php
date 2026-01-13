@@ -81,8 +81,9 @@ Route::middleware([
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reservations/{reservation}/incident/signaler', [IncidentController::class, 'create'])->name('incidents.create');
         Route::post('/reservations/{reservation}/incident', [IncidentController::class, 'store'])->name('incidents.store');
-        Route::get('/reservations/{reservation}/incident/suivi', [IncidentController::class, 'suivi'])->name('incidents.suivi');
-        Route::post('/reservations/{reservation}/incident/contester', [IncidentController::class, 'contester'])->name('incidents.contester');
+        Route::get('/incident/{incident}/suivi', [IncidentController::class, 'suivi'])->name('incidents.suivi');
+        Route::post('/incident/{incident}/contester', [IncidentController::class, 'contester'])->name('incidents.contester');
+        Route::post('/incident/{incident}/accepter', [IncidentController::class, 'accepter'])->name('incidents.accepter');
         Route::post('/reservations/{reservation}/incident/cloturer', [IncidentController::class, 'cloturer'])->name('incidents.cloturer');
     });
 });
@@ -135,6 +136,7 @@ Route::middleware([
 
         Route::get('/reservations/{reservation}/incident/justification', [IncidentController::class, 'justificationForm'])->name('incidents.justification');
         Route::post('/reservations/{reservation}/incident/justification', [IncidentController::class, 'storeJustification'])->name('incidents.justification.store');
+        Route::get('/compte/mes-litiges', [IncidentController::class, 'userIncidents'])->name('user.incidents.index');
     });
 });
 
@@ -189,6 +191,7 @@ Route::middleware([
             Route::post('/{incident}/classer', [IncidentController::class, 'classerSansSuite'])->name('services.incidents.classer');
             Route::post('/{incident}/rembourser', [IncidentController::class, 'rembourser'])->name('rembourser');
             Route::post('/{incident}/valider-etape-4', [IncidentController::class, 'validerVersEtape4'])->name('services.incidents.valider4');
+            Route::post('/{incident}/contentieux', [IncidentController::class, 'envoyerAuContentieux'])->name('contentieux');
         });
 
     Route::prefix('/services/catalogue')

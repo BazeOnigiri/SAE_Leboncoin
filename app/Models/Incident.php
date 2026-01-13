@@ -22,6 +22,7 @@ class Incident extends Model
         'etape',
         'estclasse',
         'estrembourse',
+        'estremisaucontentieux',
         'explicationproprietaire',
     ];
 

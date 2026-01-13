@@ -151,29 +151,12 @@
                                             </svg>
                                             Facture
                                         </button>
-                                        @if($reservation->incident && $reservation->incident->etape < 6)
-                                            {{-- Bouton Suivi (si incident existant) --}}
-                                            <a href="{{ route('incidents.suivi', $reservation) }}" class="text-orange-600 hover:text-orange-700 flex items-center gap-1 transition group">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
-                                                </svg>
-                                                Suivre mon incident
-                                                @if($reservation->incident->etape == 4)
-                                                    <span class="flex h-2 w-2 relative">
-                                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-                                                    </span>
-                                                @endif
-                                            </a>
-                                        @else
-                                            {{-- Bouton Signaler (si aucun incident) --}}
-                                            <a href="{{ route('incidents.create', $reservation) }}" class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition group">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                                </svg>
-                                                Signaler un incident
-                                            </a>
-                                        @endif
+                                        <a href="{{ route('incidents.create', $reservation) }}" class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition group">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                            </svg>
+                                            Signaler un incident
+                                        </a>
                                         <button 
                                             @click="showCancelModal = true; reservationToCancel = {{ $reservation->idreservation }}; reservationTitle = '{{ addslashes($reservation->annonce->titreannonce ?? 'cette réservation') }}'"
                                             class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition ml-auto group">

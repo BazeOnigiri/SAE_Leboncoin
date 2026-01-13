@@ -57,10 +57,13 @@ class IncidentController extends Controller
     {
         $allIncidents = Incident::with(['dateRecord', 'user', 'reservation'])->orderBy('idincident', 'desc')->get();
 
-        $incidentsEnCours = $allIncidents->where('estclasse', false);
-        $incidentsClasses = $allIncidents->where('estclasse', true);
+        $incidentsEnCours = $allIncidents->where('estclasse', false)->where('estremisaucontentieux', false);
 
-        return view('services.incidents.index', compact('incidentsEnCours', 'incidentsClasses'));
+        $incidentsContentieux = $allIncidents->where('estremisaucontentieux', true);
+
+        $incidentsClasses = $allIncidents->where('estclasse', true)->where('estremisaucontentieux', false);
+
+        return view('services.incidents.index', compact('incidentsEnCours', 'incidentsClasses', 'incidentsContentieux'));
     }
 
     public function classerSansSuite(Incident $incident)
@@ -142,33 +145,45 @@ class IncidentController extends Controller
         return back()->with('success', 'Réponse transmise au locataire. Le remboursement a été refusé.');
     }
 
-    public function suivi(Reservation $reservation)
+    public function suivi(Incident $incident)
     {
-        $incident = $reservation->incident;
-        if (!$incident || $incident->idutilisateur != Auth::id()) abort(403);
+        $incident->load(['reservation.annonce', 'user']);
         
-        return view('profile.incidents.suivi', compact('reservation', 'incident'));
+        return view('profile.incidents.suivi', compact('incident'));
     }
 
-    public function contester(Reservation $reservation)
+    public function contester(Incident $incident) // On injecte l'incident directement
     {
-        $incident = $reservation->incident;
-
-        if (!$incident) {
-            abort(403, "Incident introuvable.");
-        }
-
         if ($incident->idutilisateur != Auth::id()) {
             abort(403, "Vous n'êtes pas l'auteur de ce signalement.");
         }
 
         if ($incident->etape != 4) {
-            return redirect()->back()->with('error', "L'incident n'est pas dans un état permettant la contestation.");
+            return redirect()->back()->with('error', "La contestation n'est possible qu'après une décision (Étape 4).");
         }
 
-        $incident->update(['etape' => 5]);
+        $incident->update([
+            'etape' => 5,
+            'estremisaucontentieux' => false 
+        ]);
 
-        return redirect()->route('user.mes-reservations')->with('success', 'Votre contestation a été prise en compte.');
+        return redirect()->route('user.incidents.index')
+            ->with('success', 'Votre contestation a été transmise au service client pour une dernière expertise.');
+    }
+
+    public function accepter(Incident $incident)
+    {
+        if ($incident->idutilisateur != Auth::id()) {
+            abort(403);
+        }
+
+        $incident->update([
+            'etape' => 5,
+            'estclasse' => true
+        ]);
+
+        return redirect()->route('user.incidents.index')
+            ->with('success', 'Le litige est désormais clôturé. Merci de votre retour.');
     }
 
     public function cloturer(Reservation $reservation)
@@ -180,5 +195,26 @@ class IncidentController extends Controller
         $incident->update(['etape' => 6, 'estclasse' => true]);
 
         return redirect()->route('user.mes-reservations')->with('success', 'L\'incident est désormais clos.');
+    }
+
+    public function envoyerAuContentieux(Incident $incident)
+    {
+        $incident->update([
+            'estremisaucontentieux' => true,
+            'etape' => 6, 
+        ]);
+
+        return back()->with('success', 'Dossier transmis au contentieux.');
+    }
+
+    public function userIncidents()
+    {
+        // On récupère tous les incidents de l'utilisateur avec les infos de l'annonce
+        $incidents = Incident::where('idutilisateur', Auth::id())
+            ->with(['reservation.annonce'])
+            ->orderBy('iddate', 'desc')
+            ->get();
+
+        return view('profile.incidents.index', compact('incidents'));
     }
 }

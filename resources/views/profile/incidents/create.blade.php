@@ -10,14 +10,12 @@
             
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Déclarer un problème sur votre réservation</h1>
             
-            {{-- Bloc d'information sur la réservation --}}
             <div class="bg-orange-50 border-l-4 border-orange-500 text-orange-700 p-4 mb-6" role="alert">
                 <p class="font-bold">Réservation n°{{ $reservation->idreservation }}</p>
                 <p class="text-sm">Hébergement : **{{ $reservation->annonce->titreannonce ?? 'Détails non trouvés' }}**</p>
                 <p class="text-sm">Dates : Du **{{ \Carbon\Carbon::parse($reservation->dateDebut->date)->format('d/m/Y') }}** au **{{ \Carbon\Carbon::parse($reservation->dateFin->date)->format('d/m/Y') }}**</p>
             </div>
             
-            {{-- Affichage des messages de validation ou de succès (après soumission) --}}
             @if (session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
@@ -83,13 +81,10 @@
                                     class="h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500 flex-shrink-0" 
                                     {{ (is_array(old('compensations')) && in_array($compensation->idcompensation, old('compensations'))) ? 'checked' : '' }}
                                 >
-                                {{-- ml-3 crée un petit espace entre la checkbox et le texte --}}
                                 <div class="ml-3 text-sm"> 
                                     <label for="compensation_{{ $compensation->idcompensation }}" class="font-medium text-gray-900 cursor-pointer">
                                         {{ $compensation->nomcompensation }}
                                     </label>
-                                    {{-- Ajout de la description de compensation si elle existe --}}
-                                    <p class="text-gray-500">{{ $compensation->descriptioncompensation ?? 'Détail de la compensation.' }}</p>
                                 </div>
                             </div>
                         @empty
@@ -102,12 +97,10 @@
                 </div>
 
                 <div class="flex items-center justify-end gap-4">
-                    {{-- Bouton Annuler : Redirige vers la page précédente --}}
                     <a href="{{ url()->previous() }}" class="text-gray-600 font-bold py-2 px-4 rounded hover:text-gray-800 transition">
                         Annuler
                     </a>
                     
-                    {{-- Bouton Confirmer : Soumet le formulaire --}}
                     <button 
                         type="submit" 
                         class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"

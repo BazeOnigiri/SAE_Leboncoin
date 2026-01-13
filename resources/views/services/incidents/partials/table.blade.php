@@ -37,6 +37,10 @@
                         <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold uppercase">
                             [3] Analyse des explications
                         </span>
+                    @elseif($incident->etape == 5)
+                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">
+                            [5] Décision contestée par le locataire
+                        </span>
                     @endif
                 </td>
                 <td class="px-6 py-4 text-right">
