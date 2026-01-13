@@ -274,7 +274,6 @@
         </div>
     </div>
 
-    {{-- Modal de confirmation de suppression --}}
     <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6">
             <div class="flex items-center gap-3 mb-4">
@@ -379,7 +378,6 @@
             modal.classList.remove('flex');
         }
 
-        // Fermer le modal en cliquant en dehors
         document.getElementById('deleteModal')?.addEventListener('click', function(e) {
             if (e.target === this) {
                 closeDeleteModal();

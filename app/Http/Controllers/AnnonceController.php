@@ -386,12 +386,10 @@ class AnnonceController extends Controller
     {
         $annonce = Annonce::with(['utilisateur', 'photos', 'reservations.dateDebut', 'reservations.dateFin'])->findOrFail($id);
         
-        // Vérifier que l'utilisateur est bien le propriétaire de l'annonce
         if ($annonce->idutilisateur !== Auth::id()) {
             return back()->with('error', 'Vous n\'êtes pas autorisé à supprimer cette annonce.');
         }
         
-        // Vérifier s'il y a des réservations en cours ou à venir
         $today = \Carbon\Carbon::today();
         $hasActiveReservations = false;
         
@@ -409,26 +407,20 @@ class AnnonceController extends Controller
             return back()->with('error', 'Impossible de supprimer cette annonce car des réservations sont en cours ou à venir.');
         }
         
-        // Supprimer l'annonce et ses données associées
         DB::transaction(function () use ($annonce) {
-            // Supprimer les photos du stockage
             foreach ($annonce->photos as $photo) {
                 $path = str_replace('/storage/', '', $photo->lienphoto);
                 Storage::disk('public')->delete($path);
             }
             
-            // Supprimer les relations
             $annonce->photos()->delete();
             $annonce->commodites()->detach();
             $annonce->users()->detach();
             $annonce->dates()->detach();
             $annonce->annonces()->detach();
             
-            // Supprimer les références bidirectionnelles dans ressembler
-            // (où cette annonce est référencée comme idannonce_b)
             DB::table('ressembler')->where('idannonce_b', $annonce->idannonce)->delete();
             
-            // Supprimer l'annonce
             $annonce->delete();
         });
 
