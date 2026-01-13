@@ -78,7 +78,7 @@
                             </div>
 
                             <div class="flex items-center gap-2 mt-2">
-                                <div class="w-7 h-7 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600">
+                                <div class="w-7 h-7 bg-orange-50 rounded-full flex items-center justify-center text-orange-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
                                         <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
                                     </svg>
@@ -89,13 +89,13 @@
                                 </p>
                             </div>
                             
-                            <p class="text-sm text-indigo-600 font-medium mt-1">
+                            <p class="text-sm text-orange-600 font-medium mt-1">
                                 {{ $annonce->typehebergement->nomtypehebergement ?? 'Type non défini' }}
                             </p>
                         </div>
 
                         <div class="mt-4 flex items-center justify-end">
-                            <a href="{{ route('services.annonce-editor.edit', $annonce->idannonce) }}" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm">
+                            <a href="{{ route('services.annonce-editor.edit', $annonce->idannonce) }}" class="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                 </svg>

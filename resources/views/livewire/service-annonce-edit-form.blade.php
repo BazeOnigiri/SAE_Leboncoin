@@ -27,7 +27,7 @@
             <div class="grid grid-cols-1 gap-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 @foreach($equipements as $equip)
                     <label class="flex items-center p-3 rounded-xl border border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors">
-                        <input type="checkbox" wire:model="selectedEquipements" value="{{ $equip->idcommodite }}" class="rounded text-indigo-600 focus:ring-indigo-500 w-5 h-5">
+                        <input type="checkbox" wire:model="selectedEquipements" value="{{ $equip->idcommodite }}" class="rounded text-orange-600 focus:ring-orange-500 w-5 h-5">
                         <span class="ml-3 text-sm font-medium text-slate-700">{{ $equip->nomcommodite }}</span>
                     </label>
                 @endforeach

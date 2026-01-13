@@ -18,7 +18,7 @@
                     @foreach($incidents as $incident)
                         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center font-bold">
+                                <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center font-bold">
                                     #{{ $incident->idincident }}
                                 </div>
                                 <div>
@@ -33,7 +33,7 @@
                                 {{-- Badge d'étape --}}
                                 <div>
                                     @if($incident->estremisaucontentieux)
-                                        <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold uppercase tracking-widest italic">⚖️ Contentieux</span>
+                                        <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold uppercase tracking-widest italic">⚖️ Contentieux</span>
                                     @elseif($incident->estclasse)
                                         <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-bold uppercase tracking-widest">Terminé</span>
                                     @else

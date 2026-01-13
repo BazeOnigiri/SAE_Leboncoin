@@ -10,16 +10,16 @@
             
             <div class="flex gap-4 mb-6 border-b border-gray-200">
                 <button @click="tab = 'en-cours'" 
-                    :class="tab === 'en-cours' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                    :class="tab === 'en-cours' ? 'border-orange-600 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
                     class="pb-4 px-2 font-bold text-sm border-b-2 transition-colors relative">
                     Incidents à traiter
-                    <span class="ml-2 bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs font-medium">
+                    <span class="ml-2 bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full text-xs font-medium">
                         {{ $incidentsEnCours->count() }}
                     </span>
                 </button>
 
                 <button @click="tab = 'contentieux'" 
-                    :class="tab === 'contentieux' ? 'border-red-600 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                    :class="tab === 'contentieux' ? 'border-orange-600 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
                     class="pb-4 px-2 font-bold text-sm border-b-2 transition-colors relative">
                     Contentieux
                 </button>
@@ -36,10 +36,6 @@
             </div>
 
             <div x-show="tab === 'contentieux'" class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden" x-cloak>
-                <div class="bg-red-50 p-3 border-b border-red-100 flex items-center gap-2">
-                    <span class="text-red-600 text-sm">⚖️</span>
-                    <p class="text-red-700 text-[10px] font-bold uppercase tracking-widest">Dossiers sous expertise juridique</p>
-                </div>
                 @include('services.incidents.partials.table', ['incidents' => $incidentsContentieux])
             </div>
 
@@ -69,7 +65,7 @@
                         
                         <div>
                             <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Motif déclaré</p>
-                            <p id="modal-motif" class="font-bold text-red-600 tracking-tight text-lg"></p>
+                            <p id="modal-motif" class="font-bold text-orange-600 tracking-tight text-lg"></p>
                         </div>
 
                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
@@ -82,12 +78,12 @@
                             <p id="modal-explication-proprio" class="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap"></p>
                         </div>
 
-                        <div id="modal-contestation-alert" class="bg-red-50 p-4 rounded-xl border border-red-200 hidden">
+                        <div id="modal-contestation-alert" class="bg-orange-50 p-4 rounded-xl border border-orange-200 hidden">
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="text-red-600">⚠️</span>
-                                <p class="text-red-800 text-xs font-bold uppercase tracking-tighter">Information dossier</p>
+                                <span class="text-orange-600">⚠️</span>
+                                <p class="text-orange-800 text-xs font-bold uppercase tracking-tighter">Information dossier</p>
                             </div>
-                            <p id="modal-alert-text" class="text-red-700 text-sm italic leading-relaxed"></p>
+                            <p id="modal-alert-text" class="text-orange-700 text-sm italic leading-relaxed"></p>
                         </div>
                     </div>
                 </div>
@@ -155,7 +151,7 @@
                 formLeftAction.action = `/services/incidents/${data.id}/classer`;
                 
                 btnActionText.innerText = "Demander explication proprio";
-                btnActionText.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                btnActionText.classList.add('bg-orange-600', 'hover:bg-orange-700');
                 formActionPrincipale.action = `/services/incidents/${data.id}/valider`;
             } 
             else if (data.etape == 3) {
@@ -177,7 +173,7 @@
                 formLeftAction.action = `/services/incidents/${data.id}/classer`;
                 
                 btnActionText.innerText = "Envoyer au contentieux";
-                btnActionText.classList.add('bg-red-600', 'hover:bg-red-700');
+                btnActionText.classList.add('bg-orange-600', 'hover:bg-orange-700');
                 formActionPrincipale.action = `/services/incidents/${data.id}/contentieux`;
             }
             else {

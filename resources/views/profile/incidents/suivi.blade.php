@@ -21,7 +21,7 @@
                     <p class="text-gray-500 text-sm">Logement : {{ $incident->reservation->annonce->titreannonce }}</p>
                 </div>
 
-                <div class="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-blue-500 before:via-gray-200 before:to-gray-200">
+                <div class="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-orange-500 before:via-gray-200 before:to-gray-200">
                     
                     @php
                         $etapes = [
@@ -34,7 +34,7 @@
 
                     @foreach($etapes as $num => $info)
                         <div class="relative flex items-start group">
-                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white shadow-sm shrink-0 z-10 {{ $incident->etape >= $num ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-400' }}">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white shadow-sm shrink-0 z-10 {{ $incident->etape >= $num ? 'bg-orange-600 text-white' : 'bg-gray-200 text-gray-400' }}">
                                 @if($incident->etape > $num)
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
                                 @else
@@ -47,9 +47,9 @@
                                 @if($num == 4 && $incident->etape >= 4)
                                     <div class="mt-1">
                                         @if($incident->estrembourse)
-                                            <p class="text-sm text-green-600 font-semibold italic">✅ Remboursement validé en votre faveur.</p>
+                                            <p class="text-sm text-orange-600 font-semibold italic">Remboursement validé en votre faveur.</p>
                                         @else
-                                            <p class="text-sm text-orange-600 font-semibold italic">❌ Remboursement refusé par nos services.</p>
+                                            <p class="text-sm text-orange-600 font-semibold italic">Remboursement refusé par nos services.</p>
                                         @endif
                                     </div>
                                 @else
@@ -62,7 +62,7 @@
                                         <div class="flex gap-3">
                                             <form action="{{ route('incidents.accepter', $incident->idincident) }}" method="POST" class="flex-1">
                                                 @csrf
-                                                <button class="w-full bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-700 transition shadow-sm">Accepter</button>
+                                                <button class="w-full bg-orange-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-orange-700 transition shadow-sm">Accepter</button>
                                             </form>
                                             <form action="{{ route('incidents.contester', $incident->idincident) }}" method="POST" class="flex-1">
                                                 @csrf
