@@ -1,7 +1,7 @@
 console.log('--- APP.JS LOADED ---');
 import './bootstrap';
 import './cookies';
-import './help-system-absolute';
+// import './help-system-absolute';
 
 
 const overlay = document.getElementById('filter-overlay');
