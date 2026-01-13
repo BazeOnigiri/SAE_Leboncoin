@@ -516,12 +516,15 @@
     const messages    = document.querySelector('#chatbot-messages');
     const csrfToken   = document.querySelector('meta[name="csrf-token"]')?.content;
 
+    const userId = {{ auth()->id() ?? 0 }};
+    const storageKey = `chatbot_messages_${userId}`;
+
     const saveMessages = () => {
-        localStorage.setItem('chatbot_messages', messages.innerHTML);
+        localStorage.setItem(storageKey, messages.innerHTML);
     };
 
     const loadMessages = () => {
-        const saved = localStorage.getItem('chatbot_messages');
+        const saved = localStorage.getItem(storageKey);
         if (saved) {
             messages.innerHTML = saved;
             messages.scrollTop = messages.scrollHeight;
@@ -543,7 +546,6 @@
         div.textContent = text;
         messages.appendChild(div);
         messages.scrollTop = messages.scrollHeight;
-
         saveMessages();
     };
 
