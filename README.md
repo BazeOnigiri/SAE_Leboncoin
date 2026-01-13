@@ -93,3 +93,9 @@ info exemple :
 ```php
 return back()->with('info', 'Votre CNI est déjà vérifiée.');
 ```
+
+```
+Pour résoudre l'erreur 419 :
+
+Faire : CTRL + R
+```
