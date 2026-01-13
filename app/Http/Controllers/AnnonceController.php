@@ -381,4 +381,57 @@ class AnnonceController extends Controller
 
         return back()->with('success', "Annonce « {$titreAnnonce} » rejetée et supprimée.");
     }
+
+    public function destroy($id)
+    {
+        $annonce = Annonce::with(['utilisateur', 'photos', 'reservations.dateDebut', 'reservations.dateFin'])->findOrFail($id);
+        
+        // Vérifier que l'utilisateur est bien le propriétaire de l'annonce
+        if ($annonce->idutilisateur !== Auth::id()) {
+            return back()->with('error', 'Vous n\'êtes pas autorisé à supprimer cette annonce.');
+        }
+        
+        // Vérifier s'il y a des réservations en cours ou à venir
+        $today = \Carbon\Carbon::today();
+        $hasActiveReservations = false;
+        
+        foreach ($annonce->reservations as $reservation) {
+            if ($reservation->dateFin && $reservation->dateFin->date) {
+                $endDate = \Carbon\Carbon::parse($reservation->dateFin->date);
+                if ($endDate >= $today) {
+                    $hasActiveReservations = true;
+                    break;
+                }
+            }
+        }
+        
+        if ($hasActiveReservations) {
+            return back()->with('error', 'Impossible de supprimer cette annonce car des réservations sont en cours ou à venir.');
+        }
+        
+        // Supprimer l'annonce et ses données associées
+        DB::transaction(function () use ($annonce) {
+            // Supprimer les photos du stockage
+            foreach ($annonce->photos as $photo) {
+                $path = str_replace('/storage/', '', $photo->lienphoto);
+                Storage::disk('public')->delete($path);
+            }
+            
+            // Supprimer les relations
+            $annonce->photos()->delete();
+            $annonce->commodites()->detach();
+            $annonce->users()->detach();
+            $annonce->dates()->detach();
+            $annonce->annonces()->detach();
+            
+            // Supprimer les références bidirectionnelles dans ressembler
+            // (où cette annonce est référencée comme idannonce_b)
+            DB::table('ressembler')->where('idannonce_b', $annonce->idannonce)->delete();
+            
+            // Supprimer l'annonce
+            $annonce->delete();
+        });
+
+        return back()->with('success', 'L\'annonce a été supprimée avec succès.');
+    }
 }
