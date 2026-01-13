@@ -127,10 +127,19 @@
             const alertText = document.getElementById('modal-alert-text');
             
             alertSection.classList.add('hidden');
-            formLeftAction.classList.remove('hidden', 'flex');
             proprioSection.classList.add('hidden');
+            formLeftAction.classList.remove('hidden', 'flex');
             footer.classList.remove('hidden', 'flex');
-            btnActionText.classList.remove('bg-blue-600', 'bg-green-600', 'bg-red-600', 'hover:bg-blue-700', 'hover:bg-green-700', 'hover:bg-red-700');
+            
+            formLeftAction.action = "";
+            formActionPrincipale.action = "";
+
+            btnActionText.className = "w-full inline-flex justify-center px-4 py-2.5 text-sm font-bold text-white rounded-xl shadow-md transition-colors";
+
+            if (data.etape >= 3 && data.explication) {
+                proprioSection.classList.remove('hidden');
+                document.getElementById('modal-explication-proprio').innerText = data.explication;
+            }
 
             if (data.estremisaucontentieux) {
                 footer.classList.add('hidden');
@@ -144,29 +153,29 @@
                 footer.classList.add('flex');
                 btnLeftText.innerText = "Classer sans suite";
                 formLeftAction.action = `/services/incidents/${data.id}/classer`;
+                
                 btnActionText.innerText = "Demander explication proprio";
                 btnActionText.classList.add('bg-blue-600', 'hover:bg-blue-700');
                 formActionPrincipale.action = `/services/incidents/${data.id}/valider`;
             } 
             else if (data.etape == 3) {
-                proprioSection.classList.remove('hidden');
-                document.getElementById('modal-explication-proprio').innerText = data.explication;
                 footer.classList.add('flex');
                 btnLeftText.innerText = "Refuser le remboursement";
                 formLeftAction.action = `/services/incidents/${data.id}/valider-etape-4`;
+                
                 btnActionText.innerText = "Enclencher Remboursement";
                 btnActionText.classList.add('bg-green-600', 'hover:bg-green-700');
                 formActionPrincipale.action = `/services/incidents/${data.id}/rembourser`;
             }
             else if (data.etape == 5) {
-                if (data.explication) {
-                    proprioSection.classList.remove('hidden');
-                    document.getElementById('modal-explication-proprio').innerText = data.explication;
-                }
+                footer.classList.add('flex');
                 alertSection.classList.remove('hidden');
                 alertText.innerText = "Le locataire conteste la décision. Le dossier nécessite une expertise juridique.";
-                footer.classList.add('flex');
-                formLeftAction.classList.add('hidden');
+                
+                formLeftAction.classList.remove('hidden'); 
+                btnLeftText.innerText = "Classer sans suite";
+                formLeftAction.action = `/services/incidents/${data.id}/classer`;
+                
                 btnActionText.innerText = "Envoyer au contentieux";
                 btnActionText.classList.add('bg-red-600', 'hover:bg-red-700');
                 formActionPrincipale.action = `/services/incidents/${data.id}/contentieux`;
