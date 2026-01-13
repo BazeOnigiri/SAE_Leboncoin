@@ -57,6 +57,14 @@ php artisan geo:clear
 
 ```
 
+## Error solving
+Pour résoudre l'erreur 419 :
+```
+
+Faire : CTRL + R
+
+```
+
 ## Comptes
 
 | Rôle | Email | Mot de passe |
@@ -94,8 +102,4 @@ info exemple :
 return back()->with('info', 'Votre CNI est déjà vérifiée.');
 ```
 
-```
-Pour résoudre l'erreur 419 :
-
-Faire : CTRL + R
 ```

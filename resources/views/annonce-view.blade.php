@@ -813,9 +813,6 @@
                         </svg>
                     </button>
                 </h2>
-                <a href="#" class="text-slate-800 font-semibold hover:underline flex items-center">
-                    Voir plus d'annonces <span class="ml-1">→</span>
-                </a>
             </div>
 
             <div class="flex overflow-x-auto space-x-6 pb-6 px-1 snap-x scrollbar-hide">

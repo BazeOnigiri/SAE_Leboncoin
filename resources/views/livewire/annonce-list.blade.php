@@ -50,7 +50,7 @@
                             <button onclick="scrollLeft{{ $annonce->idannonce }}()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">‹</button>
                             <button onclick="scrollRight{{ $annonce->idannonce }}()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-8 h-8 flex items-center justify-center z-10">›</button>
                         
-                            <div id="carousel{{ $annonce->idannonce }}" class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scroll r-hide">
+                            <div id="carousel{{ $annonce->idannonce }}" class="w-full h-full overflow-x-auto flex gap-2 rounded-3xl scroll-smooth snap-x snap-mandatory scroll r-hide scrollbar-hide" style="scrollbar-width: none; -ms-overflow-style: none;">
                                 @foreach ($annonce->photos ?? [] as $photo)
                                     <div class="min-w-full h-full snap-start rounded-3xl overflow-hidden">
                                         <img src="{{ $photo->lienphoto }}" alt="{{ $annonce->titreannonce }} - Photo {{ $loop->iteration }}" loading="lazy" class="w-full h-full object-cover">
