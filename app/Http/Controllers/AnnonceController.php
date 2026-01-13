@@ -381,4 +381,49 @@ class AnnonceController extends Controller
 
         return back()->with('success', "Annonce « {$titreAnnonce} » rejetée et supprimée.");
     }
+
+    public function destroy($id)
+    {
+        $annonce = Annonce::with(['utilisateur', 'photos', 'reservations.dateDebut', 'reservations.dateFin'])->findOrFail($id);
+        
+        if ($annonce->idutilisateur !== Auth::id()) {
+            return back()->with('error', 'Vous n\'êtes pas autorisé à supprimer cette annonce.');
+        }
+        
+        $today = \Carbon\Carbon::today();
+        $hasActiveReservations = false;
+        
+        foreach ($annonce->reservations as $reservation) {
+            if ($reservation->dateFin && $reservation->dateFin->date) {
+                $endDate = \Carbon\Carbon::parse($reservation->dateFin->date);
+                if ($endDate >= $today) {
+                    $hasActiveReservations = true;
+                    break;
+                }
+            }
+        }
+        
+        if ($hasActiveReservations) {
+            return back()->with('error', 'Impossible de supprimer cette annonce car des réservations sont en cours ou à venir.');
+        }
+        
+        DB::transaction(function () use ($annonce) {
+            foreach ($annonce->photos as $photo) {
+                $path = str_replace('/storage/', '', $photo->lienphoto);
+                Storage::disk('public')->delete($path);
+            }
+            
+            $annonce->photos()->delete();
+            $annonce->commodites()->detach();
+            $annonce->users()->detach();
+            $annonce->dates()->detach();
+            $annonce->annonces()->detach();
+            
+            DB::table('ressembler')->where('idannonce_b', $annonce->idannonce)->delete();
+            
+            $annonce->delete();
+        });
+
+        return back()->with('success', 'L\'annonce a été supprimée avec succès.');
+    }
 }

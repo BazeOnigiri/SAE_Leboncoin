@@ -142,7 +142,7 @@
                                             <svg class="w-4 h-4 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                                             Statistiques
                                         </button>
-                                        <button class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition ml-auto group">
+                                        <button onclick="openDeleteModal({{ $annonce->idannonce }}, '{{ addslashes($annonce->titreannonce) }}', {{ $annonce->reservations->filter(function($r) { return $r->dateFin && \Carbon\Carbon::parse($r->dateFin->date)->isFuture(); })->count() }})" class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition ml-auto group">
                                             <svg class="w-4 h-4 text-gray-400 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                             Supprimer
                                         </button>
@@ -258,7 +258,7 @@
                                             <svg class="w-4 h-4 text-gray-400 group-hover:text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                             Modifier
                                         </button>
-                                        <button class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition ml-auto group">
+                                        <button onclick="openDeleteModal({{ $annonce->idannonce }}, '{{ addslashes($annonce->titreannonce) }}', {{ $annonce->reservations->filter(function($r) { return $r->dateFin && \Carbon\Carbon::parse($r->dateFin->date)->isFuture(); })->count() }})" class="text-gray-700 hover:text-red-600 flex items-center gap-1 transition ml-auto group">
                                             <svg class="w-4 h-4 text-gray-400 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                             Supprimer
                                         </button>
@@ -269,6 +269,47 @@
                     </div>
                 @endif
             </div>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Supprimer l'annonce</h3>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-6">
+                Vous êtes sur le point de supprimer l'annonce <strong id="deleteModalTitle"></strong>.
+                <span class="text-red-600 font-semibold block mt-2">Cette action est irréversible.</span>
+            </p>
+            <div id="activeReservationsWarning" class="hidden bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                <p class="text-sm text-red-800 font-semibold">
+                    <svg class="w-5 h-5 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                    Impossible de supprimer cette annonce car <span id="reservationCount"></span> réservation(s) sont en cours ou à venir.
+                </p>
+            </div>
+            <form id="deleteForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeDeleteModal()" 
+                        class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition">
+                        Annuler
+                    </button>
+                    <button type="submit" id="confirmDeleteBtn"
+                        class="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
+                        Supprimer
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
     @endsection
@@ -302,6 +343,43 @@
             });
 
             setActive('tab-en-ligne');
+        });
+
+        function openDeleteModal(annonceId, titre, activeReservations) {
+            document.getElementById('deleteModalTitle').textContent = '« ' + titre + ' »';
+            document.getElementById('deleteForm').action = '{{ url("/annonce") }}/' + annonceId;
+            
+            const modal = document.getElementById('deleteModal');
+            const warning = document.getElementById('activeReservationsWarning');
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            
+            if (activeReservations > 0) {
+                warning.classList.remove('hidden');
+                document.getElementById('reservationCount').textContent = activeReservations;
+                confirmBtn.disabled = true;
+                confirmBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                confirmBtn.classList.remove('hover:bg-red-700');
+            } else {
+                warning.classList.add('hidden');
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                confirmBtn.classList.add('hover:bg-red-700');
+            }
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
         });
     </script>
     @endpush
