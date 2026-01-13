@@ -93,5 +93,10 @@ class ServicePetiteAnnonceController extends Controller
 
         return back()->with('success', "Type d'hébergement ajouté.");
     }
+
+    public function annonceEditorIndex()
+    {
+        return view('services.annonce-editor.index');
+    }
 }
 

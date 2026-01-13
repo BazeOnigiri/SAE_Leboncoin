@@ -193,11 +193,21 @@ Route::middleware([
 
     Route::prefix('/services/catalogue')
         ->as('services.catalogue.')
-        ->middleware('can:service.catalogue') // Nouvelle permission dédiée
+        ->middleware('can:service.catalogue')
         ->group(function () {
             Route::get('/', [ServicePetiteAnnonceController::class, 'catalogueIndex'])->name('index');
             Route::post('/ajouter-equipement', [ServicePetiteAnnonceController::class, 'storeEquipement'])->name('add.equipement');
             Route::post('/ajouter-hebergement', [ServicePetiteAnnonceController::class, 'storeHebergement'])->name('add.hebergement');
+        });
+
+    Route::prefix('/services/annonce-editor')   
+        ->as('services.annonce-editor.')
+        ->middleware('can:service.annonce-editor')
+        ->group(function () {
+            Route::get('/', [ServicePetiteAnnonceController::class, 'annonceEditorIndex'])->name('index');
+            Route::get('/{annonce}/edit', function (App\Models\Annonce $annonce) {
+                return view('services.annonce-editor.edit', compact('annonce'));
+            })->name('edit');
         });
 });
 
