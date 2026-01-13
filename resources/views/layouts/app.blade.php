@@ -516,6 +516,20 @@
     const messages    = document.querySelector('#chatbot-messages');
     const csrfToken   = document.querySelector('meta[name="csrf-token"]')?.content;
 
+    const saveMessages = () => {
+        localStorage.setItem('chatbot_messages', messages.innerHTML);
+    };
+
+    const loadMessages = () => {
+        const saved = localStorage.getItem('chatbot_messages');
+        if (saved) {
+            messages.innerHTML = saved;
+            messages.scrollTop = messages.scrollHeight;
+        }
+    };
+
+    loadMessages();
+
     const addMessage = (text, type = 'bot') => {
         const div = document.createElement('div');
         div.classList.add('p-2','rounded-lg','text-sm');
@@ -529,6 +543,8 @@
         div.textContent = text;
         messages.appendChild(div);
         messages.scrollTop = messages.scrollHeight;
+
+        saveMessages();
     };
 
     const showTyping = () => {
@@ -586,6 +602,7 @@
             addMessage("Erreur de connexion au serveur.", 'bot');
         }
     };
+
     sendBtn.addEventListener('click', sendMessage);
 
     input.addEventListener('keydown', (e) => {
@@ -593,8 +610,7 @@
             e.preventDefault();
             sendMessage();
         }
-        });
-    
+    });
     </script>
 
     <x-cookie-banner />

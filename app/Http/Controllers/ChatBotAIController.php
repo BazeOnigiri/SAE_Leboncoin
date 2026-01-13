@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Reservation;
 
 class ChatBotAIController extends Controller
 {
@@ -20,7 +21,13 @@ class ChatBotAIController extends Controller
         $userContext = "";
         if (Auth::check()) {
             $user = Auth::user();
-            $userContext = "L'utilisateur connecté s'appelle {$user->pseudonyme} ({$user->email}).";
+
+            $nbReservations = Reservation::where('idutilisateur', $user->idutilisateur)->count();
+
+            $userContext = "
+            L'utilisateur connecté s'appelle {$user->pseudonyme} ({$user->email}).
+            Il a effectué {$nbReservations} réservation(s) sur le site.
+            ";
         } else {
             $userContext = "L'utilisateur n'est pas connecté.";
         }
