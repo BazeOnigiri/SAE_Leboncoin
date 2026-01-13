@@ -169,6 +169,18 @@
                 </div>
             </div>
 
+            @auth
+                @role('Service Petite Annonce')
+                    @if (isset($header))
+                        <div class="hidden lg:flex items-center flex-1 min-w-0 ml-4 border-l pl-4 border-gray-200">
+                            <div class="truncate text-lg font-bold text-gray-800">
+                                {{ $header }}
+                            </div>
+                        </div>
+                    @endif
+                @endrole
+            @endauth
+
             @if($isSuperAdminOrNoRoles)
                 <a href="{{ route('annonce.create') }}" id="header-create-annonce-btn"
                     class="hidden md:flex items-center gap-2 bg-[#ea580c] hover:bg-[#c2410c] text-white transition-colors  font-bold py-2.5 px-5 rounded-xl  shadow-sm">
@@ -248,6 +260,7 @@
         </div>
     </header>
     <x-alert/>
+
     @yield('content')
     {{ $slot ?? '' }}
     @stack('modals')

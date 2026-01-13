@@ -56,26 +56,18 @@ class ServicePetiteAnnonceController extends Controller
 
     public function storeEquipement(Request $request)
     {
-        $request->validate(['nom' => 'required|string|max:50|unique:commodite,nomcommodite']);
+        $request->validate(['nom_equipement' => 'required|string|max:50|unique:commodite,nomcommodite']);
 
-        // On cherche "Équipement" avec l'accent exact du script
         $idCategorie = \DB::table('categorie')
-            ->where('nomcategorie', 'Équipement')
+            ->where('nomcategorie', 'Équipements')
             ->value('idcategorie');
-
-        if (!$idCategorie) {
-            // Plan B : recherche plus souple si l'accent pose problème à l'encodage
-            $idCategorie = \DB::table('categorie')
-                ->where('nomcategorie', 'ILIKE', '%quipement%')
-                ->value('idcategorie');
-        }
 
         if (!$idCategorie) {
             return back()->with('error', 'La catégorie "Équipement" n\'est pas reconnue.');
         }
 
         \App\Models\Commodite::create([
-            'nomcommodite' => $request->nom,
+            'nomcommodite' => $request->nom_equipement,
             'idcategorie'  => $idCategorie
         ]);
 
@@ -84,31 +76,18 @@ class ServicePetiteAnnonceController extends Controller
 
     public function storeHebergement(Request $request)
     {
-        $request->validate(['nom' => 'required|string|max:50|unique:commodite,nomcommodite']);
+        $request->validate(['nom_hebergement' => 'required|string|max:50|unique:commodite,nomcommodite']);
 
-        // On cherche "Hébergement" avec l'accent exact du script
         $idCategorie = \DB::table('categorie')
             ->where('nomcategorie', 'Hébergement')
             ->value('idcategorie');
 
         if (!$idCategorie) {
-            // Plan B : recherche sans l'accent initial
-            $idCategorie = \DB::table('categorie')
-                ->where('nomcategorie', 'ILIKE', '%bergement%')
-                ->value('idcategorie');
-        }
-
-        if (!$idCategorie) {
             return back()->with('error', 'La catégorie "Hébergement" n\'est pas reconnue.');
         }
 
-        \App\Models\Commodite::create([
-            'nomcommodite' => $request->nom,
-            'idcategorie'  => $idCategorie
-        ]);
-
         \App\Models\TypeHebergement::create([
-            'nomtypehebergement' => $request->nom,
+            'nomtypehebergement' => $request->nom_hebergement,
             'idcategorie'        => $idCategorie
         ]);
 

@@ -141,7 +141,7 @@
                             </div>
                             <div>
                                 <h2 class="text-lg font-bold text-gray-900">Catalogue & Types</h2>
-                                <p class="text-gray-500 text-sm mt-1">Gérer les équipements et types de logements</p>
+                                <p class="text-gray-500 text-sm mt-1">Gérer les équipements et types d'hébergement</p>
                             </div>
                         </a>
                     @endcan

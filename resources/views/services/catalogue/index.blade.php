@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-bold text-lg text-gray-800 leading-tight">
             {{ __('Gestion du Catalogue') }}
         </h2>
     </x-slot>
@@ -31,7 +31,6 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-black text-gray-900 uppercase tracking-tight">Nouvel Équipement</h3>
-                            <p class="text-xs text-gray-400 font-medium">Ajout dans la table commodite</p>
                         </div>
                     </div>
 
@@ -40,11 +39,11 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Nom de l'équipement</label>
-                                <input type="text" name="nom" required 
-                                    class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('nom') border-red-500 @enderror" 
+                                <input type="text" name="nom_equipement" required 
+                                    class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('nom_equipement') border-red-500 @enderror" 
                                     placeholder="Ex: Climatisation, Wifi, BBQ..."
-                                    value="{{ old('nom') }}">
-                                @error('nom') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                    value="{{ old('nom_equipement') }}">
+                                @error('nom_equipement') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
                             <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-md flex items-center justify-center gap-2">
@@ -62,8 +61,7 @@
                             🏠
                         </div>
                         <div>
-                            <h3 class="text-lg font-black text-gray-900 uppercase tracking-tight">Nouveau Logement</h3>
-                            <p class="text-xs text-gray-400 font-medium">Ajout dans commodite & typehebergement</p>
+                            <h3 class="text-lg font-black text-gray-900 uppercase tracking-tight">Nouveau Type d'Hébergement</h3>
                         </div>
                     </div>
 
@@ -72,11 +70,11 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Nom du type d'hébergement</label>
-                                <input type="text" name="nom" required 
-                                    class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-orange-500 focus:border-orange-500 @error('nom') border-red-500 @enderror" 
+                                <input type="text" name="nom_hebergement" required 
+                                    class="w-full border-gray-300 rounded-xl shadow-sm focus:ring-orange-500 focus:border-orange-500 @error('nom_hebergement') border-red-500 @enderror" 
                                     placeholder="Ex: Péniche, Yourte, Loft..."
-                                    value="{{ old('nom') }}">
-                                @error('nom') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                                    value="{{ old('nom_hebergement') }}">
+                                @error('nom_hebergement') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
 
                             <button type="submit" class="w-full bg-orange-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-700 transition shadow-md flex items-center justify-center gap-2">
@@ -89,16 +87,8 @@
 
             </div>
 
-            {{-- Footer d'aide --}}
             <div class="mt-12 bg-white rounded-2xl p-6 border border-gray-100 flex items-center justify-between shadow-sm">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center font-bold">?</div>
-                    <div>
-                        <p class="text-sm font-bold text-gray-900">Besoin d'aide ?</p>
-                        <p class="text-xs text-gray-500">Les nouveaux types apparaîtront automatiquement lors de la création d'annonce.</p>
-                    </div>
-                </div>
-                <a href="{{ route('dashboard') }}" class="text-sm text-gray-400 hover:text-gray-900 font-bold transition">← Dashboard</a>
+                <a href="{{ route('dashboard') }}" class="text-sm text-black-400 hover:text-black-900 font-bold transition">←  Retourner au dashboard</a>
             </div>
         </div>
     </div>
