@@ -26,8 +26,9 @@ class Reservation extends Model
         'bebes',
     ];
 
-    public function incident() {
-        return $this->hasOne(Incident::class, 'idreservation', 'idreservation');
+    public function incidents()
+    {
+        return $this->hasMany(Incident::class, 'idreservation', 'idreservation');
     }
     
     public function annonce() {

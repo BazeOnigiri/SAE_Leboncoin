@@ -93,7 +93,6 @@
                                                                 </span>
                                                             @endif
                                                             <div class="flex items-center gap-2">
-                                                                {{-- Bouton de Discussion --}}
                                                                 <a href="{{ route('conversation.show', $reservation) }}" 
                                                                     class="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-orange-50 text-orange-700 border border-orange-100 hover:bg-orange-100 transition" 
                                                                     title="Discussion avec le client">
@@ -107,20 +106,19 @@
                                                                     @endif
                                                                 </a>
 
-                                                                {{-- Bouton Incident --}}
                                                                 @php
-                                                                    $incident = $reservation->incident;
+                                                                    $incidentsAJustifier = $reservation->incidents->where('etape', 2)->where('estclasse', false);
                                                                 @endphp
 
-                                                                @if($incident && $incident->etape == 2 && !$incident->estclasse)
-                                                                    <a href="{{ route('incidents.justification', $reservation->idreservation) }}" 
+                                                                @foreach($incidentsAJustifier as $incidentAction)
+                                                                    <a href="{{ route('incidents.justification', $incidentAction->idincident) }}" 
                                                                         class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-100 text-red-600 border border-red-200 hover:bg-red-500 hover:text-white transition animate-pulse" 
-                                                                        title="Incident : Justification requise">
+                                                                        title="Justification requise pour l'incident #{{ $incidentAction->idincident }}">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                                                         </svg>
                                                                     </a>
-                                                                @endif
+                                                                @endforeach
                                                             </div>
                                                             <span class="text-[11px] font-semibold text-gray-600 whitespace-nowrap">
                                                                 Reste à payer sur place : {{ number_format($reservation->resteAPayerSurPlace($annonce), 2, ',', ' ') }} €

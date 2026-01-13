@@ -134,8 +134,8 @@ Route::middleware([
         Route::get('/recherche', [UserAccountController::class, 'searches'])->name('user.searches');
         Route::delete('/recherche/{id}', [UserAccountController::class, 'destroySearch'])->name('user.searches.delete');
 
-        Route::get('/reservations/{reservation}/incident/justification', [IncidentController::class, 'justificationForm'])->name('incidents.justification');
-        Route::post('/reservations/{reservation}/incident/justification', [IncidentController::class, 'storeJustification'])->name('incidents.justification.store');
+        Route::get('/incident/{incident}/justification', [IncidentController::class, 'justificationForm'])->name('incidents.justification');
+        Route::post('/incident/{incident}/justification', [IncidentController::class, 'storeJustification'])->name('incidents.justification.store');
         Route::get('/compte/mes-litiges', [IncidentController::class, 'userIncidents'])->name('user.incidents.index');
     });
 });
@@ -188,8 +188,7 @@ Route::middleware([
         ->group(function () {
             Route::get('/', [IncidentController::class, 'index'])->name('index');
             Route::post('/{incident}/valider', [IncidentController::class, 'validerVersEtape2'])->name('services.incidents.valider');
-            Route::post('/{incident}/classer', [IncidentController::class, 'classerSansSuite'])->name('services.incidents.classer');
-            Route::post('/{incident}/rembourser', [IncidentController::class, 'rembourser'])->name('rembourser');
+            Route::post('/{incident}/classer', [IncidentController::class, 'classerSansSuite'])->name('services.incidents.classer');            Route::post('/{incident}/rembourser', [IncidentController::class, 'rembourser'])->name('rembourser');
             Route::post('/{incident}/valider-etape-4', [IncidentController::class, 'validerVersEtape4'])->name('services.incidents.valider4');
             Route::post('/{incident}/contentieux', [IncidentController::class, 'envoyerAuContentieux'])->name('contentieux');
         });
