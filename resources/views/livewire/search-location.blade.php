@@ -1,29 +1,49 @@
 <div class="relative w-full">
     <div 
         x-data="{ 
+            initialized: false,
             initAutocomplete() {
-                if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
-
                 const input = document.getElementById('google-search-input');
                 
-                const options = {
-                    types: ['(regions)'], // Cible les villes, départements, régions
-                    componentRestrictions: { country: 'fr' },
-                    fields: ['address_components', 'geometry', 'icon', 'name']
+                const setup = () => {
+                    if (this.initialized) return true;
+                    if (typeof google === 'undefined' || !google.maps || !google.maps.places) return false;
+
+                    const options = {
+                        types: ['(regions)'], // Cible les villes, départements, régions
+                        componentRestrictions: { country: 'fr' },
+                        fields: ['address_components', 'geometry', 'icon', 'name']
+                    };
+
+                    const autocomplete = new google.maps.places.Autocomplete(input, options);
+
+                    autocomplete.addListener('place_changed', () => {
+                        const place = autocomplete.getPlace();
+                        
+                        if (!place.geometry) {
+                            @this.setLocation(input.value);
+                            return;
+                        }
+
+                        @this.setLocation(place.name);
+                    });
+                    
+                    this.initialized = true;
+                    return true;
                 };
 
-                const autocomplete = new google.maps.places.Autocomplete(input, options);
-
-                autocomplete.addListener('place_changed', () => {
-                    const place = autocomplete.getPlace();
+                if (!setup()) {
+                    window.addEventListener('google-maps-loaded', setup);
                     
-                    if (!place.geometry) {
-                        @this.setLocation(input.value);
-                        return;
-                    }
-
-                    @this.setLocation(place.name);
-                });
+                    // Fallback polling in case the event is missed or script loads without event
+                    let attempts = 0;
+                    const interval = setInterval(() => {
+                        attempts++;
+                        if (setup() || attempts > 20) {
+                            clearInterval(interval);
+                        }
+                    }, 500);
+                }
             }
         }"
         x-init="initAutocomplete()"

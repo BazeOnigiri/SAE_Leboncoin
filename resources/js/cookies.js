@@ -130,6 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
             newScript.defer = true;
             newScript.setAttribute('data-managed', 'google-maps-active');
             newScript.id = 'google-maps-active-script'; // for removal identifying
+            newScript.onload = () => {
+                window.dispatchEvent(new CustomEvent('google-maps-loaded'));
+            };
             mapsScript.parentNode.replaceChild(newScript, mapsScript);
         }
         // If already active (re-consent), nothing to do.
