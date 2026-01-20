@@ -17,19 +17,16 @@
                 step: @js($errors->any() ? 2 : 1),
                 role: @js(old('role', 'particulier')),
 
-                // --- Variables Recherche Adresse ---
                 query: @js(old('ville') ? (old('numerorue') ? old('numerorue') . ' ' : '') . old('nomrue') . ' ' . old('codepostal') . ' ' . old('ville') : ''),
                 suggestions: [],
                 showSuggestions: false,
                 addressSelected: @js(old('ville') ? true : false),
 
-                // --- Variables Choix Ville ---
                 showCityModal: false,
                 citiesByCp: [],
                 modalCp: '',
                 selectedCityRadio: '',
 
-                // Fonction : Autocomplétion Adresse (API Gouv)
                 searchAddress() {
                     if (this.query.length < 3) {
                         this.suggestions = [];
@@ -43,7 +40,6 @@
                         });
                 },
 
-                // Fonction : Sélectionner une adresse depuis la liste
                 selectAddress(feature) {
                     document.querySelector('#autocomplete').value = feature.properties.label;
                     document.querySelector('#street_number_display').value = feature.properties.housenumber || '';
@@ -61,7 +57,6 @@
                     this.addressSelected = true;
                 },
 
-                // Fonction : Ouvrir la modale 'Choisir Ville'
                 async openCityChooser() {
                     const cp = document.querySelector('#codepostal').value;
                     const currentCity = document.querySelector('#ville').value;
@@ -91,7 +86,6 @@
                     }
                 },
 
-                // Fonction : Valider le choix dans la modale
                 validateCityChoice() {
                     if (!this.selectedCityRadio) return;
                     document.querySelector('#locality_display').value = this.selectedCityRadio;
@@ -105,7 +99,6 @@
                 }
             }">
 
-                {{-- STEP 1 --}}
                 <div x-show="step === 1" x-transition>
                     <h2 class="text-xl font-semibold text-gray-900 mb-2 text-center">Créer un compte</h2>
                     <p class="text-sm text-gray-600 mb-6 text-center">Choisissez votre profil pour commencer</p>
@@ -136,7 +129,6 @@
                     </div>
                 </div>
 
-                {{-- STEP 2 --}}
                 <form x-show="step === 2" x-cloak method="POST" action="{{ route('register') }}" class="space-y-5">
                     @csrf
 
@@ -165,7 +157,6 @@
                                value="{{ request('email') ?? old('email') }}">
                     </div>
 
-                    {{-- CHAMPS PARTICULIER --}}
                     <div x-show="role === 'particulier'" class="space-y-4">
                         <div class="flex flex-wrap gap-4">
                             <label class="inline-flex items-center cursor-pointer">
@@ -213,7 +204,6 @@
                         </div>
                     </div>
 
-                    {{-- CHAMPS PROFESSIONNEL --}}
                     <div x-show="role === 'professionnel'" class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Numéro SIRET *</label>
@@ -400,7 +390,6 @@
                         * Champs obligatoires. Les données collectées sont traitées par Leboncoin pour gérer votre compte. Pour exercer vos droits, consultez notre <a href="{{ route('privacy.policy') }}" class="underline hover:text-orange-700">politique de confidentialité</a>. <a href="{{ route('cookies.policy') }}" class="underline hover:text-orange-700">politique de cookies</a>
                     </p>
 
-                    {{-- MODALE CHOIX VILLE --}}
                     <div x-show="showCityModal" x-cloak class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                         <div @click.away="showCityModal = false" class="bg-white rounded-md border border-gray-200 max-w-md w-full mx-4 p-5">
                             <h3 class="text-base font-semibold text-gray-900 mb-2">Choisir une ville</h3>
