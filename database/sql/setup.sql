@@ -836,7 +836,6 @@ CREATE INDEX idx_cartebancaire_idutilisateur ON cartebancaire(idutilisateur);
 
 /* cibler */
 CREATE INDEX idx_cibler_idrecherche ON cibler(idrecherche);
-CREATE INDEX idx_cibler_idtypehebergement ON cibler(idtypehebergement);
 
 /* commodite */
 CREATE INDEX idx_commodite_idcategorie ON commodite(idcategorie);
@@ -849,15 +848,12 @@ CREATE INDEX idx_departement_idregion ON departement(idregion);
 
 /* demander */
 CREATE INDEX idx_demander_idcompensation ON demander(idcompensation);
-CREATE INDEX idx_demander_idincident ON demander(idincident);
 
 /* favoriser */
 CREATE INDEX idx_favoriser_idannonce ON favoriser(idannonce);
-CREATE INDEX idx_favoriser_idutilisateur ON favoriser(idutilisateur);
 
 /* filtrer */
 CREATE INDEX idx_filtrer_idcommodite ON filtrer(idcommodite);
-CREATE INDEX idx_filtrer_idrecherche ON filtrer(idrecherche);
 
 /* incident */
 CREATE INDEX idx_incident_iddate ON incident(iddate);
@@ -865,7 +861,6 @@ CREATE INDEX idx_incident_idreservation ON incident(idreservation);
 CREATE INDEX idx_incident_idutilisateur ON incident(idutilisateur);
 
 /* inclure */
-CREATE INDEX idx_inclure_idreservation ON inclure(idreservation);
 CREATE INDEX idx_inclure_idtypevoyageur ON inclure(idtypevoyageur);
 
 /* message */
@@ -875,18 +870,13 @@ CREATE INDEX idx_message_idutilisateurreceveur ON message(idutilisateurreceveur)
 
 /* particulier */
 CREATE INDEX idx_particulier_iddate ON particulier(iddate);
-CREATE INDEX idx_particulier_idutilisateur ON particulier(idutilisateur);
 
 /* photo */
 CREATE INDEX idx_photo_idannonce ON photo(idannonce);
 CREATE INDEX idx_photo_idincident ON photo(idincident);
 
-/* professionnel */
-CREATE INDEX idx_professionnel_idutilisateur ON professionnel(idutilisateur);
-
 /* proposer */
 CREATE INDEX idx_proposer_idannonce ON proposer(idannonce);
-CREATE INDEX idx_proposer_idcommodite ON proposer(idcommodite);
 
 /* recherche */
 CREATE INDEX idx_recherche_iddatedebutrecherche ON recherche(iddatedebutrecherche);
@@ -897,7 +887,6 @@ CREATE INDEX idx_recherche_idutilisateur ON recherche(idutilisateur);
 CREATE INDEX idx_recherche_idville ON recherche(idville);
 
 /* relier */
-CREATE INDEX idx_relier_idannonce ON relier(idannonce);
 CREATE INDEX idx_relier_iddate ON relier(iddate);
 
 /* reservation */
@@ -907,7 +896,6 @@ CREATE INDEX idx_reservation_iddatedebutreservation ON reservation(iddatedebutre
 CREATE INDEX idx_reservation_idutilisateur ON reservation(idutilisateur);
 
 /* ressembler */
-CREATE INDEX idx_ressembler_idannonce_a ON ressembler(idannonce_a);
 CREATE INDEX idx_ressembler_idannonce_b ON ressembler(idannonce_b);
 
 /* transaction */
