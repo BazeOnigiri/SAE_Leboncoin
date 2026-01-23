@@ -1204,3 +1204,155 @@ BEGIN
       a.prixnuitee ASC;
 END;
 $$ LANGUAGE plpgsql;
+
+/*===========================================================================================*/
+/*===========================================================================================*/
+/* CREATION DES TRIGGERS                                                                     */
+/*===========================================================================================*/
+/*===========================================================================================*/
+
+-- Trigger qui empêche une réservation si le logement n'est pas disponible 
+CREATE OR REPLACE FUNCTION trg_fnc_gestion_disponibilite()
+RETURNS TRIGGER AS $$
+DECLARE
+   v_date_debut DATE;
+   v_date_fin DATE;
+BEGIN
+   SELECT d.date INTO v_date_debut FROM date d WHERE d.iddate = NEW.iddatedebutreservation;
+   SELECT d.date INTO v_date_fin FROM date d WHERE d.iddate = NEW.iddatefinreservation;
+
+   IF EXISTS (
+      SELECT 1 
+      FROM relier r
+      JOIN date d ON r.iddate = d.iddate
+      WHERE r.idannonce = NEW.idannonce
+         AND r.estdisponible = false
+         AND d.date >= v_date_debut 
+         AND d.date < v_date_fin 
+   ) THEN
+      RAISE EXCEPTION 'Impossible de réserver : le logement n est pas disponible sur cette période.';
+   END IF;
+
+   IF (TG_OP = 'INSERT') THEN
+      UPDATE relier
+      SET estdisponible = false
+      FROM date d
+      WHERE relier.iddate = d.iddate
+         AND relier.idannonce = NEW.idannonce
+         AND d.date >= v_date_debut
+         AND d.date < v_date_fin;
+   END IF;
+
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trg_check_update_disponibilite
+BEFORE INSERT ON reservation
+FOR EACH ROW
+EXECUTE PROCEDURE trg_fnc_gestion_disponibilite();
+
+-- Trigger qui empêche de réserver avec une date de fin antérieure à la date de début 
+CREATE OR REPLACE FUNCTION trg_fnc_check_coherence_dates()
+RETURNS TRIGGER AS $$
+DECLARE
+   v_date_debut DATE;
+   v_date_fin DATE;
+BEGIN
+   SELECT d.date INTO v_date_debut FROM date d WHERE d.iddate = NEW.iddatedebutreservation;
+   SELECT d.date INTO v_date_fin FROM date d WHERE d.iddate = NEW.iddatefinreservation;
+
+   IF v_date_debut >= v_date_fin THEN
+      RAISE EXCEPTION 'Erreur de dates : La date de fin doit être strictement postérieure à la date de début.';
+   END IF;
+
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger qui met à jour la table annonce automatiquement quand un avis est ajouté, modifié ou supprimé
+CREATE TRIGGER trg_verif_dates_reservation
+BEFORE INSERT OR UPDATE ON reservation
+FOR EACH ROW
+EXECUTE PROCEDURE trg_fnc_check_coherence_dates();
+
+CREATE OR REPLACE FUNCTION trg_fnc_maj_moyenne_etoiles()
+RETURNS TRIGGER AS $$
+DECLARE
+   v_id_annonce INT;
+BEGIN
+   IF (TG_OP = 'DELETE') THEN
+      v_id_annonce := OLD.idannonce;
+   ELSE
+      v_id_annonce := NEW.idannonce;
+   END IF;
+
+   UPDATE annonce
+   SET nombreetoilesleboncoin = (
+      SELECT ROUND(AVG(nombreetoiles)) 
+      FROM avis
+      WHERE idannonce = v_id_annonce
+   )
+   WHERE idannonce = v_id_annonce;
+
+   RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger qui empêche la notation si on a pas réservé et que le séjour n'est pas terminé
+CREATE TRIGGER trg_auto_etoiles
+AFTER INSERT OR UPDATE OR DELETE ON avis
+FOR EACH ROW
+EXECUTE PROCEDURE trg_fnc_maj_moyenne_etoiles();
+
+CREATE OR REPLACE FUNCTION trg_fnc_verif_droit_avis()
+RETURNS TRIGGER AS $$
+BEGIN
+   IF NOT EXISTS (
+      SELECT 1 
+      FROM reservation r
+      JOIN date d ON r.iddatefinreservation = d.iddate
+      WHERE r.idutilisateur = NEW.idutilisateur
+         AND r.idannonce = NEW.idannonce
+         AND d.date < CURRENT_DATE
+   ) THEN
+      RAISE EXCEPTION 'Vous ne pouvez noter cette annonce : aucun séjour terminé trouvé pour ce logement.';
+   END IF;
+
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger qui empêche un ID d'être présent dans les deux tables à la fois
+CREATE TRIGGER trg_check_legitimite_avis
+BEFORE INSERT ON avis
+FOR EACH ROW
+EXECUTE PROCEDURE trg_fnc_verif_droit_avis();
+
+CREATE OR REPLACE FUNCTION trg_fnc_check_type_user()
+RETURNS TRIGGER AS $$
+BEGIN
+   IF (TG_TABLE_NAME = 'particulier') THEN
+      IF EXISTS (SELECT 1 FROM professionnel WHERE idutilisateur = NEW.idutilisateur) THEN
+         RAISE EXCEPTION 'Cet utilisateur est déjà enregistré comme Professionnel.';
+      END IF;
+   
+   ELSIF (TG_TABLE_NAME = 'professionnel') THEN
+      IF EXISTS (SELECT 1 FROM particulier WHERE idutilisateur = NEW.idutilisateur) THEN
+         RAISE EXCEPTION 'Cet utilisateur est déjà enregistré comme Particulier.';
+      END IF;
+   END IF;
+
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trg_verif_exclusivite_part
+BEFORE INSERT ON particulier
+FOR EACH ROW EXECUTE PROCEDURE trg_fnc_check_type_user();
+
+CREATE TRIGGER trg_verif_exclusivite_pro
+BEFORE INSERT ON professionnel
+FOR EACH ROW EXECUTE PROCEDURE trg_fnc_check_type_user();

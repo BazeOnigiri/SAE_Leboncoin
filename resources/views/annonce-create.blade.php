@@ -4,7 +4,6 @@
         <h1 class="text-2xl font-semibold text-gray-800 mb-6">Déposer une annonce</h1>
         <form id="annonce-form" method="POST" action="{{ route('annonce.store') }}" enctype="multipart/form-data" class="space-y-6"
             x-data="{
-                // --- LOGIQUE ADRESSE (API GOUV) ---
                 query: '',
                 suggestions: [],
                 showSuggestions: false,
@@ -22,13 +21,11 @@
 
                 selectAddress(feature) {
                     const props = feature.properties;
-                    // Remplissage visuel
                     document.getElementById('street_number_display').value = props.housenumber || '';
                     document.getElementById('route_display').value = props.street || props.name;
                     document.getElementById('postal_code_display').value = props.postcode;
                     document.getElementById('locality_display').value = props.city;
 
-                    // Remplissage caché (Backend)
                     document.getElementById('numerorue').value = props.housenumber;
                     document.getElementById('nomrue').value = props.street || props.name;
                     document.getElementById('codepostal').value = props.postcode;
@@ -347,7 +344,6 @@
                 </button>
             </div>
 
-            {{--MODALE DE CHOIX DE VILLE (DANS LE FORM, GÉRÉE PAR ALPINE) --}}
             <div x-show="showCityModal" x-cloak class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                 <div @click.away="showCityModal = false" class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-2">Choisir une ville</h3>
