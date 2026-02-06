@@ -99,7 +99,7 @@ class AnnonceController extends Controller
         $commoditesGroupees = $annonce->commodites->groupBy(function ($commodite) {
             return $commodite->categorie->nomcategorie;
         });
-        return view('nom_de_ta_vue', compact('annonce', 'commoditesGroupees'));
+        return view('annonce.show', compact('annonce', 'commoditesGroupees'));
     }
 
     public function create()
